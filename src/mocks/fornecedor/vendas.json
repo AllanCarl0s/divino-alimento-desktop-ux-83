@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "data": "2024-01-15",
+    "produto": "Tomate Orgânico",
+    "mercado": "Mercado Central",
+    "qtd": 45,
+    "precoUnit": 7.50,
+    "temComprovante": true,
+    "dataAviso": null,
+    "status": "entregue"
+  },
+  {
+    "id": 2,
+    "data": "2024-01-18",
+    "produto": "Alface Hidropônica",
+    "mercado": "Feira Livre",
+    "qtd": 120,
+    "precoUnit": 1.50,
+    "temComprovante": false,
+    "dataAviso": null,
+    "status": "entregue"
+  },
+  {
+    "id": 3,
+    "data": "2024-01-20",
+    "produto": "Cenoura Baby",
+    "mercado": "Supermercado Verde",
+    "qtd": 30,
+    "precoUnit": 8.00,
+    "temComprovante": true,
+    "dataAviso": "2024-01-25",
+    "status": "entregue"
+  },
+  {
+    "id": 4,
+    "data": "2024-01-22",
+    "produto": "Rúcula Orgânica",
+    "mercado": "Mercado Central",
+    "qtd": 25,
+    "precoUnit": 3.50,
+    "temComprovante": false,
+    "dataAviso": null,
+    "status": "entregue"
+  },
+  {
+    "id": 5,
+    "data": "2024-01-25",
+    "produto": "Espinafre Baby",
+    "mercado": "Feira Livre",
+    "qtd": 40,
+    "precoUnit": 4.00,
+    "temComprovante": true,
+    "dataAviso": "2024-01-30",
+    "status": "entregue"
+  },
+  {
+    "id": 6,
+    "data": "2024-12-28",
+    "produto": "Couve Manteiga",
+    "mercado": "Supermercado Verde",
+    "qtd": 35,
+    "precoUnit": 2.50,
+    "temComprovante": false,
+    "dataAviso": null,
+    "status": "pendente"
+  }
+]

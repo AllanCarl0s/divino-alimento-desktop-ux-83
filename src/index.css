@@ -1,0 +1,300 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Divino Alimento Design System - All colors MUST be HSL */
+
+@layer base {
+  :root {
+    /* Brand Colors - Divino Alimento Palette */
+    --primary: 142 100% 29%; /* #009436 - Primary green */
+    --primary-foreground: 0 0% 100%; /* White text on green */
+    --primary-hover: 142 100% 25%; /* Darker green for hover */
+    --primary-pressed: 142 100% 20%; /* Even darker for pressed */
+    
+    --secondary: 38 96% 53%; /* #f7a418 - Highlight orange */
+    --secondary-foreground: 0 0% 0%; /* Black text on orange */
+    --secondary-hover: 38 96% 48%;
+    --secondary-pressed: 38 96% 43%;
+    
+    --accent: 88 86% 41%; /* #4ea328 - Secondary green */
+    --accent-foreground: 0 0% 100%;
+    
+    --warning: 51 100% 49%; /* #f7da00 - Yellow */
+    --warning-foreground: 0 0% 0%;
+    
+    --dark-green: 142 59% 16%; /* #0d4622 - Dark green */
+    --dark-text: 0 5% 13%; /* #252121 - Dark text */
+    
+    /* Background & Surface */
+    --background: 0 0% 100%; /* White */
+    --foreground: 0 5% 13%; /* Dark text */
+    
+    --card: 0 0% 100%;
+    --card-foreground: 0 5% 13%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 5% 13%;
+    
+    /* Gray Scale */
+    --gray-50: 0 0% 98%;
+    --gray-100: 0 0% 96%;
+    --gray-200: 0 0% 93%;
+    --gray-300: 0 0% 88%;
+    --gray-400: 0 0% 74%;
+    --gray-500: 0 0% 60%;
+    --gray-600: 0 0% 45%;
+    --gray-700: 0 0% 32%;
+    --gray-800: 0 0% 18%;
+    --gray-900: 0 5% 13%;
+    
+    /* Functional Colors */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 142 100% 29%;
+    --success-foreground: 0 0% 100%;
+    
+    --border: 0 0% 93%;
+    --input: 0 0% 96%;
+    --ring: 142 100% 29%;
+    
+    /* Design System Values */
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0 10px 15px -3px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 20px 25px -5px hsl(0 0% 0% / 0.1);
+    --shadow-green: 0 8px 25px -5px hsl(142 100% 29% / 0.3);
+    
+    /* Transitions */
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    --gradient-warm: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--warning)));
+    --gradient-surface: linear-gradient(180deg, hsl(0 0% 100%), hsl(0 0% 98%));
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-inter antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
+  }
+
+  /* Typography Scale - Desktop optimized */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-poppins font-semibold;
+  }
+
+  /* Desktop-first typography */
+  html {
+    font-size: 16px;
+  }
+
+  /* Desktop typography scale */
+  @media (min-width: 1024px) {
+    h1 { @apply text-3xl leading-10; }
+    h2 { @apply text-2xl leading-8; }
+    h3 { @apply text-xl leading-7; }
+    body { @apply text-base leading-6; }
+  }
+
+  /* Mobile fallback */
+  @media (max-width: 375px) {
+    html {
+      font-size: 14px;
+    }
+  }
+}
+
+@layer components {
+  /* Brand Leaf Icons */
+  .leaf-icon {
+    @apply inline-block w-4 h-4 bg-gradient-to-br from-accent to-primary rounded-full;
+    position: relative;
+  }
+
+  .leaf-icon::before {
+    content: '';
+    @apply absolute inset-0 bg-accent rounded-full;
+    transform: rotate(45deg) scale(0.7);
+    opacity: 0.8;
+  }
+
+  /* Glassmorphism effect for cards */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Touch target minimum size */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Focus styles for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-bounce-soft {
+    animation: bounceSoft 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer utilities {
+  /* Text gradients */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .text-gradient-warm {
+    @apply bg-gradient-to-r from-secondary to-warning bg-clip-text text-transparent;
+  }
+
+  /* Custom shadows */
+  .shadow-green {
+    box-shadow: var(--shadow-green);
+  }
+
+  /* Grid spacing system (4px base) */
+  .space-1 { @apply space-y-1; } /* 4px */
+  .space-2 { @apply space-y-2; } /* 8px */
+  .space-3 { @apply space-y-3; } /* 12px */
+  .space-4 { @apply space-y-4; } /* 16px */
+  .space-6 { @apply space-y-6; } /* 24px */
+  .space-8 { @apply space-y-8; } /* 32px */
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceSoft {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Carousel specific styles */
+.embla {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}

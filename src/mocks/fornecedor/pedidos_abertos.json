@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "mercado": "Mercado Central",
+    "localEntrega": "Rua das Flores, 123 - Centro",
+    "dataEntrega": "2024-02-15",
+    "itens": [
+      {
+        "produto": "Tomate Orgânico",
+        "unidade": "kg",
+        "qtd": 50,
+        "preco": 7.50
+      }
+    ],
+    "observacao": "Pedido urgente para promoção de fim de semana",
+    "dataPedido": "2024-02-01",
+    "status": "pendente",
+    "aceito": false
+  },
+  {
+    "id": 2,
+    "mercado": "Feira Livre",
+    "localEntrega": "Av. Independência, 456 - Vila Nova",
+    "dataEntrega": "2024-02-18",
+    "itens": [
+      {
+        "produto": "Alface Hidropônica",
+        "unidade": "unidades",
+        "qtd": 100,
+        "preco": 1.50
+      }
+    ],
+    "observacao": "",
+    "dataPedido": "2024-02-03",
+    "status": "pendente",
+    "aceito": true
+  },
+  {
+    "id": 3,
+    "mercado": "Supermercado Verde",
+    "localEntrega": "Rua do Comércio, 789 - Jardim América",
+    "dataEntrega": "2024-02-20",
+    "itens": [
+      {
+        "produto": "Cenoura Baby",
+        "unidade": "kg",
+        "qtd": 25,
+        "preco": 8.00
+      }
+    ],
+    "observacao": "Cliente prefere entrega pela manhã",
+    "dataPedido": "2024-02-05", 
+    "status": "pendente",
+    "aceito": false
+  },
+  {
+    "id": 4,
+    "mercado": "Mercado Central",
+    "localEntrega": "Rua das Flores, 123 - Centro",
+    "dataEntrega": "2024-02-12",
+    "itens": [
+      {
+        "produto": "Alface Americana",
+        "unidade": "unidades", 
+        "qtd": 80,
+        "preco": 2.00
+      },
+      {
+        "produto": "Rúcula Orgânica",
+        "unidade": "maços",
+        "qtd": 30,
+        "preco": 3.50
+      }
+    ],
+    "observacao": "Entrega deve ser feita até 14h",
+    "dataPedido": "2024-01-30",
+    "status": "pendente",
+    "aceito": true
+  }
+]
