@@ -35,6 +35,7 @@ type FormData = {
   email: string;
   confirmEmail: string;
   password: string;
+  confirmPassword: string;
   profiles: {
     consumidor: boolean;
     fornecedor: boolean;
@@ -60,6 +61,7 @@ const Register = () => {
       email: '',
       confirmEmail: '',
       password: '',
+      confirmPassword: '',
       profiles: {
         consumidor: false,
         fornecedor: false,
@@ -91,6 +93,8 @@ const Register = () => {
     else if (data.email !== data.confirmEmail) errors.push('E-mails não coincidem');
     if (!data.password.trim()) errors.push('Senha é obrigatória');
     else if (data.password.length < 6) errors.push('Senha deve ter pelo menos 6 caracteres');
+    if (!data.confirmPassword.trim()) errors.push('Confirmação de senha é obrigatória');
+    else if (data.password !== data.confirmPassword) errors.push('Senhas não coincidem');
     if (!hasAnyProfile) errors.push('Selecione pelo menos um perfil');
     if (data.profiles.consumidor && !data.selectedMarket) errors.push('Selecione um mercado');
 
@@ -300,6 +304,31 @@ const Register = () => {
                                   className="pl-10 lg:pl-12 lg:h-12 lg:text-base"
                                   {...field}
                                 />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Confirmar Senha</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Lock className="absolute left-3 top-3 w-4 h-4 lg:w-5 lg:h-5 text-muted-foreground" />
+                                <Input
+                                  type="password"
+                                  placeholder="Digite novamente sua senha"
+                                  className="pl-10 lg:pl-12 pr-10 lg:pr-12 lg:h-12 lg:text-base"
+                                  {...field}
+                                />
+                                {watchedValues.confirmPassword && watchedValues.password === watchedValues.confirmPassword && (
+                                  <CheckCircle2 className="absolute right-3 top-3 w-4 h-4 lg:w-5 lg:h-5 text-success" />
+                                )}
                               </div>
                             </FormControl>
                             <FormMessage />
@@ -590,6 +619,14 @@ const Register = () => {
                               <div className="w-4 h-4 rounded-full border-2 border-muted-foreground" />
                             )}
                             <span className="text-sm">Senha criada</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {watchedValues.password === watchedValues.confirmPassword && watchedValues.password ? (
+                              <CheckCircle2 className="w-4 h-4 text-success" />
+                            ) : (
+                              <div className="w-4 h-4 rounded-full border-2 border-muted-foreground" />
+                            )}
+                            <span className="text-sm">Senhas coincidem</span>
                           </div>
                           <div className="flex items-center space-x-2">
                             {hasAnyProfile ? (
