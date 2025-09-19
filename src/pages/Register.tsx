@@ -171,7 +171,7 @@ const Register = () => {
               <div className="flex items-center justify-center space-x-2 mb-2">
                 <LeafIcon size="lg" className="text-primary" />
                 <CardTitle className="font-poppins text-2xl lg:text-3xl text-gradient-primary">
-                  Criação de Conta
+                  Novo Cadastro
                 </CardTitle>
                 <LeafIcon size="lg" className="text-accent" />
               </div>
