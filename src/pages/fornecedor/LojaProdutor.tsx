@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import { Plus, Package, MapPin, Calendar, Edit, Eye, Trash2, Settings } from 'lucide-react';
+import { Plus, Package, MapPin, Calendar, Edit, Eye, Trash2, Settings, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -80,6 +80,11 @@ const LojaProdutor = () => {
   });
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const handleLogout = () => {
+    localStorage.removeItem('fornecedorAuth');
+    navigate('/');
+  };
 
   const openEditModal = (product: typeof mockProducts[0]) => {
     setEditForm({
@@ -155,7 +160,17 @@ const LojaProdutor = () => {
 
   return (
     <ResponsiveLayout 
-      headerContent={null}
+      headerContent={
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={handleLogout}
+          className="focus-ring text-primary-foreground hover:bg-primary-hover"
+        >
+          <LogOut className="w-4 h-4 mr-1" />
+          <span className="hidden md:inline">Sair</span>
+        </Button>
+      }
     >
       <div className="space-y-4 lg:space-y-6">
         {/* Header with Settings */}
