@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import { Plus, Package, MapPin, Calendar, Edit, Eye, Trash2, Settings, LogOut } from 'lucide-react';
+import { Plus, Package, MapPin, Calendar, Edit, Eye, Trash2, Settings, LogOut, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -201,7 +201,7 @@ const LojaProdutor = () => {
         </div>
 
         {/* Quick Access Menu */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
           <Button
             variant="outline"
             onClick={() => navigate('/fornecedor/pedidos-aberto')}
@@ -223,10 +223,19 @@ const LojaProdutor = () => {
           <Button
             variant="outline"
             onClick={() => navigate('/fornecedor/cronograma')}
-            className="h-16 lg:h-20 flex flex-col items-center justify-center space-y-1 bg-gradient-to-br from-accent/5 to-primary/5 border-accent/20 hover:border-accent/40 lg:col-span-1"
+            className="h-16 lg:h-20 flex flex-col items-center justify-center space-y-1 bg-gradient-to-br from-accent/5 to-primary/5 border-accent/20 hover:border-accent/40"
           >
             <Calendar className="w-6 h-6 text-accent" />
             <span className="text-sm font-medium text-center">Cronograma</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => navigate('/fornecedor/produtos-vencidos')}
+            className="h-16 lg:h-20 flex flex-col items-center justify-center space-y-1 bg-gradient-to-br from-red-500/10 to-orange-500/10 border-red-400/30 hover:border-red-500/50"
+          >
+            <AlertTriangle className="w-6 h-6 text-red-500" />
+            <span className="text-sm font-medium text-center">Produtos Vencidos</span>
           </Button>
         </div>
 
