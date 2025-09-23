@@ -58,7 +58,7 @@ const mercados = [
 export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprove }: AddProductModalProps) {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [formData, setFormData] = useState({
     productId: '',
     name: '',
@@ -78,7 +78,7 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
   const filteredProducts = useMemo(() => {
     return produtosReferencia.filter(produto => {
       const matchesSearch = produto.nome.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = !categoryFilter || produto.categoria === categoryFilter;
+      const matchesCategory = categoryFilter === 'all' || produto.categoria === categoryFilter;
       return matchesSearch && matchesCategory && produto.ativo;
     });
   }, [searchTerm, categoryFilter]);
@@ -130,7 +130,7 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
       mercadoPrioritario: ''
     });
     setSearchTerm('');
-    setCategoryFilter('');
+    setCategoryFilter('all');
   };
 
   const handleClose = () => {
@@ -224,7 +224,7 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
                   <SelectValue placeholder="Todas as categorias" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas as categorias</SelectItem>
+                  <SelectItem value="all">Todas as categorias</SelectItem>
                   {categorias.map(categoria => (
                     <SelectItem key={categoria} value={categoria}>
                       {categoria}
