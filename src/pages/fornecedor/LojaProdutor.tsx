@@ -7,7 +7,7 @@ import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import ReuseOfferModal from '@/components/fornecedor/ReuseOfferModal';
 import ProductAnalysisModal from '@/components/fornecedor/ProductAnalysisModal';
 import ProductCycleCard from '@/components/fornecedor/ProductCycleCard';
-import { Plus, Package, Calendar, Settings, LogOut, AlertTriangle, CheckCircle, Clock, FileDown } from 'lucide-react';
+import { Plus, Package, Calendar, Settings, LogOut, AlertTriangle, CheckCircle, Clock, FileDown, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { ProductInCycle, PreviousCycleData } from '@/types/product-cycle';
@@ -111,10 +111,10 @@ const LojaProdutor = () => {
 
   // Check for previous cycle on component mount
   useEffect(() => {
-    if (isFirstAccess && hasPreviousCycle && cycleProducts.length === 0) {
+    if (isFirstAccess && hasPreviousCycle) {
       setShowReuseModal(true);
     }
-  }, [isFirstAccess, hasPreviousCycle, cycleProducts.length]);
+  }, [isFirstAccess, hasPreviousCycle]);
 
   const handleLogout = () => {
     localStorage.removeItem('fornecedorAuth');
@@ -122,22 +122,53 @@ const LojaProdutor = () => {
   };
 
   const handleReuseOffers = () => {
-    // Add previous cycle products as drafts
-    const reusedProducts = mockPreviousCycle.products.map(product => ({
-      ...product,
-      id: `reused-${Date.now()}-${product.id}`,
-      status: 'draft' as const,
-      lastUpdated: new Date(),
-      expiryDate: undefined, // Clear expiry date for review
-      pricePerUnit: product.pricePerUnit // Keep previous price for reference
-    }));
+    // Get current cycle dates (mock - in real app this would come from API)
+    const currentCycleStart = new Date('2024-02-01');
+    const currentCycleEnd = new Date('2024-02-07');
+    
+    // Filter products that don't already exist in current cycle
+    const existingProductIds = cycleProducts.map(p => p.productId);
+    const eligibleProducts = mockPreviousCycle.products.filter(
+      product => !existingProductIds.includes(product.productId)
+    );
+    
+    if (eligibleProducts.length === 0) {
+      toast({
+        title: "Nenhum produto elegível",
+        description: "Nenhum produto elegível no ciclo anterior.",
+      });
+      setShowReuseModal(false);
+      return;
+    }
+    
+    const reusedProducts = eligibleProducts.map(product => {
+      // Check if expiry date is within current cycle
+      let expiryDate = product.expiryDate;
+      let needsDateReview = false;
+      
+      if (expiryDate && (expiryDate < currentCycleStart || expiryDate > currentCycleEnd)) {
+        expiryDate = undefined; // Clear invalid date
+        needsDateReview = true;
+      }
+      
+      return {
+        ...product,
+        id: `reused-${Date.now()}-${product.productId}`,
+        status: 'draft' as const,
+        lastUpdated: new Date(),
+        expiryDate,
+        needsDateReview // Flag to show warning later
+      };
+    });
     
     setCycleProducts(prev => [...prev, ...reusedProducts]);
     setShowReuseModal(false);
     
+    const dateReviewCount = reusedProducts.filter(p => p.needsDateReview).length;
+    
     toast({
-      title: "Ofertas reutilizadas",
-      description: `${reusedProducts.length} produtos foram adicionados como rascunho para revisão`,
+      title: "Produtos reutilizados",
+      description: `${reusedProducts.length} produtos foram trazidos do ciclo anterior como rascunho.${dateReviewCount > 0 ? ` ${dateReviewCount} produto(s) precisam de nova data de validade.` : ''}`,
     });
   };
 
@@ -313,7 +344,7 @@ const LojaProdutor = () => {
             </div>
           </div>
 
-          <div className="col-span-2 lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1 space-y-2">
             <Button
               variant="outline"
               className="w-full h-full flex flex-col items-center justify-center space-y-1 bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200 hover:border-purple-300"
@@ -325,22 +356,24 @@ const LojaProdutor = () => {
               <FileDown className="w-6 h-6 text-purple-600" />
               <span className="text-sm font-medium text-purple-700">Exportar Ciclo</span>
             </Button>
+            
+            {hasPreviousCycle && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowReuseModal(true)}
+                className="w-full text-xs text-muted-foreground hover:text-primary flex items-center justify-center space-x-1"
+              >
+                <RefreshCw className="w-3 h-3" />
+                <span>Reutilizar ciclo anterior</span>
+              </Button>
+            )}
           </div>
         </div>
 
         {/* Meus Produtos no Ciclo */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Meus Produtos no Ciclo</h2>
-            <Button 
-              onClick={() => navigate('/fornecedor/pre-cadastro-produtos')}
-              size="sm"
-              className="flex items-center space-x-1"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Adicionar Produto</span>
-            </Button>
-          </div>
+          <h2 className="text-xl font-semibold">Meus Produtos no Ciclo</h2>
 
           {/* Tabs for filtering */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
