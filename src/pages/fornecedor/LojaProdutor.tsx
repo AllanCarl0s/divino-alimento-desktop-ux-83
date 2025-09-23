@@ -264,7 +264,7 @@ const LojaProdutor = () => {
               className="flex items-center space-x-1 flex-1 lg:flex-none"
             >
               <Plus className="w-4 h-4" />
-              <span className="lg:inline">Produto</span>
+              <span className="lg:inline">Adicionar Produto</span>
             </Button>
             <Button
               variant="outline"
@@ -439,13 +439,13 @@ const LojaProdutor = () => {
               className="px-8 py-3 text-base font-medium"
               onClick={() => {
                 toast({
-                  title: "Ciclo publicado",
+                  title: "Produtos ofertados",
                   description: `${approvedCount} produtos foram publicados para oferta`,
                 });
               }}
             >
               <CheckCircle className="w-5 h-5 mr-2" />
-              Publicar Ciclo ({approvedCount} produtos)
+              Ofertar Produtos ({approvedCount} produtos)
             </Button>
           </div>
         )}
