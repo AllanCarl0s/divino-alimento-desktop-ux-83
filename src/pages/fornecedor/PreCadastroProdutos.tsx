@@ -100,7 +100,7 @@ const PreCadastroProdutos = () => {
     return newErrors;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, action: 'save' | 'saveAndReturn' = 'save') => {
     e.preventDefault();
     
     const validationErrors = validateForm();
@@ -115,11 +115,28 @@ const PreCadastroProdutos = () => {
     setTimeout(() => {
       setIsLoading(false);
       toast({
-        title: "Produto cadastrado!",
-        description: "O produto foi enviado para análise e aprovação.",
+        title: "Metadados salvos!",
+        description: "Você pode ofertar este produto no ciclo.",
       });
-      navigate('/fornecedor/loja');
+      
+      if (action === 'saveAndReturn') {
+        navigate('/fornecedor/loja');
+      }
     }, 1500);
+  };
+
+  const handleSaveMetadata = () => {
+    const form = document.createElement('form');
+    const event = new Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent = () => true;
+    handleSubmit(event as any, 'save');
+  };
+
+  const handleSaveAndReturn = () => {
+    const form = document.createElement('form');
+    const event = new Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent = () => true;
+    handleSubmit(event as any, 'saveAndReturn');
   };
 
   return (
@@ -366,14 +383,33 @@ const PreCadastroProdutos = () => {
                 />
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading}
-                size="lg"
-              >
-                {isLoading ? "Cadastrando..." : "Cadastrar Produto"}
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  onClick={() => navigate('/fornecedor/loja')}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  onClick={handleSaveMetadata}
+                  disabled={isLoading}
+                  className="flex-1"
+                >
+                  {isLoading ? "Salvando..." : "Salvar Metadados"}
+                </Button>
+                <Button 
+                  type="button" 
+                  onClick={handleSaveAndReturn}
+                  disabled={isLoading}
+                  className="flex-1"
+                >
+                  {isLoading ? "Salvando..." : "Salvar e Voltar"}
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>

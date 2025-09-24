@@ -7,7 +7,6 @@ import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import ReuseOfferModal from '@/components/fornecedor/ReuseOfferModal';
 import ProductAnalysisModal from '@/components/fornecedor/ProductAnalysisModal';
 import ProductCycleCard from '@/components/fornecedor/ProductCycleCard';
-import AddProductModal from '@/components/fornecedor/AddProductModal';
 import { Plus, Package, Calendar, Settings, LogOut, AlertTriangle, CheckCircle, Clock, FileDown, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -103,7 +102,6 @@ const LojaProdutor = () => {
   const [cycleProducts, setCycleProducts] = useState<ProductInCycle[]>(mockCycleProducts);
   const [showReuseModal, setShowReuseModal] = useState(false);
   const [showAnalysisModal, setShowAnalysisModal] = useState(false);
-  const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductInCycle | null>(null);
   const [hasPreviousCycle] = useState(true);
   const [isFirstAccess] = useState(true); // Simulate first access to cycle
@@ -229,39 +227,6 @@ const LojaProdutor = () => {
     });
   };
 
-  // Handlers for Add Product Modal
-  const handleAddProductDraft = (productData: Omit<ProductInCycle, 'id' | 'lastUpdated' | 'updatedBy'>) => {
-    const newProduct: ProductInCycle = {
-      ...productData,
-      id: `new-${Date.now()}`,
-      lastUpdated: new Date(),
-      updatedBy: 'João da Silva'
-    };
-    
-    setCycleProducts(prev => [...prev, newProduct]);
-    
-    toast({
-      title: "Produto adicionado",
-      description: "Produto salvo como rascunho",
-    });
-  };
-
-  const handleAddProductApprove = (productData: Omit<ProductInCycle, 'id' | 'lastUpdated' | 'updatedBy'>) => {
-    const newProduct: ProductInCycle = {
-      ...productData,
-      id: `new-${Date.now()}`,
-      lastUpdated: new Date(),
-      updatedBy: 'João da Silva'
-    };
-    
-    setCycleProducts(prev => [...prev, newProduct]);
-    
-    toast({
-      title: "Produto aprovado",
-      description: "Produto adicionado e aprovado para oferta",
-    });
-  };
-
   const filterProducts = (products: ProductInCycle[]) => {
     if (activeTab === 'todos') return products;
     return products.filter(product => product.status === activeTab);
@@ -294,7 +259,7 @@ const LojaProdutor = () => {
           </div>
           <div className="flex items-center space-x-2 lg:space-x-3">
             <Button 
-              onClick={() => setShowAddProductModal(true)}
+              onClick={() => navigate('/fornecedor/pre-cadastro-produtos')}
               size="sm"
               className="flex items-center space-x-1 flex-1 lg:flex-none"
             >
@@ -501,14 +466,6 @@ const LojaProdutor = () => {
           product={selectedProduct}
           onSaveDraft={handleSaveDraft}
           onApprove={handleApproveProduct}
-        />
-
-        {/* Add Product Modal */}
-        <AddProductModal
-          isOpen={showAddProductModal}
-          onClose={() => setShowAddProductModal(false)}
-          onSaveDraft={handleAddProductDraft}
-          onApprove={handleAddProductApprove}
         />
 
       </div>
