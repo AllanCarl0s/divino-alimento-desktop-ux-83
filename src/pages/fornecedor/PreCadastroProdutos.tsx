@@ -14,6 +14,7 @@ import { ArrowLeft, Package, Camera, Calendar, MapPin, AlertCircle, CheckCircle2
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { produtosReferencia, categorias, type ProdutoReferencia } from '@/data/produtos-referencia';
+import { getMercadosAtivos } from '@/data/mercados-locais';
 
 const PreCadastroProdutos = () => {
   const [formData, setFormData] = useState({
@@ -36,6 +37,9 @@ const PreCadastroProdutos = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Mercados ativos
+  const mercadosAtivos = getMercadosAtivos();
 
   // Filtered products for the reference table
   const filteredProducts = useMemo(() => {
@@ -131,8 +135,8 @@ const PreCadastroProdutos = () => {
       newErrors.harvestPeriod = 'Selecione pelo menos um mês de colheita';
     }
 
-    if (!formData.priorityMarket.trim()) {
-      newErrors.priorityMarket = 'Mercado prioritário é obrigatório';
+    if (!formData.priorityMarket) {
+      newErrors.priorityMarket = 'É obrigatório indicar um mercado prioritário de venda.';
     }
 
     return newErrors;
@@ -149,7 +153,21 @@ const PreCadastroProdutos = () => {
 
     setIsLoading(true);
     
-    // Simulate API call
+    // Simulate API call with metadata persistence
+    const mercadoSelecionado = mercadosAtivos.find(m => m.id === formData.priorityMarket);
+    
+    const metadados = {
+      certificado: formData.certified,
+      agricultura_familiar: formData.familyFarming,
+      outras_caracteristicas: formData.characteristics,
+      meses_colheita: formData.harvestPeriod,
+      mercado_prioritario_id: formData.priorityMarket,
+      mercado_prioritario_nome: mercadoSelecionado?.nome || '',
+      mercado_prioritario_tipo: mercadoSelecionado?.tipo || ''
+    };
+    
+    console.log('Metadados salvos:', metadados);
+    
     setTimeout(() => {
       setIsLoading(false);
       toast({
@@ -473,16 +491,29 @@ const PreCadastroProdutos = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="priorityMarket" className="text-sm font-medium">
-                    Mercado Prioritário
+                    Mercado Prioritário *
                   </Label>
-                  <Input
-                    id="priorityMarket"
-                    type="text"
-                    placeholder="Ex: Mercado Local, Regional"
-                    value={formData.priorityMarket}
-                    onChange={(e) => handleInputChange('priorityMarket', e.target.value)}
-                    className="focus-ring"
-                  />
+                  <Select value={formData.priorityMarket} onValueChange={(value) => handleInputChange('priorityMarket', value)}>
+                    <SelectTrigger className={`focus-ring ${errors.priorityMarket ? 'border-destructive' : ''}`}>
+                      <SelectValue placeholder="Selecione o mercado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {mercadosAtivos.map((mercado) => (
+                        <SelectItem key={mercado.id} value={mercado.id}>
+                          <div className="flex flex-col">
+                            <span>{mercado.nome}</span>
+                            <span className="text-sm text-muted-foreground">{mercado.tipo}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.priorityMarket && (
+                    <div className="flex items-center space-x-1 text-sm text-destructive">
+                      <AlertCircle className="w-3 h-3" />
+                      <span>{errors.priorityMarket}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

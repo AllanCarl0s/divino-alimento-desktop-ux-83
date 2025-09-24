@@ -14,6 +14,15 @@ export interface ProductInCycle {
   description?: string;
   lastUpdated: Date;
   updatedBy: string;
+  metadados?: {
+    mercado_prioritario_id?: string;
+    mercado_prioritario_nome?: string;
+    mercado_prioritario_tipo?: string;
+    certificado?: boolean;
+    agricultura_familiar?: boolean;
+    outras_caracteristicas?: string;
+    meses_colheita?: string[];
+  };
 }
 
 export interface CycleOffer {

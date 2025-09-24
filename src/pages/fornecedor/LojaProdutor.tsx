@@ -28,7 +28,15 @@ const mockCycleProducts: ProductInCycle[] = [
     familyFarming: true,
     description: 'Tomate orgânico cultivado sem agrotóxicos',
     lastUpdated: new Date('2024-01-15'),
-    updatedBy: 'João da Silva'
+    updatedBy: 'João da Silva',
+    metadados: {
+      mercado_prioritario_id: 'mc',
+      mercado_prioritario_nome: 'Mercado Central',
+      mercado_prioritario_tipo: 'Cestas',
+      certificado: true,
+      agricultura_familiar: true,
+      meses_colheita: ['janeiro', 'fevereiro', 'março']
+    }
   },
   {
     id: '2',
@@ -44,7 +52,14 @@ const mockCycleProducts: ProductInCycle[] = [
     familyFarming: true,
     description: 'Alface hidropônica fresca',
     lastUpdated: new Date('2024-01-20'),
-    updatedBy: 'João da Silva'
+    updatedBy: 'João da Silva',
+    metadados: {
+      mercado_prioritario_id: 'fo',
+      mercado_prioritario_nome: 'Feira Orgânica',
+      mercado_prioritario_tipo: 'Cestas',
+      agricultura_familiar: true,
+      meses_colheita: ['abril', 'maio', 'junho']
+    }
   },
   {
     id: '3',

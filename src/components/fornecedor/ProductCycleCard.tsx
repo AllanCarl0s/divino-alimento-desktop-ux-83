@@ -77,6 +77,11 @@ const ProductCycleCard: React.FC<ProductCycleCardProps> = ({
                   Agricultura Familiar
                 </Badge>
               )}
+              {localProduct.metadados?.mercado_prioritario_nome && (
+                <Badge variant="outline" className="text-xs text-blue-700 bg-blue-50">
+                  Prioritário: {localProduct.metadados.mercado_prioritario_nome}
+                </Badge>
+              )}
             </div>
           </div>
           <div className="flex space-x-1">
