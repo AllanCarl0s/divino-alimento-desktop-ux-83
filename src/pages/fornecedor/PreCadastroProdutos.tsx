@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,16 +8,20 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import { ArrowLeft, Package, Camera, Calendar, MapPin, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Package, Camera, Calendar, MapPin, AlertCircle, CheckCircle2, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { produtosReferencia, categorias, type ProdutoReferencia } from '@/data/produtos-referencia';
 
 const PreCadastroProdutos = () => {
   const [formData, setFormData] = useState({
     name: '',
+    category: '',
     unit: '',
     conversionFactor: '1',
+    price: '',
     certified: false,
     familyFarming: false,
     characteristics: '',
@@ -26,10 +30,36 @@ const PreCadastroProdutos = () => {
     priorityMarket: '',
     notes: ''
   });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Filtered products for the reference table
+  const filteredProducts = useMemo(() => {
+    return produtosReferencia.filter(product => {
+      const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = categoryFilter === 'all' || product.categoria === categoryFilter;
+      return product.ativo && matchesSearch && matchesCategory;
+    });
+  }, [searchTerm, categoryFilter]);
+
+  const handleUseAsBase = (product: ProdutoReferencia) => {
+    setFormData(prev => ({
+      ...prev,
+      name: product.nome,
+      category: product.categoria,
+      unit: product.unidade,
+      price: product.preco_referencia.toFixed(2)
+    }));
+    
+    toast({
+      title: "Referência aplicada",
+      description: "Revise preço e validade para este ciclo.",
+    });
+  };
 
   const units = [
     { value: 'kg', label: 'Quilograma (kg)', factor: '1' },
@@ -95,6 +125,14 @@ const PreCadastroProdutos = () => {
 
     if (!formData.conversionFactor || isNaN(Number(formData.conversionFactor))) {
       newErrors.conversionFactor = 'Fator de conversão deve ser um número válido';
+    }
+
+    if (formData.harvestPeriod.length === 0) {
+      newErrors.harvestPeriod = 'Selecione pelo menos um mês de colheita';
+    }
+
+    if (!formData.priorityMarket.trim()) {
+      newErrors.priorityMarket = 'Mercado prioritário é obrigatório';
     }
 
     return newErrors;
@@ -165,6 +203,79 @@ const PreCadastroProdutos = () => {
           </CardHeader>
           
           <CardContent className="space-y-6">
+            {/* Referência (Opcional) */}
+            <div className="space-y-4">
+              <h3 className="font-medium text-foreground">Referência (Opcional)</h3>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <Input
+                    type="text"
+                    placeholder="Buscar por nome..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 focus-ring"
+                  />
+                </div>
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger className="w-full sm:w-48 focus-ring">
+                    <SelectValue placeholder="Todas as categorias" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as categorias</SelectItem>
+                    {categorias.map((categoria) => (
+                      <SelectItem key={categoria} value={categoria}>
+                        {categoria}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {filteredProducts.length > 0 ? (
+                <div className="border rounded-lg overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Nome</TableHead>
+                        <TableHead>Categoria</TableHead>
+                        <TableHead>Unidade</TableHead>
+                        <TableHead>Preço Ref.</TableHead>
+                        <TableHead className="text-right">Ação</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredProducts.map((product) => (
+                        <TableRow key={product.id}>
+                          <TableCell className="font-medium">{product.nome}</TableCell>
+                          <TableCell>{product.categoria}</TableCell>
+                          <TableCell>{product.unidade}</TableCell>
+                          <TableCell>R$ {product.preco_referencia.toFixed(2).replace('.', ',')}</TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleUseAsBase(product)}
+                              className="text-primary hover:bg-primary/10"
+                            >
+                              Usar como base
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Package className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>Nenhum produto encontrado</p>
+                </div>
+              )}
+            </div>
+
+            <Separator />
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Informações Básicas */}
               <div className="space-y-4">
@@ -189,6 +300,20 @@ const PreCadastroProdutos = () => {
                       <span>{errors.name}</span>
                     </div>
                   )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-sm font-medium">
+                    Categoria
+                  </Label>
+                  <Input
+                    id="category"
+                    type="text"
+                    placeholder="Ex: Hortaliças, Derivados"
+                    value={formData.category}
+                    onChange={(e) => handleInputChange('category', e.target.value)}
+                    className="focus-ring"
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -237,6 +362,21 @@ const PreCadastroProdutos = () => {
                       </div>
                     )}
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="price" className="text-sm font-medium">
+                    Preço do Ciclo (R$)
+                  </Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    step="0.01"
+                    placeholder="0,00"
+                    value={formData.price}
+                    onChange={(e) => handleInputChange('price', e.target.value)}
+                    className="focus-ring"
+                  />
                 </div>
 
                 <div className="bg-muted/50 p-3 rounded-lg">
