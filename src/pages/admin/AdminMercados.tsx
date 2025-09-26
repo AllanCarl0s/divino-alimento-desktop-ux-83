@@ -7,8 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import { ArrowLeft, Plus, Store, MapPin, Package, Trash2, Edit, Save, Search, Filter } from 'lucide-react';
+import { ArrowLeft, Plus, Store, MapPin, Package, Trash2, Edit, Save, Search, Filter, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -20,20 +21,39 @@ const mockProducts = [
   { id: 4, name: 'Brócolis', price: 6.00 }
 ];
 
+const mockMarketAdministrators = [
+  { id: 1, name: 'João Silva', email: 'joao.silva@admin.com' },
+  { id: 2, name: 'Maria Santos', email: 'maria.santos@admin.com' },
+  { id: 3, name: 'Pedro Costa', email: 'pedro.costa@admin.com' },
+  { id: 4, name: 'Ana Paula', email: 'ana.paula@admin.com' }
+];
+
+const marketTypeOptions = [
+  { value: 'cesta', label: 'Cesta' },
+  { value: 'lote', label: 'Lote' },
+  { value: 'venda_direta', label: 'Venda Direta' }
+];
+
 const mockMarkets = [
   {
     id: 1,
     name: 'Mercado Central',
     deliveryPoints: ['Centro', 'Zona Norte'],
     products: [1, 2, 3],
-    totalProducts: 3
+    totalProducts: 3,
+    type: 'cesta',
+    administratorId: 1,
+    administrativeFee: 5
   },
   {
     id: 2,
     name: 'Feira Livre',
     deliveryPoints: ['Bairro Alto', 'Vila Nova'],
     products: [2, 4],
-    totalProducts: 2
+    totalProducts: 2,
+    type: 'venda_direta',
+    administratorId: 2,
+    administrativeFee: null
   }
 ];
 
@@ -45,7 +65,10 @@ const AdminMercados = () => {
   const [newMarket, setNewMarket] = useState({ 
     name: '', 
     deliveryPoints: [''], 
-    products: [] as number[] 
+    products: [] as number[],
+    type: '',
+    administratorId: null as number | null,
+    administrativeFee: null as number | null
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -113,6 +136,15 @@ const AdminMercados = () => {
     return mockProducts.find(p => p.id === id)?.name || '';
   };
 
+  const getAdministratorName = (id: number | null) => {
+    if (!id) return '';
+    return mockMarketAdministrators.find(admin => admin.id === id)?.name || '';
+  };
+
+  const getMarketTypeLabel = (type: string) => {
+    return marketTypeOptions.find(option => option.value === type)?.label || '';
+  };
+
   const startEditMarket = (market: typeof mockMarkets[0]) => {
     setEditData({...market});
     setIsEditingMarket(true);
@@ -142,7 +174,7 @@ const AdminMercados = () => {
   );
 
   const saveMarket = () => {
-    if (!newMarket.name || newMarket.deliveryPoints.some(point => !point.trim())) {
+    if (!newMarket.name || newMarket.deliveryPoints.some(point => !point.trim()) || !newMarket.type || !newMarket.administratorId) {
       toast({
         title: "Erro",
         description: "Preencha todos os campos obrigatórios",
@@ -156,11 +188,14 @@ const AdminMercados = () => {
       name: newMarket.name,
       deliveryPoints: newMarket.deliveryPoints.filter(point => point.trim()),
       products: newMarket.products,
-      totalProducts: newMarket.products.length
+      totalProducts: newMarket.products.length,
+      type: newMarket.type,
+      administratorId: newMarket.administratorId,
+      administrativeFee: newMarket.administrativeFee
     };
 
     setMarkets([...markets, market]);
-    setNewMarket({ name: '', deliveryPoints: [''], products: [] });
+    setNewMarket({ name: '', deliveryPoints: [''], products: [], type: '', administratorId: null, administrativeFee: null });
     setIsDialogOpen(false);
     setSelectedMarket(market); // Auto-select new market
     
@@ -363,6 +398,87 @@ const AdminMercados = () => {
                         disabled={!isEditingMarket}
                         className="mt-2"
                       />
+                    </div>
+
+                    <div>
+                      <Label>Tipo de Mercado</Label>
+                      {isEditingMarket ? (
+                        <Select
+                          value={editData?.type || ''}
+                          onValueChange={(value) => setEditData(prev => prev ? { ...prev, type: value } : null)}
+                        >
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Selecione o tipo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {marketTypeOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <div className="mt-2 p-3 bg-muted/30 rounded-lg border">
+                          <span className="text-sm font-medium">{getMarketTypeLabel(selectedMarket.type)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label>Administrador Responsável</Label>
+                      {isEditingMarket ? (
+                        <Select
+                          value={editData?.administratorId?.toString() || ''}
+                          onValueChange={(value) => setEditData(prev => prev ? { ...prev, administratorId: parseInt(value) } : null)}
+                        >
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Selecione o administrador" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {mockMarketAdministrators.map((admin) => (
+                              <SelectItem key={admin.id} value={admin.id.toString()}>
+                                <div className="flex items-center space-x-2">
+                                  <User className="w-4 h-4" />
+                                  <span>{admin.name}</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <div className="mt-2 p-3 bg-muted/30 rounded-lg border">
+                          <div className="flex items-center space-x-2">
+                            <User className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm font-medium">{getAdministratorName(selectedMarket.administratorId)}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label>Taxa Administrativa (%)</Label>
+                      {isEditingMarket ? (
+                        <Input
+                          type="number"
+                          value={editData?.administrativeFee || ''}
+                          onChange={(e) => setEditData(prev => prev ? { 
+                            ...prev, 
+                            administrativeFee: e.target.value ? parseFloat(e.target.value) : null 
+                          } : null)}
+                          placeholder="Ex: 5.0"
+                          min="0"
+                          max="100"
+                          step="0.1"
+                          className="mt-2"
+                        />
+                      ) : (
+                        <div className="mt-2 p-3 bg-muted/30 rounded-lg border">
+                          <span className="text-sm font-medium">
+                            {selectedMarket.administrativeFee ? `${selectedMarket.administrativeFee}%` : 'Não aplicável'}
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     <div>
@@ -571,12 +687,71 @@ const AdminMercados = () => {
                 <h4 className="font-medium">Informações Básicas</h4>
                 
                 <div>
-                  <Label htmlFor="newMarketName">Nome do Mercado</Label>
+                  <Label htmlFor="newMarketName">Nome do Mercado *</Label>
                   <Input
                     id="newMarketName"
                     value={newMarket.name}
                     onChange={(e) => setNewMarket(prev => ({ ...prev, name: e.target.value }))}
                     placeholder="Ex: Mercado Central"
+                    className="mt-2"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="marketType">Tipo de Mercado *</Label>
+                  <Select
+                    value={newMarket.type}
+                    onValueChange={(value) => setNewMarket(prev => ({ ...prev, type: value }))}
+                  >
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {marketTypeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="administrator">Administrador Responsável *</Label>
+                  <Select
+                    value={newMarket.administratorId?.toString() || ''}
+                    onValueChange={(value) => setNewMarket(prev => ({ ...prev, administratorId: parseInt(value) }))}
+                  >
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Selecione o administrador" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {mockMarketAdministrators.map((admin) => (
+                        <SelectItem key={admin.id} value={admin.id.toString()}>
+                          <div className="flex items-center space-x-2">
+                            <User className="w-4 h-4" />
+                            <span>{admin.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="administrativeFee">Taxa Administrativa (%)</Label>
+                  <Input
+                    id="administrativeFee"
+                    type="number"
+                    value={newMarket.administrativeFee || ''}
+                    onChange={(e) => setNewMarket(prev => ({ 
+                      ...prev, 
+                      administrativeFee: e.target.value ? parseFloat(e.target.value) : null 
+                    }))}
+                    placeholder="Ex: 5.0"
+                    min="0"
+                    max="100"
+                    step="0.1"
                     className="mt-2"
                   />
                 </div>
