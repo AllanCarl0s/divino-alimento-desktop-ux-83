@@ -45,6 +45,7 @@ import AdminKitandinhaComposicao from "./pages/admin/AdminKitandinhaComposicao";
 import AdminKitandinhaResumo from "./pages/admin/AdminKitandinhaResumo";
 import AdminKitandinhaGestao from "./pages/admin/AdminKitandinhaGestao";
 import AdminRelatorios from "./pages/admin/AdminRelatorios";
+import Usuarios from "./pages/Usuarios";
 
 const queryClient = new QueryClient();
 
@@ -100,6 +101,7 @@ const App = () => (
           <Route path="/admin/kitandinha/resumo/:id" element={<AdminKitandinhaResumo />} />
           <Route path="/admin/kitandinha/gestao/:id" element={<AdminKitandinhaGestao />} />
           <Route path="/admin/relatorios" element={<AdminRelatorios />} />
+          <Route path="/usuarios" element={<Usuarios />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -55,6 +55,13 @@ const AdminDashboard = () => {
       badge: null
     },
     {
+      title: 'Usuários',
+      description: 'Gerenciar perfis e acessos',
+      icon: Users,
+      route: '/usuarios',
+      badge: null
+    },
+    {
       title: 'Página de Venda',
       description: 'Configurar ofertas e cestas',
       icon: ShoppingCart,
