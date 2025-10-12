@@ -198,6 +198,55 @@ const AdminCiclo = () => {
           const novoTipo = tiposPermitidos.includes(tipoAtual) ? tipoAtual : (tiposPermitidos[0] as TipoVenda);
           return { ...m, [field]: value, tipo_venda: novoTipo };
         }
+        
+        // Se mudou a ordem de atendimento, reordenar os mercados
+        if (field === 'ordem_atendimento') {
+          const novaOrdem = parseInt(value.toString());
+          if (isNaN(novaOrdem) || novaOrdem < 1 || novaOrdem > mercados.length) {
+            return m;
+          }
+          
+          // Encontrar o mercado que está sendo reordenado
+          const mercadoAtual = mercados.find(item => item.id === id);
+          if (!mercadoAtual) return m;
+          
+          const ordemAntiga = mercadoAtual.ordem_atendimento;
+          
+          // Se a ordem não mudou, retornar o mercado sem alterações
+          if (ordemAntiga === novaOrdem) return m;
+          
+          // Ajustar a ordem dos outros mercados
+          const outrosMercados = mercados.filter(item => item.id !== id);
+          const reordenados = outrosMercados.map(item => {
+            if (ordemAntiga < novaOrdem) {
+              // Movendo para baixo: ajustar mercados entre ordemAntiga e novaOrdem
+              if (item.ordem_atendimento > ordemAntiga && item.ordem_atendimento <= novaOrdem) {
+                return { ...item, ordem_atendimento: item.ordem_atendimento - 1 };
+              }
+            } else {
+              // Movendo para cima: ajustar mercados entre novaOrdem e ordemAntiga
+              if (item.ordem_atendimento >= novaOrdem && item.ordem_atendimento < ordemAntiga) {
+                return { ...item, ordem_atendimento: item.ordem_atendimento + 1 };
+              }
+            }
+            return item;
+          });
+          
+          // Atualizar a ordem do mercado atual
+          const mercadoAtualizado = { ...mercadoAtual, ordem_atendimento: novaOrdem };
+          
+          // Combinar e reordenar
+          const todosReordenados = [...reordenados, mercadoAtualizado].sort((a, b) => a.ordem_atendimento - b.ordem_atendimento);
+          
+          // Atualizar o estado com os mercados reordenados
+          setMercados(todosReordenados);
+          
+          // Rolar até o mercado reordenado
+          setTimeout(() => scrollToMercado(id), 100);
+          
+          return mercadoAtualizado;
+        }
+        
         return { ...m, [field]: value };
       }
       return m;
@@ -303,6 +352,11 @@ const AdminCiclo = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-primary">
               {isEdit ? 'Editar Ciclo' : 'Novo Ciclo'}
             </h1>
+            {isEdit && administradorResponsavel && (
+              <p className="text-sm text-muted-foreground mt-1">
+                Responsável: {administradoresDisponiveis.find(a => a.id === administradorResponsavel)?.nome}
+              </p>
+            )}
           </div>
           {isEdit && (
             <Badge className={status === 'ativo' ? 'bg-green-500' : 'bg-orange-500'}>

@@ -58,7 +58,7 @@ import AdminKitandinhaGestao from "./pages/admin/AdminKitandinhaGestao";
 import AdminRelatorios from "./pages/admin/AdminRelatorios";
 import AdminCicloIndex from "./pages/admin/AdminCicloIndex";
 import AdminCiclo from "./pages/admin/AdminCiclo";
-import OfertaCiclo from "./pages/fornecedor/OfertaCiclo";
+import AdminOferta from "./pages/admin/AdminOferta";
 import AdminComposicaoCesta from "./pages/admin/AdminComposicaoCesta";
 import AdminComposicaoLote from "./pages/admin/AdminComposicaoLote";
 import AdminComposicaoVendaDireta from "./pages/admin/AdminComposicaoVendaDireta";
@@ -135,7 +135,7 @@ const App = () => (
           <Route path="/admin/ciclo-index" element={<AdminCicloIndex />} />
           <Route path="/admin/ciclo" element={<AdminCiclo />} />
           <Route path="/admin/ciclo/:id" element={<AdminCiclo />} />
-          <Route path="/oferta/:id" element={<OfertaCiclo />} />
+          <Route path="/oferta/:id" element={<AdminOferta />} />
           <Route path="/admin/composicao-cesta/:id" element={<AdminComposicaoCesta />} />
           <Route path="/admin/composicao-lote/:id" element={<AdminComposicaoLote />} />
           <Route path="/admin/composicao-venda-direta/:id" element={<AdminComposicaoVendaDireta />} />
