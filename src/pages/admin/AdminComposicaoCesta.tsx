@@ -296,18 +296,18 @@ export default function AdminComposicaoCesta() {
               <CardTitle>Produtos Selecionados</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
+              <Table className="tabela-produtos-selecionados">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-left">Produto</TableHead>
-                    <TableHead className="text-left">Medida</TableHead>
-                    <TableHead className="text-right">Valor Unit.</TableHead>
-                    <TableHead className="text-left">Fornecedor</TableHead>
-                    <TableHead className="text-right">Ofertados</TableHead>
-                    <TableHead className="text-right">Pedidos</TableHead>
-                    <TableHead className="text-right">Valor Acumulado</TableHead>
-                    <TableHead className="text-right">Disponíveis</TableHead>
-                    <TableHead className="text-center">Remover</TableHead>
+                    <TableHead className="td-texto">Produto</TableHead>
+                    <TableHead className="td-texto">Medida</TableHead>
+                    <TableHead className="td-valor">Valor Unit.</TableHead>
+                    <TableHead className="td-texto">Fornecedor</TableHead>
+                    <TableHead className="td-numero">Ofertados</TableHead>
+                    <TableHead className="td-numero">Pedidos</TableHead>
+                    <TableHead className="td-valor">Valor Acumulado</TableHead>
+                    <TableHead className="td-numero">Disponíveis</TableHead>
+                    <TableHead className="td-icone">Remover</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -320,39 +320,38 @@ export default function AdminComposicaoCesta() {
                     
                     return (
                       <TableRow key={item.id}>
-                        <TableCell className="text-left font-medium">{oferta.produto_base}</TableCell>
-                        <TableCell className="text-left">{oferta.unidade}</TableCell>
-                        <TableCell className="text-right tabular-nums">{formatBRL(oferta.valor)}</TableCell>
-                        <TableCell className="text-left">{oferta.fornecedor}</TableCell>
-                        <TableCell className="text-right tabular-nums">{oferta.quantidadeOfertada}</TableCell>
-                        <TableCell className="text-right tabular-nums">
+                        <TableCell className="td-texto font-medium">{oferta.produto_base}</TableCell>
+                        <TableCell className="td-texto">{oferta.unidade}</TableCell>
+                        <TableCell className="td-valor">{formatBRL(oferta.valor)}</TableCell>
+                        <TableCell className="td-texto">{oferta.fornecedor}</TableCell>
+                        <TableCell className="td-numero">{oferta.quantidadeOfertada}</TableCell>
+                        <TableCell className="td-numero">
                           <Input
                             type="number"
                             min={0}
                             max={oferta.quantidadeOfertada}
                             value={item.quantidade}
                             onChange={(e) => handleQuantidadeChange(item.id, Number(e.target.value))}
-                            className="w-20 text-right tabular-nums"
+                            className="w-[60px] text-center tabular-nums mx-auto"
                           />
                         </TableCell>
-                        <TableCell className="text-right font-medium tabular-nums">
+                        <TableCell className="td-valor font-medium">
                           {formatBRL(valorAcumulado)}
                         </TableCell>
-                        <TableCell className="text-right tabular-nums">
+                        <TableCell className="td-numero">
                           <span className={disponiveis < 0 ? 'text-red-600' : ''}>
                             {disponiveis}
                           </span>
                         </TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="td-icone">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => {
-                              // Find the group key for this variant
                               const groupKey = oferta.produto_base;
                               handleClearGroup(groupKey);
                             }}
-                            className="h-8 w-8"
+                            className="h-8 w-8 mx-auto transition-opacity hover:opacity-70"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
