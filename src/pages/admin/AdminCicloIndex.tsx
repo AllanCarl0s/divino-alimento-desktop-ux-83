@@ -35,6 +35,7 @@ export default function AdminCicloIndex() {
   
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [cicloToDelete, setCicloToDelete] = useState<string | null>(null);
+  const [mercadoSelecionado, setMercadoSelecionado] = useState<Record<string, string>>({});
   const [ciclos, setCiclos] = useState<Ciclo[]>([
     { 
       id: '1', 
@@ -106,29 +107,16 @@ export default function AdminCicloIndex() {
   };
 
   const getMercadoAtual = (ciclo: Ciclo): CicloMercado | undefined => {
+    const selecionadoId = mercadoSelecionado[ciclo.id];
+    if (selecionadoId) {
+      return ciclo.mercados.find(m => m.id === selecionadoId);
+    }
     return ciclo.mercados.find(m => m.status_composicao === 'em_andamento') 
       || ciclo.mercados.find(m => m.status_composicao === 'pendente');
   };
 
   const handleMercadoChange = (ciclo: Ciclo, mercadoId: string) => {
-    const mercado = ciclo.mercados.find(m => m.id === mercadoId);
-    if (!mercado) return;
-
-    // Verificar se está bloqueado
-    if (mercado.ordem > 1) {
-      const mercadoAnterior = ciclo.mercados.find(m => m.ordem === mercado.ordem - 1);
-      if (mercadoAnterior && mercadoAnterior.status_composicao !== 'concluida') {
-        toast({ 
-          title: "Mercado bloqueado", 
-          description: "Complete a composição do mercado anterior primeiro.", 
-          variant: "destructive" 
-        });
-        return;
-      }
-    }
-
-    // Navegar para a composição
-    handleComposicao(ciclo, mercado);
+    setMercadoSelecionado(prev => ({ ...prev, [ciclo.id]: mercadoId }));
   };
 
   const handleComposicao = (ciclo: Ciclo, mercado?: CicloMercado) => {
