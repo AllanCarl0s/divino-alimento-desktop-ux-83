@@ -180,7 +180,6 @@ export default function AdminCicloIndex() {
                   <TableHead>Nome do Ciclo</TableHead>
                   <TableHead>Administrador Responsável</TableHead>
                   <TableHead>Período de Ofertas</TableHead>
-                  <TableHead>Mercados</TableHead>
                   <TableHead>Mercado Atual</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
@@ -188,7 +187,7 @@ export default function AdminCicloIndex() {
               </TableHeader>
               <TableBody>
                 {filteredCiclos.length === 0 ? (
-                  <TableRow><TableCell colSpan={7} className="text-center py-8 space-y-4"><p className="text-muted-foreground">{hasActiveFilters() ? 'Sem resultados para os filtros selecionados.' : 'Nenhum ciclo encontrado.'}</p>{hasActiveFilters() && <Button variant="outline" onClick={clearFilters}>Limpar filtros</Button>}</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={6} className="text-center py-8 space-y-4"><p className="text-muted-foreground">{hasActiveFilters() ? 'Sem resultados para os filtros selecionados.' : 'Nenhum ciclo encontrado.'}</p>{hasActiveFilters() && <Button variant="outline" onClick={clearFilters}>Limpar filtros</Button>}</TableCell></TableRow>
                 ) : (
                   filteredCiclos.map((ciclo) => {
                     const mercadoAtual = getMercadoAtual(ciclo);
@@ -197,7 +196,6 @@ export default function AdminCicloIndex() {
                         <TableCell className="font-medium">{ciclo.nome}</TableCell>
                         <TableCell>{ciclo.admin_responsavel_nome}</TableCell>
                         <TableCell>{formatarDataBR(ciclo.inicio_ofertas)} – {formatarDataBR(ciclo.fim_ofertas)}</TableCell>
-                        <TableCell>{ciclo.mercados.length} mercados</TableCell>
                         <TableCell>
                           <Select 
                             value={mercadoAtual?.id || ''} 
