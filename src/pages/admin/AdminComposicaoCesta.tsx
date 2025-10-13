@@ -4,12 +4,13 @@ import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from '@/hooks/use-toast';
-import { Search, ArrowLeft } from 'lucide-react';
+import { Search, ArrowLeft, AlertTriangle } from 'lucide-react';
 
 interface ProdutoOfertado {
   id: string;
@@ -26,6 +27,7 @@ export default function AdminComposicaoCesta() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [busca, setBusca] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [produtos, setProdutos] = useState<ProdutoOfertado[]>([
     {
       id: '1',
@@ -74,47 +76,57 @@ export default function AdminComposicaoCesta() {
 
   const handleToggleProduto = (id: string) => {
     setProdutos(produtos.map(p => 
-      p.id === id ? { ...p, selecionado: !p.selecionado, quantidadePedida: !p.selecionado ? 1 : 0 } : p
+      p.id === id ? { ...p, selecionado: !p.selecionado, quantidadePedida: !p.selecionado ? 0 : 0 } : p
     ));
   };
 
   const handleQuantidadeChange = (id: string, quantidade: number) => {
-    setProdutos(produtos.map(p => 
-      p.id === id ? { ...p, quantidadePedida: Math.max(0, Math.min(quantidade, p.quantidadeOfertada)) } : p
-    ));
+    const validQuantity = Math.max(0, Math.min(quantidade, produtos.find(p => p.id === id)?.quantidadeOfertada || 0));
+    
+    setProdutos(produtos.map(p => {
+      if (p.id === id) {
+        // Se quantidade for 0, remover da seleção
+        if (validQuantity === 0) {
+          return { ...p, quantidadePedida: 0, selecionado: false };
+        }
+        return { ...p, quantidadePedida: validQuantity };
+      }
+      return p;
+    }));
   };
 
-  const handleSalvar = () => {
-    const selecionados = produtos.filter(p => p.selecionado);
-    if (selecionados.length === 0) {
-      toast({
-        title: "Erro",
-        description: "Selecione pelo menos um produto.",
-        variant: "destructive"
-      });
-      return;
-    }
+  const handlePublicar = () => {
+    const selecionados = produtos.filter(p => p.selecionado && p.quantidadePedida > 0);
+    
+    // Preparar dados para envio
+    const payload = selecionados.map(p => ({
+      produto_id: p.id,
+      fornecedor_id: p.fornecedor, // Aqui você usaria o ID real do fornecedor
+      valor_unit: p.valor,
+      pedidos: p.quantidadePedida
+    }));
 
-    if (saldo < 0) {
+    setIsLoading(true);
+    
+    // Simular chamada ao backend
+    setTimeout(() => {
+      setIsLoading(false);
       toast({
-        title: "Erro",
-        description: "O valor total excede o valor máximo por cesta.",
-        variant: "destructive"
+        title: "✅ Cesta publicada com sucesso.",
+        className: "bg-green-600 text-white border-green-700",
       });
-      return;
-    }
-
-    toast({
-      title: "Composição salva!",
-      description: "A composição das cestas foi atualizada com sucesso.",
-    });
+      console.log('Dados enviados:', payload);
+    }, 1000);
   };
 
-  const produtosSelecionados = produtos.filter(p => p.selecionado);
+  const produtosSelecionados = produtos.filter(p => p.selecionado && p.quantidadePedida > 0);
   const produtosFiltrados = produtos.filter(p => 
     p.nome.toLowerCase().includes(busca.toLowerCase()) ||
     p.fornecedor.toLowerCase().includes(busca.toLowerCase())
   );
+
+  const podePublicar = valorAtual <= ciclo.valorMaximo && produtosSelecionados.length > 0;
+  const excedeuValor = valorAtual > ciclo.valorMaximo;
 
   return (
     <ResponsiveLayout
@@ -130,8 +142,18 @@ export default function AdminComposicaoCesta() {
       }
     >
       <div className="space-y-6">
-        {/* Cabeçalho com informações do ciclo */}
-        <Card>
+        {/* Banner de alerta quando excede valor máximo */}
+        {excedeuValor && (
+          <Alert variant="destructive" className="sticky top-0 z-50">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              ⚠️ Valor atual excede o valor máximo permitido para este mercado.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Resumo fixo (sticky) */}
+        <Card className="sticky top-0 z-40 shadow-lg">
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
@@ -155,7 +177,7 @@ export default function AdminComposicaoCesta() {
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-muted-foreground">Saldo</p>
-                  <p className={`text-2xl font-bold ${saldo < 0 ? 'text-destructive' : 'text-success'}`}>
+                  <p className={`text-2xl font-bold ${saldo >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     R$ {saldo.toFixed(2).replace('.', ',')}
                   </p>
                 </div>
@@ -165,7 +187,16 @@ export default function AdminComposicaoCesta() {
         </Card>
 
         {/* Produtos Selecionados */}
-        {produtosSelecionados.length > 0 && (
+        {isLoading ? (
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-64 w-full" />
+            </CardContent>
+          </Card>
+        ) : produtosSelecionados.length > 0 ? (
           <Card>
             <CardHeader>
               <CardTitle>Produtos Selecionados</CardTitle>
@@ -210,7 +241,7 @@ export default function AdminComposicaoCesta() {
               </Table>
             </CardContent>
           </Card>
-        )}
+        ) : null}
 
         {/* Todos os Produtos Ofertados */}
         <Card>
@@ -229,43 +260,68 @@ export default function AdminComposicaoCesta() {
             </div>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">Selecionar</TableHead>
-                  <TableHead>Produto</TableHead>
-                  <TableHead>Medida</TableHead>
-                  <TableHead>Valor Unit.</TableHead>
-                  <TableHead>Fornecedor</TableHead>
-                  <TableHead>Quantidade Ofertada</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {produtosFiltrados.map((produto) => (
-                  <TableRow key={produto.id}>
-                    <TableCell>
-                      <Checkbox
-                        checked={produto.selecionado}
-                        onCheckedChange={() => handleToggleProduto(produto.id)}
-                      />
-                    </TableCell>
-                    <TableCell className="font-medium">{produto.nome}</TableCell>
-                    <TableCell>{produto.unidade}</TableCell>
-                    <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
-                    <TableCell>{produto.fornecedor}</TableCell>
-                    <TableCell>{produto.quantidadeOfertada}</TableCell>
+            {isLoading ? (
+              <Skeleton className="h-64 w-full" />
+            ) : produtosFiltrados.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <p>Nenhuma oferta disponível para este ciclo.</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-12">Selecionar</TableHead>
+                    <TableHead>Produto</TableHead>
+                    <TableHead>Medida</TableHead>
+                    <TableHead>Valor Unit.</TableHead>
+                    <TableHead>Fornecedor</TableHead>
+                    <TableHead>Quantidade Ofertada</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {produtosFiltrados.map((produto) => (
+                    <TableRow key={produto.id}>
+                      <TableCell>
+                        <Checkbox
+                          checked={produto.selecionado}
+                          onCheckedChange={() => handleToggleProduto(produto.id)}
+                          disabled={produto.quantidadeOfertada === 0}
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">{produto.nome}</TableCell>
+                      <TableCell>{produto.unidade}</TableCell>
+                      <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
+                      <TableCell>{produto.fornecedor}</TableCell>
+                      <TableCell>{produto.quantidadeOfertada}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
 
             <div className="flex justify-end gap-4 mt-6">
               <Button variant="outline" onClick={() => navigate('/admin/ciclo-index')}>
                 Voltar
               </Button>
-              <Button onClick={handleSalvar}>
-                Salvar Composição
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Button 
+                        onClick={handlePublicar}
+                        disabled={!podePublicar || isLoading}
+                      >
+                        {isLoading ? 'Publicando...' : 'Publicar Cesta'}
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  {!podePublicar && (
+                    <TooltipContent>
+                      <p>Ajuste os produtos para que o valor total não ultrapasse o máximo permitido.</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </CardContent>
         </Card>
