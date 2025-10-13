@@ -28,7 +28,9 @@ export default function AdminComposicaoCesta() {
   const navigate = useNavigate();
   const [busca, setBusca] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [produtos, setProdutos] = useState<ProdutoOfertado[]>([
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
+  const [produtos] = useState<ProdutoOfertado[]>([
     {
       id: '1',
       nome: 'Tomate Orgânico',
@@ -68,43 +70,62 @@ export default function AdminComposicaoCesta() {
     tipo: 'Cesta'
   };
 
-  const valorAtual = produtos
-    .filter(p => p.selecionado)
-    .reduce((acc, p) => acc + (p.valor * p.quantidadePedida), 0);
+  // Lista derivada de produtos selecionados
+  const selectedProducts = produtos.filter(p => selectedIds.has(p.id));
+
+  // Cálculos reativos
+  const valorAtual = selectedProducts.reduce((acc, p) => {
+    const pedidos = composicao.get(p.id) || 0;
+    return acc + (p.valor * pedidos);
+  }, 0);
   
   const saldo = ciclo.valorMaximo - valorAtual;
 
   const handleToggleProduto = (id: string) => {
-    setProdutos(produtos.map(p => 
-      p.id === id ? { ...p, selecionado: !p.selecionado, quantidadePedida: !p.selecionado ? 0 : 0 } : p
-    ));
+    setSelectedIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+        // Remove também da composição
+        setComposicao(prevComp => {
+          const newComp = new Map(prevComp);
+          newComp.delete(id);
+          return newComp;
+        });
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
   const handleQuantidadeChange = (id: string, quantidade: number) => {
-    const validQuantity = Math.max(0, Math.min(quantidade, produtos.find(p => p.id === id)?.quantidadeOfertada || 0));
+    const produto = produtos.find(p => p.id === id);
+    if (!produto) return;
     
-    setProdutos(produtos.map(p => {
-      if (p.id === id) {
-        // Se quantidade for 0, remover da seleção
-        if (validQuantity === 0) {
-          return { ...p, quantidadePedida: 0, selecionado: false };
-        }
-        return { ...p, quantidadePedida: validQuantity };
+    const validQuantity = Math.max(0, Math.min(quantidade, produto.quantidadeOfertada));
+    
+    setComposicao(prev => {
+      const newComp = new Map(prev);
+      if (validQuantity === 0) {
+        newComp.delete(id);
+      } else {
+        newComp.set(id, validQuantity);
       }
-      return p;
-    }));
+      return newComp;
+    });
   };
 
   const handlePublicar = () => {
-    const selecionados = produtos.filter(p => p.selecionado && p.quantidadePedida > 0);
-    
     // Preparar dados para envio
-    const payload = selecionados.map(p => ({
-      produto_id: p.id,
-      fornecedor_id: p.fornecedor, // Aqui você usaria o ID real do fornecedor
-      valor_unit: p.valor,
-      pedidos: p.quantidadePedida
-    }));
+    const payload = selectedProducts
+      .filter(p => (composicao.get(p.id) || 0) > 0)
+      .map(p => ({
+        produto_id: p.id,
+        fornecedor_id: p.fornecedor,
+        valor_unit: p.valor,
+        pedidos: composicao.get(p.id) || 0
+      }));
 
     setIsLoading(true);
     
@@ -119,13 +140,15 @@ export default function AdminComposicaoCesta() {
     }, 1000);
   };
 
-  const produtosSelecionados = produtos.filter(p => p.selecionado && p.quantidadePedida > 0);
+  // Produtos selecionados com pedidos > 0
+  const produtosSelecionadosComPedidos = selectedProducts.filter(p => (composicao.get(p.id) || 0) > 0);
+  
   const produtosFiltrados = produtos.filter(p => 
     p.nome.toLowerCase().includes(busca.toLowerCase()) ||
     p.fornecedor.toLowerCase().includes(busca.toLowerCase())
   );
 
-  const podePublicar = valorAtual <= ciclo.valorMaximo && produtosSelecionados.length > 0;
+  const podePublicar = valorAtual <= ciclo.valorMaximo && produtosSelecionadosComPedidos.length > 0;
   const excedeuValor = valorAtual > ciclo.valorMaximo;
 
   return (
@@ -196,7 +219,7 @@ export default function AdminComposicaoCesta() {
               <Skeleton className="h-64 w-full" />
             </CardContent>
           </Card>
-        ) : produtosSelecionados.length > 0 ? (
+        ) : selectedProducts.length > 0 ? (
           <Card>
             <CardHeader>
               <CardTitle>Produtos Selecionados</CardTitle>
@@ -216,27 +239,33 @@ export default function AdminComposicaoCesta() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {produtosSelecionados.map((produto) => (
-                    <TableRow key={produto.id}>
-                      <TableCell className="font-medium">{produto.nome}</TableCell>
-                      <TableCell>{produto.unidade}</TableCell>
-                      <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
-                      <TableCell>{produto.fornecedor}</TableCell>
-                      <TableCell>{produto.quantidadeOfertada}</TableCell>
-                      <TableCell>
-                        <Input
-                          type="number"
-                          value={produto.quantidadePedida}
-                          onChange={(e) => handleQuantidadeChange(produto.id, parseInt(e.target.value) || 0)}
-                          className="w-20"
-                          min="0"
-                          max={produto.quantidadeOfertada}
-                        />
-                      </TableCell>
-                      <TableCell>R$ {(produto.valor * produto.quantidadePedida).toFixed(2).replace('.', ',')}</TableCell>
-                      <TableCell>{produto.quantidadeOfertada - produto.quantidadePedida}</TableCell>
-                    </TableRow>
-                  ))}
+                  {selectedProducts.map((produto) => {
+                    const pedidos = composicao.get(produto.id) || 0;
+                    const valorAcumulado = produto.valor * pedidos;
+                    const disponiveis = produto.quantidadeOfertada - pedidos;
+                    
+                    return (
+                      <TableRow key={produto.id}>
+                        <TableCell className="font-medium">{produto.nome}</TableCell>
+                        <TableCell>{produto.unidade}</TableCell>
+                        <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
+                        <TableCell>{produto.fornecedor}</TableCell>
+                        <TableCell>{produto.quantidadeOfertada}</TableCell>
+                        <TableCell>
+                          <Input
+                            type="number"
+                            value={pedidos}
+                            onChange={(e) => handleQuantidadeChange(produto.id, parseInt(e.target.value) || 0)}
+                            className="w-20"
+                            min="0"
+                            max={produto.quantidadeOfertada}
+                          />
+                        </TableCell>
+                        <TableCell>R$ {valorAcumulado.toFixed(2).replace('.', ',')}</TableCell>
+                        <TableCell>{disponiveis}</TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </CardContent>
@@ -283,7 +312,7 @@ export default function AdminComposicaoCesta() {
                     <TableRow key={produto.id}>
                       <TableCell>
                         <Checkbox
-                          checked={produto.selecionado}
+                          checked={selectedIds.has(produto.id)}
                           onCheckedChange={() => handleToggleProduto(produto.id)}
                           disabled={produto.quantidadeOfertada === 0}
                         />
