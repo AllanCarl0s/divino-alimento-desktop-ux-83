@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,12 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Plus, Pencil, Trash2, Search } from 'lucide-react';
+import { ArrowLeft, Pencil, Trash2, Search, Info } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { formatBRLInput, parseBRLToNumber } from '@/utils/currency';
-import { ProdutoComercializavel, OfertaProduto, agruparPorProdutoBase, criarDescricaoProduto } from '@/types/produto-oferta';
+import { formatBRL, formatBRLInput, parseBRLToNumber } from '@/utils/currency';
+import { ProdutoComercializavel, OfertaProduto, criarDescricaoProduto } from '@/types/produto-oferta';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 // Mock data - produtos comercializáveis
 const mockProdutosComercializaveis: ProdutoComercializavel[] = [
@@ -83,22 +84,23 @@ export default function AdminOferta() {
   const { id: cicloId } = useParams();
   
   const [ofertas, setOfertas] = useState<OfertaProduto[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingOferta, setEditingOferta] = useState<OfertaProduto | null>(null);
   const [searchProduto, setSearchProduto] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [ofertaToDelete, setOfertaToDelete] = useState<string | null>(null);
   
   // Form state
   const [selectedProdutoId, setSelectedProdutoId] = useState('');
   const [valorUnitario, setValorUnitario] = useState('');
   const [quantidadeDisponivel, setQuantidadeDisponivel] = useState('');
+  const [precoBaseSugerido, setPrecoBaseSugerido] = useState<number | null>(null);
+
+  // Refs para foco automático
+  const valorInputRef = useRef<HTMLInputElement>(null);
+  const quantidadeInputRef = useRef<HTMLInputElement>(null);
 
   // Mock ciclo data
   const cicloNome = '1º Ciclo de Novembro 2025';
-
-  // Agrupar produtos por produto base
-  const produtosAgrupados = useMemo(() => {
-    return agruparPorProdutoBase(mockProdutosComercializaveis);
-  }, []);
 
   // Produtos filtrados pela busca
   const produtosFiltrados = useMemo(() => {
@@ -111,44 +113,41 @@ export default function AdminOferta() {
     );
   }, [searchProduto]);
 
-  // Ao selecionar um produto, preencher o valor unitário com o preço base
+  // Ao selecionar um produto, preencher o valor unitário com o preço base e focar
   useEffect(() => {
     if (selectedProdutoId && !editingOferta) {
       const produto = mockProdutosComercializaveis.find(p => p.id === selectedProdutoId);
       if (produto) {
-        setValorUnitario(formatBRLInput(produto.preco_base.toFixed(2)));
+        const precoFormatado = produto.preco_base.toFixed(2).replace('.', ',');
+        setValorUnitario(precoFormatado);
+        setPrecoBaseSugerido(produto.preco_base);
+        // Focar no campo de valor após seleção
+        setTimeout(() => valorInputRef.current?.focus(), 100);
       }
     }
   }, [selectedProdutoId, editingOferta]);
 
-  const handleOpenDialog = (oferta?: OfertaProduto) => {
-    if (oferta) {
-      setEditingOferta(oferta);
-      setSelectedProdutoId(oferta.produto_comercializavel_id);
-      setValorUnitario(formatBRLInput(oferta.valor_unitario.toFixed(2)));
-      setQuantidadeDisponivel(oferta.quantidade_disponivel.toString());
-    } else {
-      setEditingOferta(null);
-      setSelectedProdutoId('');
-      setValorUnitario('');
-      setQuantidadeDisponivel('');
-    }
-    setIsDialogOpen(true);
-  };
+  // Validar se o formulário está completo
+  const isFormValid = useMemo(() => {
+    if (!selectedProdutoId || !valorUnitario || !quantidadeDisponivel) return false;
+    const valor = parseBRLToNumber(valorUnitario);
+    const qtd = parseInt(quantidadeDisponivel);
+    return valor >= 0.01 && qtd >= 1 && !isNaN(valor) && !isNaN(qtd);
+  }, [selectedProdutoId, valorUnitario, quantidadeDisponivel]);
 
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
+  const handleLimparFormulario = () => {
     setEditingOferta(null);
     setSelectedProdutoId('');
     setValorUnitario('');
     setQuantidadeDisponivel('');
+    setPrecoBaseSugerido(null);
   };
 
-  const handleSaveOferta = () => {
-    if (!selectedProdutoId || !valorUnitario || !quantidadeDisponivel) {
+  const handleAdicionarProduto = () => {
+    if (!isFormValid) {
       toast({
-        title: 'Campos obrigatórios',
-        description: 'Preencha todos os campos para continuar.',
+        title: 'Campos inválidos',
+        description: 'Preencha todos os campos corretamente. Valor deve ser ≥ R$ 0,01 e Quantidade ≥ 1.',
         variant: 'destructive',
       });
       return;
@@ -177,13 +176,13 @@ export default function AdminOferta() {
             }
           : o
       ));
-      toast({ title: 'Oferta atualizada', description: 'A oferta foi atualizada com sucesso.' });
+      toast({ title: 'Produto atualizado', description: 'O produto foi atualizado na oferta.' });
     } else {
       // Criar nova oferta
       const novaOferta: OfertaProduto = {
         id: `oferta-${Date.now()}`,
         ciclo_id: cicloId || '',
-        mercado_ciclo_id: '', // Será preenchido pelo contexto do mercado
+        mercado_ciclo_id: '',
         produto_comercializavel_id: selectedProdutoId,
         produto_base_nome: produto.produto_base_nome,
         unidade: produto.unidade,
@@ -194,15 +193,40 @@ export default function AdminOferta() {
         quantidade_disponivel: quantidade,
       };
       setOfertas([...ofertas, novaOferta]);
-      toast({ title: 'Oferta criada', description: 'A oferta foi criada com sucesso.' });
+      toast({ title: 'Produto adicionado', description: 'O produto foi adicionado à oferta.' });
     }
 
-    handleCloseDialog();
+    handleLimparFormulario();
   };
 
-  const handleDeleteOferta = (id: string) => {
-    setOfertas(ofertas.filter(o => o.id !== id));
-    toast({ title: 'Oferta excluída', description: 'A oferta foi excluída com sucesso.' });
+  const handleEditarOferta = (oferta: OfertaProduto) => {
+    setEditingOferta(oferta);
+    setSelectedProdutoId(oferta.produto_comercializavel_id);
+    const precoFormatado = oferta.valor_unitario.toFixed(2).replace('.', ',');
+    setValorUnitario(precoFormatado);
+    setQuantidadeDisponivel(oferta.quantidade_disponivel.toString());
+    setPrecoBaseSugerido(oferta.preco_base);
+    // Scroll para o formulário
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleConfirmDelete = (id: string) => {
+    setOfertaToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteOferta = () => {
+    if (ofertaToDelete) {
+      setOfertas(ofertas.filter(o => o.id !== ofertaToDelete));
+      toast({ title: 'Produto removido', description: 'O produto foi removido da oferta.' });
+      setOfertaToDelete(null);
+    }
+    setDeleteDialogOpen(false);
+  };
+
+  const handleValorUnitarioBlur = () => {
+    // Após sair do campo de preço, focar quantidade
+    quantidadeInputRef.current?.focus();
   };
 
   const getTotalOfertas = () => {
@@ -246,102 +270,19 @@ export default function AdminOferta() {
               <div>
                 <p className="text-sm text-muted-foreground">Valor Total Estimado</p>
                 <p className="text-2xl font-bold text-primary">
-                  R$ {getValorTotal().toFixed(2)}
+                  {formatBRL(getValorTotal())}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Actions */}
-        <div className="flex justify-end">
-          <Button onClick={() => handleOpenDialog()} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Nova Oferta
-          </Button>
-        </div>
-
-        {/* Produtos Ofertados Table */}
+        {/* Formulário inline - Adicionar Produto à Oferta */}
         <Card>
           <CardHeader>
-            <CardTitle>Produtos Ofertados</CardTitle>
+            <CardTitle>{editingOferta ? 'Editar Produto' : 'Adicionar Produto à Oferta'}</CardTitle>
           </CardHeader>
           <CardContent>
-            {ofertas.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">
-                Nenhuma oferta cadastrada. Clique em "Nova Oferta" para começar.
-              </p>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Produto</TableHead>
-                    <TableHead>Unidade</TableHead>
-                    <TableHead>Peso/Volume</TableHead>
-                    <TableHead>Preço Base</TableHead>
-                    <TableHead>Valor Unitário</TableHead>
-                    <TableHead>Quantidade</TableHead>
-                    <TableHead>Total</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {ofertas.map((oferta) => (
-                    <TableRow key={oferta.id}>
-                      <TableCell className="font-medium">{oferta.produto_base_nome}</TableCell>
-                      <TableCell>{oferta.unidade}</TableCell>
-                      <TableCell>
-                        {oferta.peso ? `${oferta.peso.toFixed(2)} kg` : 
-                         oferta.volume ? `${oferta.volume.toFixed(2)} L` : '-'}
-                      </TableCell>
-                      <TableCell>R$ {oferta.preco_base.toFixed(2)}</TableCell>
-                      <TableCell>
-                        <Badge variant={oferta.valor_unitario !== oferta.preco_base ? 'warning' : 'secondary'}>
-                          R$ {oferta.valor_unitario.toFixed(2)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{oferta.quantidade_disponivel}</TableCell>
-                      <TableCell className="font-bold">
-                        R$ {(oferta.valor_unitario * oferta.quantidade_disponivel).toFixed(2)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleOpenDialog(oferta)}
-                            className="h-8 w-8"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleDeleteOferta(oferta.id)}
-                            className="h-8 w-8 border-destructive text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Dialog para criar/editar oferta */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>{editingOferta ? 'Editar Oferta' : 'Nova Oferta'}</DialogTitle>
-              <DialogDescription>
-                Selecione o produto e configure os valores da oferta.
-              </DialogDescription>
-            </DialogHeader>
-
             <div className="space-y-4">
               {/* Busca de produto */}
               <div>
@@ -365,7 +306,7 @@ export default function AdminOferta() {
                   <SelectTrigger id="produto">
                     <SelectValue placeholder="Selecione o produto e variação" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-[300px]">
+                  <SelectContent className="max-h-[300px] bg-background z-50">
                     {produtosFiltrados.map((produto) => (
                       <SelectItem key={produto.id} value={produto.id}>
                         {criarDescricaoProduto(produto)}
@@ -380,22 +321,34 @@ export default function AdminOferta() {
 
               {/* Valor Unitário */}
               <div>
-                <Label htmlFor="valor">Valor Unitário (R$) *</Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <Label htmlFor="valor">Valor Unitário (R$) *</Label>
+                  {precoBaseSugerido && (
+                    <Badge variant="secondary" className="gap-1">
+                      <Info className="h-3 w-3" />
+                      Preço Base
+                    </Badge>
+                  )}
+                </div>
                 <Input
+                  ref={valorInputRef}
                   id="valor"
                   placeholder="0,00"
                   value={valorUnitario}
                   onChange={(e) => setValorUnitario(formatBRLInput(e.target.value))}
+                  onBlur={handleValorUnitarioBlur}
+                  aria-describedby="valor-hint"
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Valor preenchido automaticamente com o Preço Base, mas pode ser editado
+                <p id="valor-hint" className="text-xs text-muted-foreground mt-1">
+                  Valor sugerido (Preço Base). Você pode editar.
                 </p>
               </div>
 
               {/* Quantidade Disponível */}
               <div>
-                <Label htmlFor="quantidade">Quantidade Disponível *</Label>
+                <Label htmlFor="quantidade">Quantidade *</Label>
                 <Input
+                  ref={quantidadeInputRef}
                   id="quantidade"
                   type="number"
                   min="1"
@@ -403,19 +356,130 @@ export default function AdminOferta() {
                   value={quantidadeDisponivel}
                   onChange={(e) => setQuantidadeDisponivel(e.target.value)}
                 />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Informe a quantidade disponível (mínimo 1)
+                </p>
+              </div>
+
+              {/* Botões de ação */}
+              <div className="flex gap-2 justify-end pt-2">
+                {editingOferta && (
+                  <Button variant="outline" onClick={handleLimparFormulario}>
+                    Cancelar
+                  </Button>
+                )}
+                <Button 
+                  onClick={handleAdicionarProduto}
+                  disabled={!isFormValid}
+                >
+                  {editingOferta ? 'Atualizar Produto' : 'Adicionar Produto'}
+                </Button>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <DialogFooter>
-              <Button variant="outline" onClick={handleCloseDialog}>
+        {/* Produtos Ofertados Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Produtos Ofertados</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {ofertas.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">
+                Nenhum produto adicionado. Use o formulário acima para adicionar produtos à oferta.
+              </p>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Produto</TableHead>
+                      <TableHead>Unidade</TableHead>
+                      <TableHead>Peso/Volume</TableHead>
+                      <TableHead>Preço Base</TableHead>
+                      <TableHead>Valor Unitário</TableHead>
+                      <TableHead>Quantidade</TableHead>
+                      <TableHead>Total</TableHead>
+                      <TableHead className="text-right">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {ofertas.map((oferta) => {
+                      const total = oferta.valor_unitario * oferta.quantidade_disponivel;
+                      const precoAlterado = oferta.valor_unitario !== oferta.preco_base;
+                      
+                      return (
+                        <TableRow key={oferta.id}>
+                          <TableCell className="font-medium">{oferta.produto_base_nome}</TableCell>
+                          <TableCell>{oferta.unidade}</TableCell>
+                          <TableCell>
+                            {oferta.peso ? `${oferta.peso.toFixed(2)} kg` : 
+                             oferta.volume ? `${oferta.volume.toFixed(2)} L` : '-'}
+                          </TableCell>
+                          <TableCell>{formatBRL(oferta.preco_base)}</TableCell>
+                          <TableCell>
+                            {precoAlterado ? (
+                              <Badge variant="outline" className="bg-amber-50 dark:bg-amber-950 border-amber-300 dark:border-amber-700">
+                                {formatBRL(oferta.valor_unitario)}
+                              </Badge>
+                            ) : (
+                              <span>{formatBRL(oferta.valor_unitario)}</span>
+                            )}
+                          </TableCell>
+                          <TableCell>{oferta.quantidade_disponivel}</TableCell>
+                          <TableCell className="font-bold">
+                            {formatBRL(total)}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => handleEditarOferta(oferta)}
+                                className="h-8 w-8"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => handleConfirmDelete(oferta.id)}
+                                className="h-8 w-8 border-destructive text-destructive hover:bg-destructive/10"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Dialog de confirmação de exclusão */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza que deseja remover este produto da oferta? Esta ação não pode ser desfeita.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setOfertaToDelete(null)}>
                 Cancelar
-              </Button>
-              <Button onClick={handleSaveOferta}>
-                {editingOferta ? 'Atualizar' : 'Criar'} Oferta
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteOferta} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Excluir
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </ResponsiveLayout>
   );
