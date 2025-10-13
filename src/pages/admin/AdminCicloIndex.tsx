@@ -69,7 +69,7 @@ export default function AdminCicloIndex() {
       nome: '1º Ciclo de Outubro 2025', 
       inicio_ofertas: '2025-10-13', 
       fim_ofertas: '2025-10-20',
-      status: 'ativo',
+      status: 'inativo',
       admin_responsavel_id: '3',
       admin_responsavel_nome: 'Maria Santos',
       mercados: [
