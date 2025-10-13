@@ -133,7 +133,7 @@ export default function AdminComposicaoCesta() {
     setTimeout(() => {
       setIsLoading(false);
       toast({
-        title: "✅ Cesta publicada com sucesso.",
+        title: "Cesta publicada com sucesso.",
         className: "bg-green-600 text-white border-green-700",
       });
       console.log('Dados enviados:', payload);
