@@ -14,7 +14,7 @@ import { FiltersBar } from '@/components/admin/FiltersBar';
 import { FiltersPanel } from '@/components/admin/FiltersPanel';
 import { useFilters } from '@/hooks/useFilters';
 import { toast } from '@/hooks/use-toast';
-import { Plus, Pencil, Trash2, ShoppingBasket, Lock, ArrowLeft } from 'lucide-react';
+import { Plus, Pencil, Trash2, Tags, Lock, ArrowLeft, ShoppingBasket, Package, Store } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
 
@@ -151,6 +151,24 @@ export default function AdminCicloIndex() {
     navigate(rotas[mercadoAlvo.tipo_venda]);
   };
 
+  const getComposicaoIcon = (tipo: 'cesta' | 'lote' | 'venda_direta') => {
+    const icons = {
+      cesta: ShoppingBasket,
+      lote: Package,
+      venda_direta: Store
+    };
+    return icons[tipo];
+  };
+
+  const getComposicaoTooltip = (tipo: 'cesta' | 'lote' | 'venda_direta') => {
+    const tooltips = {
+      cesta: 'Composição da Cesta',
+      lote: 'Composição do Lote',
+      venda_direta: 'Composição da Venda Direta'
+    };
+    return tooltips[tipo];
+  };
+
   const isMercadoBloqueado = (ciclo: Ciclo, mercado: CicloMercado): boolean => {
     if (mercado.ordem === 1) return false;
     const mercadoAnterior = ciclo.mercados.find(m => m.ordem === mercado.ordem - 1);
@@ -230,14 +248,19 @@ export default function AdminCicloIndex() {
                         <TableCell className="text-right">
                           <TooltipProvider>
                             <div className="flex justify-end gap-2">
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                onClick={() => navigate(`/admin/ciclo/${ciclo.id}`)} 
-                                className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
-                              >
-                                <Pencil className="h-5 w-5 text-primary" />
-                              </Button>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    size="icon" 
+                                    onClick={() => navigate(`/admin/ciclo/${ciclo.id}`)} 
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
+                                  >
+                                    <Pencil className="h-5 w-5 text-primary" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent><p>Editar Ciclo</p></TooltipContent>
+                              </Tooltip>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button 
@@ -246,19 +269,48 @@ export default function AdminCicloIndex() {
                                     onClick={() => navigate(`/oferta/${ciclo.id}`)} 
                                     className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <ShoppingBasket className="h-5 w-5 text-primary" />
+                                    <Tags className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Inserir Ofertas</p></TooltipContent>
+                                <TooltipContent><p>Inserir/editar ofertas</p></TooltipContent>
                               </Tooltip>
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                onClick={() => handleDelete(ciclo.id)} 
-                                className="h-10 w-10 border-2 border-destructive hover:bg-destructive/10"
-                              >
-                                <Trash2 className="h-5 w-5 text-destructive" />
-                              </Button>
+                              {mercadoAtual && (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button 
+                                      variant="outline" 
+                                      size="icon" 
+                                      onClick={() => handleComposicao(ciclo, mercadoAtual)}
+                                      disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
+                                      className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                                    >
+                                      {(() => {
+                                        const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
+                                        return <Icon className="h-5 w-5 text-success" />;
+                                      })()}
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>{isMercadoBloqueado(ciclo, mercadoAtual) 
+                                      ? 'Esse mercado está bloqueado até compor o anterior' 
+                                      : getComposicaoTooltip(mercadoAtual.tipo_venda)}
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    size="icon" 
+                                    onClick={() => handleDelete(ciclo.id)} 
+                                    className="h-10 w-10 border-2 border-destructive hover:bg-destructive/10"
+                                  >
+                                    <Trash2 className="h-5 w-5 text-destructive" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent><p>Excluir Ciclo</p></TooltipContent>
+                              </Tooltip>
                             </div>
                           </TooltipProvider>
                         </TableCell>
