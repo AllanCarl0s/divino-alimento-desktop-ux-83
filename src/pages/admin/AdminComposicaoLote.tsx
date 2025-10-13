@@ -271,8 +271,8 @@ export default function AdminComposicaoLote() {
       setIsLoading(false);
       
       const mensagem = excedeuValor 
-        ? 'Lote publicado (acima do valor máximo)'
-        : 'Lote publicado com sucesso';
+        ? 'Composição lote salva (acima do valor máximo)'
+        : 'Composição lote salva com sucesso';
       
       toast({
         title: mensagem,
