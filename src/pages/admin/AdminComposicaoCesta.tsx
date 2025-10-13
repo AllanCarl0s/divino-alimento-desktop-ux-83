@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { toast } from '@/hooks/use-toast';
 import { Search, ArrowLeft, AlertTriangle, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
+import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
@@ -298,10 +299,10 @@ export default function AdminComposicaoCesta() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Produto</TableHead>
-                    <TableHead>Medida</TableHead>
+                    <TableHead className="text-left">Produto</TableHead>
+                    <TableHead className="text-left">Medida</TableHead>
                     <TableHead className="text-right">Valor Unit.</TableHead>
-                    <TableHead>Fornecedor</TableHead>
+                    <TableHead className="text-left">Fornecedor</TableHead>
                     <TableHead className="text-right">Ofertados</TableHead>
                     <TableHead className="text-right">Pedidos</TableHead>
                     <TableHead className="text-right">Valor Acumulado</TableHead>
@@ -319,10 +320,10 @@ export default function AdminComposicaoCesta() {
                     
                     return (
                       <TableRow key={item.id}>
-                        <TableCell className="font-medium">{oferta.produto_base}</TableCell>
-                        <TableCell>{oferta.unidade}</TableCell>
-                        <TableCell className="text-right">R$ {oferta.valor.toFixed(2).replace('.', ',')}</TableCell>
-                        <TableCell>{oferta.fornecedor}</TableCell>
+                        <TableCell className="text-left font-medium">{oferta.produto_base}</TableCell>
+                        <TableCell className="text-left">{oferta.unidade}</TableCell>
+                        <TableCell className="text-right">{formatBRL(oferta.valor)}</TableCell>
+                        <TableCell className="text-left">{oferta.fornecedor}</TableCell>
                         <TableCell className="text-right">{oferta.quantidadeOfertada}</TableCell>
                         <TableCell className="text-right">
                           <Input
@@ -335,7 +336,7 @@ export default function AdminComposicaoCesta() {
                           />
                         </TableCell>
                         <TableCell className="text-right font-medium">
-                          R$ {valorAcumulado.toFixed(2).replace('.', ',')}
+                          {formatBRL(valorAcumulado)}
                         </TableCell>
                         <TableCell className="text-right">
                           <span className={disponiveis < 0 ? 'text-red-600' : ''}>
