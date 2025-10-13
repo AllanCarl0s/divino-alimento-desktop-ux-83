@@ -35,7 +35,11 @@ export default function AdminCicloIndex() {
   
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [cicloToDelete, setCicloToDelete] = useState<string | null>(null);
-  const [mercadoSelecionado, setMercadoSelecionado] = useState<Record<string, string>>({});
+  const [mercadoSelecionado, setMercadoSelecionado] = useState<Record<string, string>>({
+    '1': 'm2',
+    '2': 'm4',
+    '3': 'm6'
+  });
   const [ciclos, setCiclos] = useState<Ciclo[]>([
     { 
       id: '1', 
