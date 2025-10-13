@@ -559,7 +559,7 @@ export default function AdminComposicaoLote() {
                         disabled={!podePublicar || isLoading}
                         className="bg-green-600 hover:bg-green-700 text-white"
                       >
-                        {isLoading ? 'Publicando...' : 'Publicar Lote'}
+                        {isLoading ? 'Salvando...' : 'Salvar composição'}
                       </Button>
                     </span>
                   </TooltipTrigger>
