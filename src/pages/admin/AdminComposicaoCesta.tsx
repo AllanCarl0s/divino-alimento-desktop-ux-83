@@ -322,23 +322,23 @@ export default function AdminComposicaoCesta() {
                       <TableRow key={item.id}>
                         <TableCell className="text-left font-medium">{oferta.produto_base}</TableCell>
                         <TableCell className="text-left">{oferta.unidade}</TableCell>
-                        <TableCell className="text-right">{formatBRL(oferta.valor)}</TableCell>
+                        <TableCell className="text-right tabular-nums">{formatBRL(oferta.valor)}</TableCell>
                         <TableCell className="text-left">{oferta.fornecedor}</TableCell>
-                        <TableCell className="text-right">{oferta.quantidadeOfertada}</TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right tabular-nums">{oferta.quantidadeOfertada}</TableCell>
+                        <TableCell className="text-right tabular-nums">
                           <Input
                             type="number"
                             min={0}
                             max={oferta.quantidadeOfertada}
                             value={item.quantidade}
                             onChange={(e) => handleQuantidadeChange(item.id, Number(e.target.value))}
-                            className="w-20 text-right"
+                            className="w-20 text-right tabular-nums"
                           />
                         </TableCell>
-                        <TableCell className="text-right font-medium">
+                        <TableCell className="text-right font-medium tabular-nums">
                           {formatBRL(valorAcumulado)}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right tabular-nums">
                           <span className={disponiveis < 0 ? 'text-red-600' : ''}>
                             {disponiveis}
                           </span>
