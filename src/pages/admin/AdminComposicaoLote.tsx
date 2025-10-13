@@ -586,7 +586,7 @@ export default function AdminComposicaoLote() {
           <AlertDialogHeader>
             <AlertDialogTitle>Valor acima do limite</AlertDialogTitle>
             <AlertDialogDescription>
-              O valor atual do lote ({formatBRL(valorAtual)}) excede o valor máximo ({formatBRL(ciclo.valorMaximo)}) deste mercado. Deseja publicar assim mesmo?
+              O valor atual do lote ({formatBRL(valorAtual)}) excede o valor máximo ({formatBRL(ciclo.valorMaximo)}) deste mercado. Deseja salvar assim mesmo?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
