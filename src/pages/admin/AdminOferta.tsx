@@ -265,54 +265,56 @@ export default function AdminOferta() {
     >
       <div className="space-y-6">
         {/* Header */}
-        <div className="space-y-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-primary">Criar/Editar Oferta</h1>
-            <p className="text-sm md:text-base text-muted-foreground mt-1">
-              Ciclo: {mockCiclo.nome}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Período: {format(mockCiclo.data_inicio_oferta, 'dd/MM/yyyy', { locale: ptBR })} – {format(mockCiclo.data_fim_oferta, 'dd/MM/yyyy', { locale: ptBR })}
-            </p>
-            <Badge 
-              variant={periodoOfertaAberto ? "default" : "secondary"}
-              className={periodoOfertaAberto ? "bg-green-600 hover:bg-green-700 mt-2" : "bg-orange-500 hover:bg-orange-600 mt-2"}
-            >
-              {periodoOfertaAberto ? "Período de oferta aberto" : "Período de oferta encerrado"}
-            </Badge>
-          </div>
+        <Card className="border-0 shadow-none bg-transparent">
+          <CardContent className="p-0 space-y-6">
+            {/* Title and Badge */}
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">{mockCiclo.nome}</h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Período: {format(mockCiclo.data_inicio_oferta, 'dd/MM/yyyy', { locale: ptBR })} - {format(mockCiclo.data_fim_oferta, 'dd/MM/yyyy', { locale: ptBR })}
+                </p>
+              </div>
+              <Badge 
+                variant={periodoOfertaAberto ? "default" : "secondary"}
+                className={periodoOfertaAberto ? "bg-green-600 hover:bg-green-700 text-white whitespace-nowrap" : "bg-orange-500 hover:bg-orange-600 text-white whitespace-nowrap"}
+              >
+                {periodoOfertaAberto ? "Período de oferta aberto" : "Período de oferta encerrado"}
+              </Badge>
+            </div>
 
-          {/* Stepper */}
-          <div className="flex items-center gap-2 md:gap-4">
-            {/* Etapa 1 */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white">
-                <CheckCircle2 className="h-5 w-5" />
+            {/* Stepper */}
+            <div className="flex items-center justify-center gap-3 py-4">
+              {/* Etapa 1 - Completa */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white font-bold">
+                  <CheckCircle2 className="h-5 w-5" />
+                </div>
+                <span className="text-sm font-medium text-foreground">Período aberto</span>
               </div>
-              <span className="text-sm font-medium hidden md:inline">Período aberto</span>
-            </div>
-            
-            <div className="h-px flex-1 bg-primary max-w-[80px]" />
-            
-            {/* Etapa 2 - Ativa */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
-                2
+              
+              <div className="h-0.5 w-12 md:w-20 bg-green-600" />
+              
+              {/* Etapa 2 - Ativa */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white font-bold">
+                  2
+                </div>
+                <span className="text-sm font-medium text-foreground">Seleção de produtos</span>
               </div>
-              <span className="text-sm font-medium hidden md:inline">Seleção de produtos</span>
-            </div>
-            
-            <div className="h-px flex-1 bg-muted max-w-[80px]" />
-            
-            {/* Etapa 3 */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-muted-foreground">
-                3
+              
+              <div className="h-0.5 w-12 md:w-20 bg-muted" />
+              
+              {/* Etapa 3 - Pendente */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-muted text-muted-foreground font-bold">
+                  3
+                </div>
+                <span className="text-sm font-medium text-muted-foreground">Oferta enviada</span>
               </div>
-              <span className="text-sm font-medium text-muted-foreground hidden md:inline">Oferta enviada</span>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Summary Card */}
         <Card className="bg-primary/5">
