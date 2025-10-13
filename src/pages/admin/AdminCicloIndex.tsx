@@ -16,7 +16,7 @@ import { useFilters } from '@/hooks/useFilters';
 import { toast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, ShoppingBasket, Lock, ArrowLeft } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
-import { Ciclo, CicloMercado } from '@/types/ciclo-mercado';
+import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
 
 export default function AdminCicloIndex() {
   const navigate = useNavigate();
@@ -214,12 +214,12 @@ export default function AdminCicloIndex() {
                                     value={mercado.id}
                                     disabled={bloqueado}
                                   >
-                                    <div className="flex items-center gap-2">
-                                      {bloqueado && <Lock className="h-3 w-3" />}
-                                      <span className={isCurrent ? 'font-bold' : ''}>
-                                        {mercado.ordem}. {mercado.nome_mercado}
-                                      </span>
-                                    </div>
+                                  <div className="flex items-center gap-2">
+                                    {bloqueado && <Lock className="h-3 w-3" />}
+                                    <span className={isCurrent ? 'font-bold' : ''}>
+                                      {mercado.ordem}. {mercado.nome_mercado} ({getNomeTipoVenda(mercado.tipo_venda)})
+                                    </span>
+                                  </div>
                                   </SelectItem>
                                 );
                               })}
