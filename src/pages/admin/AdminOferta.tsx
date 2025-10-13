@@ -96,10 +96,19 @@ export default function AdminOferta() {
   const [valorUnitario, setValorUnitario] = useState('');
   const [quantidadeDisponivel, setQuantidadeDisponivel] = useState('');
   const [precoBaseSugerido, setPrecoBaseSugerido] = useState<number | null>(null);
+  const [salvandoOferta, setSalvandoOferta] = useState(false);
 
   // Refs para foco automático
   const valorInputRef = useRef<HTMLInputElement>(null);
   const quantidadeInputRef = useRef<HTMLInputElement>(null);
+
+  // Carregar ofertas do localStorage na montagem
+  useEffect(() => {
+    const ofertasSalvas = localStorage.getItem(`ofertas-ciclo-${cicloId}`);
+    if (ofertasSalvas) {
+      setOfertas(JSON.parse(ofertasSalvas));
+    }
+  }, [cicloId]);
 
   // Mock ciclo data
   const mockCiclo = {
@@ -111,9 +120,8 @@ export default function AdminOferta() {
     data_fim_ciclo: new Date('2025-11-16'),
   };
 
-  // Verificar se período de oferta está aberto
-  const hoje = new Date();
-  const periodoOfertaAberto = hoje >= mockCiclo.data_inicio_oferta && hoje <= mockCiclo.data_fim_oferta;
+  // Forçar período de oferta aberto para testes (UC011)
+  const periodoOfertaAberto = true; // Status forçado: Liberado
 
   // Produtos filtrados pela busca
   const produtosFiltrados = useMemo(() => {
@@ -248,6 +256,51 @@ export default function AdminOferta() {
 
   const getValorTotal = () => {
     return ofertas.reduce((sum, o) => sum + (o.valor_unitario * o.quantidade_disponivel), 0);
+  };
+
+  const handleSalvarOferta = async () => {
+    if (ofertas.length === 0) {
+      toast({
+        title: 'Nenhum produto na oferta',
+        description: 'Adicione pelo menos um produto antes de salvar.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setSalvandoOferta(true);
+
+    // Simular salvamento no backend (substituir por chamada API real)
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Persistir no localStorage
+    localStorage.setItem(`ofertas-ciclo-${cicloId}`, JSON.stringify(ofertas));
+
+    // Log de auditoria (em produção, enviar ao backend)
+    console.log('Auditoria - Oferta Registrada:', {
+      usuario: 'Admin',
+      ciclo: mockCiclo.nome,
+      ciclo_id: cicloId,
+      timestamp: new Date().toISOString(),
+      total_produtos: ofertas.length,
+      total_itens: getTotalOfertas(),
+      valor_total: getValorTotal(),
+      produtos: ofertas.map(o => ({
+        produto: o.produto_base_nome,
+        unidade: o.unidade,
+        quantidade: o.quantidade_disponivel,
+        valor_unitario: o.valor_unitario,
+        valor_total: o.valor_unitario * o.quantidade_disponivel
+      }))
+    });
+
+    setSalvandoOferta(false);
+
+    toast({
+      title: '✓ Oferta registrada com sucesso',
+      description: `${ofertas.length} produto(s) salvos no ciclo ${mockCiclo.nome}`,
+      duration: 4000,
+    });
   };
 
   return (
@@ -438,8 +491,17 @@ export default function AdminOferta() {
 
         {/* Produtos Ofertados Table */}
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Produtos Ofertados</CardTitle>
+            {ofertas.length > 0 && (
+              <Button 
+                onClick={handleSalvarOferta}
+                disabled={salvandoOferta}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {salvandoOferta ? 'Salvando...' : 'Salvar Oferta'}
+              </Button>
+            )}
           </CardHeader>
           <CardContent>
             {ofertas.length === 0 ? (
