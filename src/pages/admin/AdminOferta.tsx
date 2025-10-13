@@ -9,9 +9,11 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Pencil, Trash2, Search, Info } from 'lucide-react';
+import { ArrowLeft, Pencil, Trash2, Search, Info, CheckCircle2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { formatBRL, formatBRLInput, parseBRLToNumber } from '@/utils/currency';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { ProdutoComercializavel, OfertaProduto, criarDescricaoProduto } from '@/types/produto-oferta';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
@@ -100,7 +102,18 @@ export default function AdminOferta() {
   const quantidadeInputRef = useRef<HTMLInputElement>(null);
 
   // Mock ciclo data
-  const cicloNome = '1º Ciclo de Novembro 2025';
+  const mockCiclo = {
+    id: cicloId || '1',
+    nome: '1º Ciclo de Novembro 2025',
+    data_inicio_oferta: new Date('2025-11-01'),
+    data_fim_oferta: new Date('2025-11-07'),
+    data_inicio_ciclo: new Date('2025-11-10'),
+    data_fim_ciclo: new Date('2025-11-16'),
+  };
+
+  // Verificar se período de oferta está aberto
+  const hoje = new Date();
+  const periodoOfertaAberto = hoje >= mockCiclo.data_inicio_oferta && hoje <= mockCiclo.data_fim_oferta;
 
   // Produtos filtrados pela busca
   const produtosFiltrados = useMemo(() => {
@@ -252,11 +265,53 @@ export default function AdminOferta() {
     >
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Criar/Editar Oferta</h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Ciclo: {cicloNome}
-          </p>
+        <div className="space-y-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-primary">Criar/Editar Oferta</h1>
+            <p className="text-sm md:text-base text-muted-foreground mt-1">
+              Ciclo: {mockCiclo.nome}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Período: {format(mockCiclo.data_inicio_oferta, 'dd/MM/yyyy', { locale: ptBR })} – {format(mockCiclo.data_fim_oferta, 'dd/MM/yyyy', { locale: ptBR })}
+            </p>
+            <Badge 
+              variant={periodoOfertaAberto ? "default" : "secondary"}
+              className={periodoOfertaAberto ? "bg-green-600 hover:bg-green-700 mt-2" : "bg-orange-500 hover:bg-orange-600 mt-2"}
+            >
+              {periodoOfertaAberto ? "Período de oferta aberto" : "Período de oferta encerrado"}
+            </Badge>
+          </div>
+
+          {/* Stepper */}
+          <div className="flex items-center gap-2 md:gap-4">
+            {/* Etapa 1 */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <span className="text-sm font-medium hidden md:inline">Período aberto</span>
+            </div>
+            
+            <div className="h-px flex-1 bg-primary max-w-[80px]" />
+            
+            {/* Etapa 2 - Ativa */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
+                2
+              </div>
+              <span className="text-sm font-medium hidden md:inline">Seleção de produtos</span>
+            </div>
+            
+            <div className="h-px flex-1 bg-muted max-w-[80px]" />
+            
+            {/* Etapa 3 */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-muted-foreground">
+                3
+              </div>
+              <span className="text-sm font-medium text-muted-foreground hidden md:inline">Oferta enviada</span>
+            </div>
+          </div>
         </div>
 
         {/* Summary Card */}
