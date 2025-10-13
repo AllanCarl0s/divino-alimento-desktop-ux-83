@@ -592,7 +592,7 @@ export default function AdminComposicaoLote() {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={executarPublicacao} className="bg-green-600 hover:bg-green-700">
-              Publicar mesmo assim
+              Salvar mesmo assim
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
