@@ -9,7 +9,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { toast } from '@/hooks/use-toast';
-import { Search, ArrowLeft, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, ArrowLeft, AlertTriangle, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
 
@@ -287,37 +288,79 @@ export default function AdminComposicaoCesta() {
           </Alert>
         )}
 
-        {/* Resumo de Produtos Selecionados */}
+        {/* Produtos Selecionados */}
         {selectedItems.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Resumo da Seleção</CardTitle>
+              <CardTitle>Produtos Selecionados</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                {selectedItems.map((item) => {
-                  const oferta = ofertas.find(o => o.id === item.id);
-                  if (!oferta) return null;
-                  const valorTotal = item.valor * item.quantidade;
-                  
-                  return (
-                    <div key={item.id} className="flex justify-between items-center text-sm py-2 border-b">
-                      <div className="flex-1">
-                        <p className="font-medium">{oferta.produto_base}</p>
-                        <p className="text-muted-foreground text-xs">
-                          {oferta.fornecedor} · {oferta.unidade} · R$ {oferta.valor.toFixed(2).replace('.', ',')}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">{item.quantidade} un.</p>
-                        <p className="text-muted-foreground text-xs">
-                          R$ {valorTotal.toFixed(2).replace('.', ',')}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Produto</TableHead>
+                    <TableHead>Medida</TableHead>
+                    <TableHead className="text-right">Valor Unit.</TableHead>
+                    <TableHead>Fornecedor</TableHead>
+                    <TableHead className="text-right">Ofertados</TableHead>
+                    <TableHead className="text-right">Pedidos</TableHead>
+                    <TableHead className="text-right">Valor Acumulado</TableHead>
+                    <TableHead className="text-right">Disponíveis</TableHead>
+                    <TableHead className="text-center">Remover</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {selectedItems.map((item) => {
+                    const oferta = ofertas.find(o => o.id === item.id);
+                    if (!oferta) return null;
+                    
+                    const valorAcumulado = item.valor * item.quantidade;
+                    const disponiveis = oferta.quantidadeOfertada - item.quantidade;
+                    
+                    return (
+                      <TableRow key={item.id}>
+                        <TableCell className="font-medium">{oferta.produto_base}</TableCell>
+                        <TableCell>{oferta.unidade}</TableCell>
+                        <TableCell className="text-right">R$ {oferta.valor.toFixed(2).replace('.', ',')}</TableCell>
+                        <TableCell>{oferta.fornecedor}</TableCell>
+                        <TableCell className="text-right">{oferta.quantidadeOfertada}</TableCell>
+                        <TableCell className="text-right">
+                          <Input
+                            type="number"
+                            min={0}
+                            max={oferta.quantidadeOfertada}
+                            value={item.quantidade}
+                            onChange={(e) => handleQuantidadeChange(item.id, Number(e.target.value))}
+                            className="w-20 text-right"
+                          />
+                        </TableCell>
+                        <TableCell className="text-right font-medium">
+                          R$ {valorAcumulado.toFixed(2).replace('.', ',')}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <span className={disponiveis < 0 ? 'text-red-600' : ''}>
+                            {disponiveis}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              // Find the group key for this variant
+                              const groupKey = oferta.produto_base;
+                              handleClearGroup(groupKey);
+                            }}
+                            className="h-8 w-8"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         )}
