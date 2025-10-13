@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { toast } from '@/hooks/use-toast';
 import { Search, ArrowLeft, AlertTriangle } from 'lucide-react';
 
@@ -30,6 +31,7 @@ export default function AdminComposicaoCesta() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [produtos] = useState<ProdutoOfertado[]>([
     {
       id: '1',
@@ -116,7 +118,16 @@ export default function AdminComposicaoCesta() {
     });
   };
 
-  const handlePublicar = () => {
+  const handlePublicarClick = () => {
+    // Se valor atual excede o máximo, abrir modal de confirmação
+    if (excedeuValor) {
+      setShowConfirmModal(true);
+    } else {
+      executarPublicacao();
+    }
+  };
+
+  const executarPublicacao = () => {
     // Preparar dados para envio
     const payload = selectedProducts
       .filter(p => (composicao.get(p.id) || 0) > 0)
@@ -128,6 +139,7 @@ export default function AdminComposicaoCesta() {
       }));
 
     setIsLoading(true);
+    setShowConfirmModal(false);
     
     // Simular chamada ao backend
     setTimeout(() => {
@@ -136,7 +148,13 @@ export default function AdminComposicaoCesta() {
         title: "Cesta publicada com sucesso.",
         className: "bg-green-600 text-white border-green-700",
       });
-      console.log('Dados enviados:', payload);
+      
+      // Telemetria: logar se publicou acima do limite
+      if (excedeuValor) {
+        console.log('Evento: cesta_publicada_acima_do_limite', payload);
+      } else {
+        console.log('Dados enviados:', payload);
+      }
     }, 1000);
   };
 
@@ -148,7 +166,8 @@ export default function AdminComposicaoCesta() {
     p.fornecedor.toLowerCase().includes(busca.toLowerCase())
   );
 
-  const podePublicar = valorAtual <= ciclo.valorMaximo && produtosSelecionadosComPedidos.length > 0;
+  // Pode publicar se houver pelo menos 1 item selecionado (independente do valor)
+  const podePublicar = produtosSelecionadosComPedidos.length > 0;
   const excedeuValor = valorAtual > ciclo.valorMaximo;
 
   return (
@@ -165,18 +184,8 @@ export default function AdminComposicaoCesta() {
       }
     >
       <div className="space-y-6">
-        {/* Banner de alerta quando excede valor máximo */}
-        {excedeuValor && (
-          <Alert variant="destructive" className="sticky top-0 z-50">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
-              Valor atual excede o valor máximo permitido para este mercado.
-            </AlertDescription>
-          </Alert>
-        )}
-
         {/* Resumo fixo (sticky) */}
-        <Card className="sticky top-0 z-40 shadow-lg">
+        <Card className="sticky top-16 z-40 shadow-lg">
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
@@ -208,6 +217,20 @@ export default function AdminComposicaoCesta() {
             </div>
           </CardHeader>
         </Card>
+
+        {/* Banner de alerta quando excede valor máximo */}
+        {excedeuValor && (
+          <Alert 
+            variant="destructive" 
+            className="border-[#FEDF89] bg-[#FFFAEB] text-[#B54708] mb-3"
+            role="alert"
+          >
+            <AlertTriangle className="h-4 w-4" aria-label="Aviso" />
+            <AlertDescription className="text-sm">
+              Valor atual excede o valor máximo permitido para este mercado.
+            </AlertDescription>
+          </Alert>
+        )}
 
         {/* Produtos Selecionados */}
         {isLoading ? (
@@ -337,7 +360,7 @@ export default function AdminComposicaoCesta() {
                   <TooltipTrigger asChild>
                     <span>
                       <Button 
-                        onClick={handlePublicar}
+                        onClick={handlePublicarClick}
                         disabled={!podePublicar || isLoading}
                       >
                         {isLoading ? 'Publicando...' : 'Publicar Cesta'}
@@ -346,7 +369,12 @@ export default function AdminComposicaoCesta() {
                   </TooltipTrigger>
                   {!podePublicar && (
                     <TooltipContent>
-                      <p>Ajuste os produtos para que o valor total não ultrapasse o máximo permitido.</p>
+                      <p>Selecione pelo menos um produto com quantidade maior que zero.</p>
+                    </TooltipContent>
+                  )}
+                  {podePublicar && excedeuValor && (
+                    <TooltipContent>
+                      <p>Acima do valor máximo — publicação permitida</p>
                     </TooltipContent>
                   )}
                 </Tooltip>
@@ -355,6 +383,24 @@ export default function AdminComposicaoCesta() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modal de Confirmação */}
+      <AlertDialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Valor acima do limite</AlertDialogTitle>
+            <AlertDialogDescription>
+              O valor atual da cesta excede o valor máximo deste mercado. Deseja publicar assim mesmo?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={executarPublicacao}>
+              Publicar mesmo assim
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ResponsiveLayout>
   );
 }
