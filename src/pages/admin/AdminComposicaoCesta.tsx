@@ -1,68 +1,87 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { toast } from '@/hooks/use-toast';
-import { Search, ArrowLeft, AlertTriangle } from 'lucide-react';
-
-interface ProdutoOfertado {
-  id: string;
-  nome: string;
-  unidade: string;
-  valor: number;
-  fornecedor: string;
-  quantidadeOfertada: number;
-  selecionado: boolean;
-  quantidadePedida: number;
-}
+import { Search, ArrowLeft, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
+import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
 
 export default function AdminComposicaoCesta() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [busca, setBusca] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [produtos] = useState<ProdutoOfertado[]>([
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  
+  // selectedByGroup: groupKey -> variantId
+  const [selectedByGroup, setSelectedByGroup] = useState<Map<string, string>>(new Map());
+  // composicao: variantId -> quantidade
+  const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
+
+  // Dados mock - agora com produto_base
+  const [ofertas] = useState<Oferta[]>([
     {
       id: '1',
-      nome: 'Tomate Orgânico',
+      produto_base: 'Tomate Orgânico',
+      nome: 'Tomate Orgânico (kg)',
       unidade: 'kg',
       valor: 4.50,
       fornecedor: 'João Produtor',
       quantidadeOfertada: 50,
-      selecionado: false,
-      quantidadePedida: 0
     },
     {
       id: '2',
-      nome: 'Alface Crespa',
+      produto_base: 'Tomate Orgânico',
+      nome: 'Tomate Orgânico (cx)',
+      unidade: 'cx',
+      valor: 20.00,
+      fornecedor: 'Maria Horta',
+      quantidadeOfertada: 15,
+    },
+    {
+      id: '3',
+      produto_base: 'Tomate Orgânico',
+      nome: 'Tomate Orgânico (kg)',
+      unidade: 'kg',
+      valor: 4.20,
+      fornecedor: 'Sítio Verde',
+      quantidadeOfertada: 30,
+    },
+    {
+      id: '4',
+      produto_base: 'Alface Crespa',
+      nome: 'Alface Crespa (kg)',
       unidade: 'kg',
       valor: 3.20,
       fornecedor: 'Maria Horta',
       quantidadeOfertada: 30,
-      selecionado: false,
-      quantidadePedida: 0
     },
     {
-      id: '3',
-      nome: 'Ovos Caipiras',
+      id: '5',
+      produto_base: 'Alface Crespa',
+      nome: 'Alface Crespa (maço)',
+      unidade: 'maço',
+      valor: 2.00,
+      fornecedor: 'João Produtor',
+      quantidadeOfertada: 50,
+    },
+    {
+      id: '6',
+      produto_base: 'Ovos Caipiras',
+      nome: 'Ovos Caipiras (dúzia)',
       unidade: 'dúzia',
       valor: 15.00,
       fornecedor: 'Sítio Boa Vista',
       quantidadeOfertada: 100,
-      selecionado: false,
-      quantidadePedida: 0
-    }
+    },
   ]);
 
   const ciclo = {
@@ -72,50 +91,97 @@ export default function AdminComposicaoCesta() {
     tipo: 'Cesta'
   };
 
-  // Lista derivada de produtos selecionados
-  const selectedProducts = produtos.filter(p => selectedIds.has(p.id));
+  // Agrupar e filtrar produtos
+  const productGroups = useMemo(() => {
+    const groups = groupAndSortProducts(ofertas);
+    return filterProducts(groups, busca);
+  }, [ofertas, busca]);
+
+  // Calcular itens selecionados
+  const selectedItems = useMemo(() => {
+    const items: Array<{ id: string; valor: number; quantidade: number }> = [];
+    selectedByGroup.forEach((variantId) => {
+      const quantidade = composicao.get(variantId) || 0;
+      if (quantidade > 0) {
+        const oferta = ofertas.find(o => o.id === variantId);
+        if (oferta) {
+          items.push({
+            id: variantId,
+            valor: oferta.valor,
+            quantidade,
+          });
+        }
+      }
+    });
+    return items;
+  }, [selectedByGroup, composicao, ofertas]);
 
   // Cálculos reativos
-  const valorAtual = selectedProducts.reduce((acc, p) => {
-    const pedidos = composicao.get(p.id) || 0;
-    return acc + (p.valor * pedidos);
+  const valorAtual = selectedItems.reduce((acc, item) => {
+    return acc + (item.valor * item.quantidade);
   }, 0);
   
   const saldo = ciclo.valorMaximo - valorAtual;
 
-  const handleToggleProduto = (id: string) => {
-    setSelectedIds(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-        // Remove também da composição
-        setComposicao(prevComp => {
-          const newComp = new Map(prevComp);
-          newComp.delete(id);
-          return newComp;
-        });
+  const handleSelectVariant = (groupKey: string, variantId: string) => {
+    setSelectedByGroup(prev => {
+      const newMap = new Map(prev);
+      newMap.set(groupKey, variantId);
+      return newMap;
+    });
+  };
+
+  const handleClearGroup = (groupKey: string) => {
+    const variantId = selectedByGroup.get(groupKey);
+    if (variantId) {
+      setSelectedByGroup(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(groupKey);
+        return newMap;
+      });
+      setComposicao(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(variantId);
+        return newMap;
+      });
+    }
+  };
+
+  const handleQuantidadeChange = (variantId: string, quantidade: number) => {
+    const oferta = ofertas.find(o => o.id === variantId);
+    if (!oferta) return;
+    
+    const validQuantity = Math.max(0, Math.min(quantidade, oferta.quantidadeOfertada));
+    
+    setComposicao(prev => {
+      const newMap = new Map(prev);
+      if (validQuantity === 0) {
+        newMap.delete(variantId);
       } else {
-        newSet.add(id);
+        newMap.set(variantId, validQuantity);
+      }
+      return newMap;
+    });
+  };
+
+  const toggleGroupExpansion = (groupKey: string) => {
+    setExpandedGroups(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(groupKey)) {
+        newSet.delete(groupKey);
+      } else {
+        newSet.add(groupKey);
       }
       return newSet;
     });
   };
 
-  const handleQuantidadeChange = (id: string, quantidade: number) => {
-    const produto = produtos.find(p => p.id === id);
-    if (!produto) return;
-    
-    const validQuantity = Math.max(0, Math.min(quantidade, produto.quantidadeOfertada));
-    
-    setComposicao(prev => {
-      const newComp = new Map(prev);
-      if (validQuantity === 0) {
-        newComp.delete(id);
-      } else {
-        newComp.set(id, validQuantity);
-      }
-      return newComp;
-    });
+  const expandAll = () => {
+    setExpandedGroups(new Set(productGroups.map(g => g.produto_base)));
+  };
+
+  const collapseAll = () => {
+    setExpandedGroups(new Set());
   };
 
   const handlePublicarClick = () => {
@@ -129,14 +195,11 @@ export default function AdminComposicaoCesta() {
 
   const executarPublicacao = () => {
     // Preparar dados para envio
-    const payload = selectedProducts
-      .filter(p => (composicao.get(p.id) || 0) > 0)
-      .map(p => ({
-        produto_id: p.id,
-        fornecedor_id: p.fornecedor,
-        valor_unit: p.valor,
-        pedidos: composicao.get(p.id) || 0
-      }));
+    const payload = selectedItems.map(item => ({
+      produto_id: item.id,
+      valor_unit: item.valor,
+      pedidos: item.quantidade,
+    }));
 
     setIsLoading(true);
     setShowConfirmModal(false);
@@ -158,16 +221,8 @@ export default function AdminComposicaoCesta() {
     }, 1000);
   };
 
-  // Produtos selecionados com pedidos > 0
-  const produtosSelecionadosComPedidos = selectedProducts.filter(p => (composicao.get(p.id) || 0) > 0);
-  
-  const produtosFiltrados = produtos.filter(p => 
-    p.nome.toLowerCase().includes(busca.toLowerCase()) ||
-    p.fornecedor.toLowerCase().includes(busca.toLowerCase())
-  );
-
   // Pode publicar se houver pelo menos 1 item selecionado (independente do valor)
-  const podePublicar = produtosSelecionadosComPedidos.length > 0;
+  const podePublicar = selectedItems.length > 0;
   const excedeuValor = valorAtual > ciclo.valorMaximo;
 
   return (
@@ -232,123 +287,105 @@ export default function AdminComposicaoCesta() {
           </Alert>
         )}
 
-        {/* Produtos Selecionados */}
-        {isLoading ? (
+        {/* Resumo de Produtos Selecionados */}
+        {selectedItems.length > 0 && (
           <Card>
             <CardHeader>
-              <Skeleton className="h-6 w-48" />
+              <CardTitle>Resumo da Seleção</CardTitle>
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-64 w-full" />
+              <div className="space-y-2">
+                {selectedItems.map((item) => {
+                  const oferta = ofertas.find(o => o.id === item.id);
+                  if (!oferta) return null;
+                  const valorTotal = item.valor * item.quantidade;
+                  
+                  return (
+                    <div key={item.id} className="flex justify-between items-center text-sm py-2 border-b">
+                      <div className="flex-1">
+                        <p className="font-medium">{oferta.produto_base}</p>
+                        <p className="text-muted-foreground text-xs">
+                          {oferta.fornecedor} · {oferta.unidade} · R$ {oferta.valor.toFixed(2).replace('.', ',')}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">{item.quantidade} un.</p>
+                        <p className="text-muted-foreground text-xs">
+                          R$ {valorTotal.toFixed(2).replace('.', ',')}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </CardContent>
           </Card>
-        ) : selectedProducts.length > 0 ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Produtos Selecionados</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Produto</TableHead>
-                    <TableHead>Medida</TableHead>
-                    <TableHead>Valor Unit.</TableHead>
-                    <TableHead>Fornecedor</TableHead>
-                    <TableHead>Ofertados</TableHead>
-                    <TableHead>Pedidos</TableHead>
-                    <TableHead>Valor Acumulado</TableHead>
-                    <TableHead>Disponíveis</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {selectedProducts.map((produto) => {
-                    const pedidos = composicao.get(produto.id) || 0;
-                    const valorAcumulado = produto.valor * pedidos;
-                    const disponiveis = produto.quantidadeOfertada - pedidos;
-                    
-                    return (
-                      <TableRow key={produto.id}>
-                        <TableCell className="font-medium">{produto.nome}</TableCell>
-                        <TableCell>{produto.unidade}</TableCell>
-                        <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
-                        <TableCell>{produto.fornecedor}</TableCell>
-                        <TableCell>{produto.quantidadeOfertada}</TableCell>
-                        <TableCell>
-                          <Input
-                            type="number"
-                            value={pedidos}
-                            onChange={(e) => handleQuantidadeChange(produto.id, parseInt(e.target.value) || 0)}
-                            className="w-20"
-                            min="0"
-                            max={produto.quantidadeOfertada}
-                          />
-                        </TableCell>
-                        <TableCell>R$ {valorAcumulado.toFixed(2).replace('.', ',')}</TableCell>
-                        <TableCell>{disponiveis}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        ) : null}
+        )}
 
-        {/* Todos os Produtos Ofertados */}
+        {/* Produtos Agrupados */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Todos os Produtos Ofertados</CardTitle>
-              <div className="relative w-64">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar fornecedor ou produto..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  className="pl-10"
-                />
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <CardTitle>Produtos Ofertados</CardTitle>
+              <div className="flex items-center gap-2">
+                <div className="relative w-64">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar produto, fornecedor ou unidade..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
+                  className="whitespace-nowrap"
+                >
+                  {expandedGroups.size === productGroups.length ? (
+                    <>
+                      <ChevronUp className="h-4 w-4 mr-1" />
+                      Colapsar tudo
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-4 w-4 mr-1" />
+                      Expandir tudo
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <Skeleton className="h-64 w-full" />
-            ) : produtosFiltrados.length === 0 ? (
+            ) : productGroups.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <p>Nenhuma oferta disponível para este ciclo.</p>
               </div>
             ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-12">Selecionar</TableHead>
-                    <TableHead>Produto</TableHead>
-                    <TableHead>Medida</TableHead>
-                    <TableHead>Valor Unit.</TableHead>
-                    <TableHead>Fornecedor</TableHead>
-                    <TableHead>Quantidade Ofertada</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {produtosFiltrados.map((produto) => (
-                    <TableRow key={produto.id}>
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedIds.has(produto.id)}
-                          onCheckedChange={() => handleToggleProduto(produto.id)}
-                          disabled={produto.quantidadeOfertada === 0}
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">{produto.nome}</TableCell>
-                      <TableCell>{produto.unidade}</TableCell>
-                      <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
-                      <TableCell>{produto.fornecedor}</TableCell>
-                      <TableCell>{produto.quantidadeOfertada}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <div className="space-y-3">
+                {productGroups.map((group) => {
+                  const selectedVariantId = selectedByGroup.get(group.produto_base) || null;
+                  const quantidadePedida = selectedVariantId ? (composicao.get(selectedVariantId) || 0) : 0;
+
+                  return (
+                    <ProductGroupItem
+                      key={group.produto_base}
+                      group={group}
+                      selectedVariantId={selectedVariantId}
+                      quantidadePedida={quantidadePedida}
+                      onSelectVariant={(variantId) => handleSelectVariant(group.produto_base, variantId)}
+                      onQuantidadeChange={handleQuantidadeChange}
+                      onClear={() => handleClearGroup(group.produto_base)}
+                      isExpanded={expandedGroups.has(group.produto_base)}
+                      onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
+                    />
+                  );
+                })}
+              </div>
             )}
 
             <div className="flex justify-end gap-4 mt-6">
