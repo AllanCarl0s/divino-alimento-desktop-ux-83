@@ -170,7 +170,7 @@ export default function AdminComposicaoCesta() {
           <Alert variant="destructive" className="sticky top-0 z-50">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              ⚠️ Valor atual excede o valor máximo permitido para este mercado.
+              Valor atual excede o valor máximo permitido para este mercado.
             </AlertDescription>
           </Alert>
         )}
