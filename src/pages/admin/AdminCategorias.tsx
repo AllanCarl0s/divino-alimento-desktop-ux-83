@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { StatusToggle } from '@/components/ui/status-toggle';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -102,6 +103,20 @@ const AdminCategorias = () => {
     setCategoriaToDelete(null);
   };
 
+  const handleStatusChange = async (id: number, newStatus: 'Ativo' | 'Inativo') => {
+    // Aqui você faria a chamada PATCH /categorias/{id} body { status: "ativo"|"inativo" }
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    setCategorias(prev => 
+      prev.map(cat => cat.id === id ? { ...cat, situacao: newStatus } : cat)
+    );
+    
+    toast({
+      title: "Status atualizado",
+      description: `Status da categoria alterado para ${newStatus}.`,
+    });
+  };
+
   return (
     <ResponsiveLayout
       leftHeaderContent={
@@ -183,12 +198,10 @@ const AdminCategorias = () => {
                           {categoria.nome}
                         </TableCell>
                         <TableCell>
-                          <Badge 
-                            variant={categoria.situacao === 'Ativo' ? 'default' : 'warning'}
-                            className={categoria.situacao === 'Ativo' ? 'bg-green-500 hover:bg-green-600' : ''}
-                          >
-                            {categoria.situacao}
-                          </Badge>
+                          <StatusToggle
+                            currentStatus={categoria.situacao}
+                            onStatusChange={(newStatus) => handleStatusChange(categoria.id, newStatus)}
+                          />
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">

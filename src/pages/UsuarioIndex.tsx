@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { StatusToggle } from '@/components/ui/status-toggle';
 
 interface Usuario {
   id: string;
@@ -99,6 +100,17 @@ const UsuarioIndex = () => {
 
   const handleAddUser = () => {
     navigate('/usuario');
+  };
+
+  const handleStatusChange = async (id: string, newStatus: 'Ativo' | 'Inativo') => {
+    // Aqui você faria a chamada PATCH /{recurso}/{id} body { status: "ativo"|"inativo" }
+    // Simulando uma chamada API
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    toast({
+      title: "Status atualizado",
+      description: `Status do usuário alterado para ${newStatus}.`,
+    });
   };
 
   return (
@@ -183,12 +195,10 @@ const UsuarioIndex = () => {
                         <TableCell className="font-medium">{usuario.nomeCompleto}</TableCell>
                         <TableCell>{usuario.email}</TableCell>
                         <TableCell>
-                          <Badge 
-                            variant={usuario.status === 'Ativo' ? 'default' : 'secondary'}
-                            className={usuario.status === 'Ativo' ? 'bg-green-500 hover:bg-green-600' : ''}
-                          >
-                            {usuario.status}
-                          </Badge>
+                          <StatusToggle
+                            currentStatus={usuario.status}
+                            onStatusChange={(newStatus) => handleStatusChange(usuario.id, newStatus)}
+                          />
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-1">

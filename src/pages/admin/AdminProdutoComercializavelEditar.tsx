@@ -26,6 +26,7 @@ import { ArrowLeft } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { produtosReferencia } from '@/data/produtos-referencia';
 import { formatBRLInput, parseBRLToNumber } from '@/utils/currency';
+import { ProductSearch } from '@/components/ui/product-search';
 
 const AdminProdutoComercializavelEditar = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const AdminProdutoComercializavelEditar = () => {
     status: 'ativo' as 'ativo' | 'inativo',
   });
 
-  const unidadesComercializacao = ['Unidade', 'Cesta', 'Lote', 'Dúzia', 'Litro', 'Kg'];
+  const unidadesComercializacao = ['Unidade', 'Dúzia', 'Litro', 'Kg'];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,8 +114,17 @@ const AdminProdutoComercializavelEditar = () => {
               <CardTitle>Informações do Produto</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              <ProductSearch
+                value={formData.produto_base}
+                onSelect={(productName) => 
+                  setFormData({ ...formData, produto_base: productName })
+                }
+                label="Buscar produto base *"
+                placeholder="Digite para buscar produto base..."
+              />
+
               <div className="space-y-2">
-                <Label htmlFor="produto_base">
+                <Label htmlFor="produto_base_select">
                   Produto Base <span className="text-destructive">*</span>
                 </Label>
                 <Select
@@ -123,7 +133,7 @@ const AdminProdutoComercializavelEditar = () => {
                     setFormData({ ...formData, produto_base: value })
                   }
                 >
-                  <SelectTrigger id="produto_base">
+                  <SelectTrigger id="produto_base_select">
                     <SelectValue placeholder="Selecione o produto base" />
                   </SelectTrigger>
                   <SelectContent>
@@ -143,7 +153,7 @@ const AdminProdutoComercializavelEditar = () => {
                 <Input
                   id="unidade"
                   type="text"
-                  placeholder="Ex: Unidade, Cesta, Lote, Dúzia, Litro, Kg"
+                  placeholder="Ex: Unidade, Dúzia, Litro, Kg"
                   value={formData.unidade}
                   onChange={(e) =>
                     setFormData({ ...formData, unidade: e.target.value })

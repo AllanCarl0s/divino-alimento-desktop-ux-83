@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { StatusToggle } from '@/components/ui/status-toggle';
 
 interface ProdutoComercializavel {
   id: string;
@@ -122,6 +123,20 @@ const AdminProdutosComercializaveis = () => {
     navigate('/admin/produto-comercializavel');
   };
 
+  const handleStatusChange = async (id: string, newStatus: 'Ativo' | 'Inativo') => {
+    // Aqui você faria a chamada PATCH /produtos-comercializaveis/{id} body { status: "ativo"|"inativo" }
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    setProdutos(prev => 
+      prev.map(prod => prod.id === id ? { ...prod, status: newStatus } : prod)
+    );
+    
+    toast({
+      title: "Status atualizado",
+      description: `Status do produto alterado para ${newStatus}.`,
+    });
+  };
+
   return (
     <ResponsiveLayout 
       leftHeaderContent={
@@ -213,11 +228,10 @@ const AdminProdutosComercializaveis = () => {
                         <TableCell>{produto.peso_kg} kg</TableCell>
                         <TableCell>R$ {produto.preco_base.toFixed(2)}</TableCell>
                         <TableCell>
-                          <Badge 
-                            variant={produto.status === 'Ativo' ? 'success' : 'warning'}
-                          >
-                            {produto.status}
-                          </Badge>
+                          <StatusToggle
+                            currentStatus={produto.status}
+                            onStatusChange={(newStatus) => handleStatusChange(produto.id, newStatus)}
+                          />
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
