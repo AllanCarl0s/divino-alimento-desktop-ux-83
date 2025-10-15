@@ -63,7 +63,7 @@ export default function AdminCicloIndex() {
       nome: '2º Ciclo de Outubro 2025', 
       inicio_ofertas: '2025-10-22', 
       fim_ofertas: '2025-10-30',
-      status: 'inativo',
+      status: 'ativo',
       admin_responsavel_id: '2',
       admin_responsavel_nome: 'Anna Cardoso',
       mercados: [
@@ -76,7 +76,7 @@ export default function AdminCicloIndex() {
       nome: '1º Ciclo de Outubro 2025', 
       inicio_ofertas: '2025-10-13', 
       fim_ofertas: '2025-10-20',
-      status: 'inativo',
+      status: 'ativo',
       admin_responsavel_id: '3',
       admin_responsavel_nome: 'Maria Santos',
       mercados: [
