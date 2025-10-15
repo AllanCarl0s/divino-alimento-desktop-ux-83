@@ -61,7 +61,8 @@ import AdminCiclo from "./pages/admin/AdminCiclo";
 import AdminOferta from "./pages/admin/AdminOferta";
 import AdminComposicaoCesta from "./pages/admin/AdminComposicaoCesta";
 import AdminComposicaoLote from "./pages/admin/AdminComposicaoLote";
-import AdminComposicaoVendaDireta from "./pages/admin/AdminComposicaoVendaDireta";
+import AdminComposicaoVendaDiretaLiberar from "./pages/admin/AdminComposicaoVendaDiretaLiberar";
+import AdminComposicaoVendaDiretaCompor from "./pages/admin/AdminComposicaoVendaDiretaCompor";
 import Usuarios from "./pages/Usuarios";
 import UsuarioIndex from "./pages/UsuarioIndex";
 import Usuario from "./pages/Usuario";
@@ -138,7 +139,8 @@ const App = () => (
           <Route path="/oferta/:id" element={<AdminOferta />} />
           <Route path="/admin/composicao-cesta/:id" element={<AdminComposicaoCesta />} />
           <Route path="/admin/composicao-lote/:id" element={<AdminComposicaoLote />} />
-          <Route path="/admin/composicao-venda-direta/:id" element={<AdminComposicaoVendaDireta />} />
+          <Route path="/admin/composicao-venda-direta/:id" element={<AdminComposicaoVendaDiretaCompor />} />
+          <Route path="/admin/composicao-venda-direta-liberar/:id" element={<AdminComposicaoVendaDiretaLiberar />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/usuario-index" element={<UsuarioIndex />} />
           <Route path="/usuario" element={<Usuario />} />
