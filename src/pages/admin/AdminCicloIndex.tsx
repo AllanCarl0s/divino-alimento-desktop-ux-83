@@ -14,7 +14,7 @@ import { FiltersBar } from '@/components/admin/FiltersBar';
 import { FiltersPanel } from '@/components/admin/FiltersPanel';
 import { useFilters } from '@/hooks/useFilters';
 import { toast } from '@/hooks/use-toast';
-import { Plus, Pencil, Trash2, Tags, Lock, ArrowLeft, ShoppingBasket, Package, Store } from 'lucide-react';
+import { Plus, Pencil, Trash2, Tags, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
 
@@ -35,11 +35,14 @@ export default function AdminCicloIndex() {
   
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [cicloToDelete, setCicloToDelete] = useState<string | null>(null);
+  const [publishDialogOpen, setPublishDialogOpen] = useState(false);
+  const [publishData, setPublishData] = useState<{ ciclo: Ciclo | null; mercado: CicloMercado | null }>({ ciclo: null, mercado: null });
   const [mercadoSelecionado, setMercadoSelecionado] = useState<Record<string, string>>({
     '1': 'm2',
     '2': 'm4',
     '3': 'm6'
   });
+  const [publishedMercados, setPublishedMercados] = useState<Set<string>>(new Set());
   const [ciclos, setCiclos] = useState<Ciclo[]>([
     { 
       id: '1', 
@@ -167,6 +170,57 @@ export default function AdminCicloIndex() {
     return mercadoAnterior ? mercadoAnterior.status_composicao !== 'concluida' : true;
   };
 
+  const canPublishVendaDireta = (ciclo: Ciclo, mercado: CicloMercado): { can: boolean; reason?: string } => {
+    if (mercado.tipo_venda !== 'venda_direta') {
+      return { can: false, reason: 'Não é venda direta' };
+    }
+    if (ciclo.status !== 'ativo') {
+      return { can: false, reason: 'Ciclo inativo' };
+    }
+    // Mock check - in production this would call an API
+    // GET /api/v1/ciclos/:cicloId/mercados/:mercadoId/venda-direta/status
+    const hasItems = mercado.status_composicao !== 'pendente';
+    if (!hasItems) {
+      return { can: false, reason: 'Adicione pelo menos 1 item na composição para liberar' };
+    }
+    return { can: true };
+  };
+
+  const handlePublishClick = (ciclo: Ciclo, mercado: CicloMercado) => {
+    setPublishData({ ciclo, mercado });
+    setPublishDialogOpen(true);
+  };
+
+  const confirmPublish = async () => {
+    const { ciclo, mercado } = publishData;
+    if (!ciclo || !mercado) return;
+
+    try {
+      // Mock API call - in production:
+      // POST /api/v1/ciclos/:cicloId/mercados/:mercadoId/venda-direta/publicar
+      // Body: { published_by: currentUserId }
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setPublishedMercados(prev => new Set(prev).add(mercado.id));
+      
+      toast({ 
+        title: "Venda direta liberada", 
+        description: "A venda direta foi liberada com sucesso para os consumidores." 
+      });
+      
+      setPublishDialogOpen(false);
+      setPublishData({ ciclo: null, mercado: null });
+    } catch (error) {
+      toast({ 
+        title: "Erro ao liberar venda", 
+        description: "Não foi possível liberar a venda direta. Tente novamente.", 
+        variant: "destructive" 
+      });
+    }
+  };
+
   return (
     <ResponsiveLayout leftHeaderContent={<Button variant="ghost" size="icon" onClick={() => navigate('/admin/dashboard')} className="text-white hover:bg-white/20"><ArrowLeft className="h-5 w-5" /></Button>}>
       <div className="space-y-6">
@@ -267,28 +321,57 @@ export default function AdminCicloIndex() {
                                 <TooltipContent><p>Inserir/editar ofertas</p></TooltipContent>
                               </Tooltip>
                               {mercadoAtual && (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button 
-                                      variant="outline" 
-                                      size="icon" 
-                                      onClick={() => handleComposicao(ciclo, mercadoAtual)}
-                                      disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
-                                      className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
-                                    >
-                                      {(() => {
-                                        const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
-                                        return <Icon className="h-5 w-5 text-success" />;
-                                      })()}
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>{isMercadoBloqueado(ciclo, mercadoAtual) 
-                                      ? 'Esse mercado está bloqueado até compor o anterior' 
-                                      : getComposicaoTooltip(mercadoAtual.tipo_venda)}
-                                    </p>
-                                  </TooltipContent>
-                                </Tooltip>
+                                <>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button 
+                                        variant="outline" 
+                                        size="icon" 
+                                        onClick={() => handleComposicao(ciclo, mercadoAtual)}
+                                        disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
+                                        className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                                        aria-label={getComposicaoTooltip(mercadoAtual.tipo_venda)}
+                                      >
+                                        {(() => {
+                                          const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
+                                          return <Icon className="h-5 w-5 text-success" />;
+                                        })()}
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>{isMercadoBloqueado(ciclo, mercadoAtual) 
+                                        ? 'Esse mercado está bloqueado até compor o anterior' 
+                                        : getComposicaoTooltip(mercadoAtual.tipo_venda)}
+                                      </p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                  {mercadoAtual.tipo_venda === 'venda_direta' && (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button 
+                                          variant="outline" 
+                                          size="icon" 
+                                          onClick={() => handlePublishClick(ciclo, mercadoAtual)}
+                                          disabled={!canPublishVendaDireta(ciclo, mercadoAtual).can}
+                                          className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                                          aria-label="Liberar venda direta para consumidores"
+                                        >
+                                          <Megaphone className="h-5 w-5 text-success" />
+                                          {publishedMercados.has(mercadoAtual.id) && (
+                                            <span className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full" />
+                                          )}
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>
+                                          {canPublishVendaDireta(ciclo, mercadoAtual).can 
+                                            ? 'Liberar venda direta para consumidores' 
+                                            : canPublishVendaDireta(ciclo, mercadoAtual).reason}
+                                        </p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  )}
+                                </>
                               )}
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -339,7 +422,43 @@ export default function AdminCicloIndex() {
         </div>
       </FiltersPanel>
 
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Confirmar exclusão</AlertDialogTitle><AlertDialogDescription>Deseja realmente excluir este ciclo? Esta ação não pode ser desfeita.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>Cancelar</AlertDialogCancel><AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">Excluir Ciclo</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Deseja realmente excluir este ciclo? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+              Excluir Ciclo
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={publishDialogOpen} onOpenChange={setPublishDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Liberar venda direta?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {publishData.ciclo && publishData.mercado && (
+                <>
+                  Isso publicará a venda direta do <strong>{publishData.mercado.nome_mercado}</strong> no ciclo <strong>{publishData.ciclo.nome}</strong> para os consumidores.
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setPublishDialogOpen(false)}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmPublish} className="bg-success hover:bg-success/90">
+              Liberar venda
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ResponsiveLayout>
   );
 }
