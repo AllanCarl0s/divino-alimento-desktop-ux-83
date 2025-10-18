@@ -64,6 +64,8 @@ import AdminComposicaoCesta from "./pages/admin/AdminComposicaoCesta";
 import AdminComposicaoLote from "./pages/admin/AdminComposicaoLote";
 import AdminComposicaoVendaDiretaLiberar from "./pages/admin/AdminComposicaoVendaDiretaLiberar";
 import AdminComposicaoVendaDiretaCompor from "./pages/admin/AdminComposicaoVendaDiretaCompor";
+import AdminEntregasFornecedores from "./pages/admin/AdminEntregasFornecedores";
+import AdminPedidosConsumidores from "./pages/admin/AdminPedidosConsumidores";
 import Usuarios from "./pages/Usuarios";
 import UsuarioIndex from "./pages/UsuarioIndex";
 import Usuario from "./pages/Usuario";
@@ -143,6 +145,8 @@ const App = () => (
           <Route path="/admin/composicao-lote/:id" element={<AdminComposicaoLote />} />
           <Route path="/admin/composicao-venda-direta/:id" element={<AdminComposicaoVendaDiretaCompor />} />
           <Route path="/admin/composicao-venda-direta-liberar/:id" element={<AdminComposicaoVendaDiretaLiberar />} />
+          <Route path="/admin/entregas-fornecedores/:id" element={<AdminEntregasFornecedores />} />
+          <Route path="/admin/pedidos-consumidores/:id" element={<AdminPedidosConsumidores />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/usuario-index" element={<UsuarioIndex />} />
           <Route path="/usuario" element={<Usuario />} />

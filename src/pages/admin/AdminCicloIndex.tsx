@@ -14,7 +14,7 @@ import { FiltersBar } from '@/components/admin/FiltersBar';
 import { FiltersPanel } from '@/components/admin/FiltersPanel';
 import { useFilters } from '@/hooks/useFilters';
 import { toast } from '@/hooks/use-toast';
-import { Plus, Pencil, Trash2, Tags, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone } from 'lucide-react';
+import { Plus, Pencil, Trash2, Tags, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
 
@@ -336,6 +336,32 @@ export default function AdminCicloIndex() {
                                   </Tooltip>
                                 </>
                               )}
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    size="icon" 
+                                    onClick={() => navigate(`/admin/entregas-fornecedores/${ciclo.id}`)}
+                                    className="h-10 w-10 rounded-full border-2 border-[#F7A418] hover:bg-[#F7A418]/10 transition-all duration-200 hover:shadow-lg"
+                                  >
+                                    <Truck className="h-5 w-5 text-[#F7A418]" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent><p>Entregas dos Fornecedores</p></TooltipContent>
+                              </Tooltip>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    size="icon" 
+                                    onClick={() => navigate(`/admin/pedidos-consumidores/${ciclo.id}`)}
+                                    className="h-10 w-10 rounded-full border-2 border-primary hover:bg-primary/10 transition-all duration-200 hover:shadow-lg"
+                                  >
+                                    <Users className="h-5 w-5 text-primary" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent><p>Pedidos dos Consumidores</p></TooltipContent>
+                              </Tooltip>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button 
