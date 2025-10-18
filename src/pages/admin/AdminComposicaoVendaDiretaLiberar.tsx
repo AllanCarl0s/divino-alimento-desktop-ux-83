@@ -4,24 +4,16 @@ import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { toast } from '@/hooks/use-toast';
-import { Search, ArrowLeft, AlertTriangle, Trash2 } from 'lucide-react';
+import { Search, ArrowLeft, AlertTriangle, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
-interface ProdutoOfertado {
-  id: string;
-  nome: string;
-  unidade: string;
-  valor: number;
-  fornecedor: string;
-  quantidadeOfertada: number;
-  selecionado: boolean;
-}
+import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
+import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
 
 export default function AdminComposicaoVendaDiretaLiberar() {
   const { id } = useParams();
@@ -32,52 +24,68 @@ export default function AdminComposicaoVendaDiretaLiberar() {
   const [busca, setBusca] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   
-  const [produtos, setProdutos] = useState<ProdutoOfertado[]>([
+  // selectedByGroup: groupKey -> variantId
+  const [selectedByGroup, setSelectedByGroup] = useState<Map<string, string>>(new Map());
+  // composicao: variantId -> quantidade
+  const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
+  
+  // Dados mock com produto_base
+  const [ofertas] = useState<Oferta[]>([
     {
       id: '1',
-      nome: 'Tomate Orgânico',
+      produto_base: 'Tomate Orgânico',
+      nome: 'Tomate Orgânico (kg)',
       unidade: 'kg',
       valor: 4.50,
       fornecedor: 'João Produtor',
       quantidadeOfertada: 50,
-      selecionado: true,
     },
     {
       id: '2',
-      nome: 'Alface Crespa',
-      unidade: 'maço',
-      valor: 2.00,
+      produto_base: 'Tomate Orgânico',
+      nome: 'Tomate Orgânico (cx)',
+      unidade: 'cx',
+      valor: 20.00,
       fornecedor: 'Maria Horta',
-      quantidadeOfertada: 30,
-      selecionado: true,
+      quantidadeOfertada: 15,
     },
     {
       id: '3',
-      nome: 'Cenoura',
+      produto_base: 'Tomate Orgânico',
+      nome: 'Tomate Orgânico (kg)',
       unidade: 'kg',
-      valor: 3.20,
+      valor: 4.20,
       fornecedor: 'Sítio Verde',
-      quantidadeOfertada: 40,
-      selecionado: false,
+      quantidadeOfertada: 30,
     },
     {
       id: '4',
-      nome: 'Ovos Caipiras',
+      produto_base: 'Alface Crespa',
+      nome: 'Alface Crespa (kg)',
+      unidade: 'kg',
+      valor: 3.20,
+      fornecedor: 'Maria Horta',
+      quantidadeOfertada: 30,
+    },
+    {
+      id: '5',
+      produto_base: 'Alface Crespa',
+      nome: 'Alface Crespa (maço)',
+      unidade: 'maço',
+      valor: 2.00,
+      fornecedor: 'João Produtor',
+      quantidadeOfertada: 50,
+    },
+    {
+      id: '6',
+      produto_base: 'Ovos Caipiras',
+      nome: 'Ovos Caipiras (dúzia)',
       unidade: 'dúzia',
       valor: 15.00,
       fornecedor: 'Sítio Boa Vista',
       quantidadeOfertada: 100,
-      selecionado: true,
-    },
-    {
-      id: '5',
-      nome: 'Banana Prata',
-      unidade: 'kg',
-      valor: 5.00,
-      fornecedor: 'João Produtor',
-      quantidadeOfertada: 60,
-      selecionado: false,
     },
   ]);
 
@@ -88,37 +96,98 @@ export default function AdminComposicaoVendaDiretaLiberar() {
     tipo: 'Venda Direta'
   };
 
-  // Filtrar produtos pela busca
-  const produtosFiltrados = useMemo(() => {
-    if (!busca.trim()) return produtos;
-    const termo = busca.toLowerCase();
-    return produtos.filter(p => 
-      p.nome.toLowerCase().includes(termo) || 
-      p.fornecedor.toLowerCase().includes(termo)
-    );
-  }, [produtos, busca]);
+  // Agrupar e filtrar produtos
+  const productGroups = useMemo(() => {
+    const groups = groupAndSortProducts(ofertas);
+    return filterProducts(groups, busca);
+  }, [ofertas, busca]);
 
-  // Produtos selecionados
-  const produtosSelecionados = useMemo(() => {
-    return produtos.filter(p => p.selecionado);
-  }, [produtos]);
+  // Calcular itens selecionados
+  const selectedItems = useMemo(() => {
+    const items: Array<{ id: string; valor: number; quantidade: number }> = [];
+    selectedByGroup.forEach((variantId) => {
+      const quantidade = composicao.get(variantId) || 0;
+      if (quantidade > 0) {
+        const oferta = ofertas.find(o => o.id === variantId);
+        if (oferta) {
+          items.push({
+            id: variantId,
+            valor: oferta.valor,
+            quantidade,
+          });
+        }
+      }
+    });
+    return items;
+  }, [selectedByGroup, composicao, ofertas]);
 
-  // Cálculos
-  const valorTotal = produtosSelecionados.reduce((acc, p) => acc + (p.valor * p.quantidadeOfertada), 0);
+  // Cálculos reativos
+  const valorTotal = selectedItems.reduce((acc, item) => {
+    return acc + (item.valor * item.quantidade);
+  }, 0);
+  
   const saldo = ciclo.valorMaximo - valorTotal;
-  const quantidadeTotal = produtosSelecionados.length;
   const excedeuValor = valorTotal > ciclo.valorMaximo;
 
-  const handleToggleProduto = (id: string) => {
-    setProdutos(prev => prev.map(p => 
-      p.id === id ? { ...p, selecionado: !p.selecionado } : p
-    ));
+  const handleSelectVariant = (groupKey: string, variantId: string) => {
+    setSelectedByGroup(prev => {
+      const newMap = new Map(prev);
+      newMap.set(groupKey, variantId);
+      return newMap;
+    });
   };
 
-  const handleRemoverProduto = (id: string) => {
-    setProdutos(prev => prev.map(p => 
-      p.id === id ? { ...p, selecionado: false } : p
-    ));
+  const handleClearGroup = (groupKey: string) => {
+    const variantId = selectedByGroup.get(groupKey);
+    if (variantId) {
+      setSelectedByGroup(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(groupKey);
+        return newMap;
+      });
+      setComposicao(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(variantId);
+        return newMap;
+      });
+    }
+  };
+
+  const handleQuantidadeChange = (variantId: string, quantidade: number) => {
+    const oferta = ofertas.find(o => o.id === variantId);
+    if (!oferta) return;
+    
+    const validQuantity = Math.max(0, Math.min(quantidade, oferta.quantidadeOfertada));
+    
+    setComposicao(prev => {
+      const newMap = new Map(prev);
+      if (validQuantity === 0) {
+        newMap.delete(variantId);
+      } else {
+        newMap.set(variantId, validQuantity);
+      }
+      return newMap;
+    });
+  };
+
+  const toggleGroupExpansion = (groupKey: string) => {
+    setExpandedGroups(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(groupKey)) {
+        newSet.delete(groupKey);
+      } else {
+        newSet.add(groupKey);
+      }
+      return newSet;
+    });
+  };
+
+  const expandAll = () => {
+    setExpandedGroups(new Set(productGroups.map(g => g.produto_base)));
+  };
+
+  const collapseAll = () => {
+    setExpandedGroups(new Set());
   };
 
   const handlePublicarClick = () => {
@@ -130,18 +199,11 @@ export default function AdminComposicaoVendaDiretaLiberar() {
   };
 
   const executarPublicacao = () => {
-    const payload = {
-      cicloId: id,
-      mercadoId,
-      produtos: produtosSelecionados.map(p => ({
-        id: p.id,
-        quantidade: p.quantidadeOfertada,
-        valor: p.valor
-      })),
-      valorTotal,
-      valorMaximo: ciclo.valorMaximo,
-      saldo
-    };
+    const payload = selectedItems.map(item => ({
+      produto_id: item.id,
+      valor_unit: item.valor,
+      pedidos: item.quantidade,
+    }));
 
     setIsLoading(true);
     setShowConfirmModal(false);
@@ -149,22 +211,17 @@ export default function AdminComposicaoVendaDiretaLiberar() {
     setTimeout(() => {
       setIsLoading(false);
       
-      const mensagem = excedeuValor 
-        ? 'Venda direta publicada (acima do valor máximo)'
-        : 'Venda direta publicada com sucesso';
-      
       toast({
-        title: mensagem,
-        description: `${produtosSelecionados.length} produto(s), ${formatBRL(valorTotal)}`,
-        className: excedeuValor ? 'bg-yellow-600 text-white border-yellow-700' : 'bg-green-600 text-white border-green-700',
-        duration: 5000,
+        title: "Venda direta publicada com sucesso.",
+        className: "bg-green-600 text-white border-green-700",
       });
       
-      console.log('Auditoria - Venda Direta Publicada:', {
-        timestamp: new Date().toISOString(),
-        acima_do_limite: excedeuValor,
-        payload,
-      });
+      // Telemetria: logar se publicou acima do limite
+      if (excedeuValor) {
+        console.log('Evento: venda_direta_publicada_acima_do_limite', payload);
+      } else {
+        console.log('Dados enviados:', payload);
+      }
 
       setTimeout(() => {
         navigate('/admin/ciclo-index');
@@ -172,7 +229,8 @@ export default function AdminComposicaoVendaDiretaLiberar() {
     }, 1000);
   };
 
-  const podePublicar = produtosSelecionados.length > 0;
+  // Pode publicar se houver pelo menos 1 item selecionado (independente do valor)
+  const podePublicar = selectedItems.length > 0;
 
   return (
     <ResponsiveLayout
@@ -264,13 +322,13 @@ export default function AdminComposicaoVendaDiretaLiberar() {
         )}
 
         {/* Produtos Selecionados */}
-        {produtosSelecionados.length > 0 && (
+        {selectedItems.length > 0 && (
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Produtos Selecionados para Venda Direta</CardTitle>
                 <div className="text-sm text-muted-foreground">
-                  {produtosSelecionados.length} produto(s)
+                  {selectedItems.length} produto(s)
                 </div>
               </div>
             </CardHeader>
@@ -290,28 +348,48 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {produtosSelecionados.map((produto) => {
-                    const valorAcumulado = produto.valor * produto.quantidadeOfertada;
+                  {selectedItems.map((item) => {
+                    const oferta = ofertas.find(o => o.id === item.id);
+                    if (!oferta) return null;
+                    
+                    const valorAcumulado = item.valor * item.quantidade;
+                    const disponiveis = oferta.quantidadeOfertada - item.quantidade;
                     
                     return (
-                      <TableRow key={produto.id}>
-                        <TableCell className="td-texto font-medium">{produto.nome}</TableCell>
-                        <TableCell className="td-texto">{produto.unidade}</TableCell>
-                        <TableCell className="td-valor">{formatBRL(produto.valor)}</TableCell>
-                        <TableCell className="td-texto">{produto.fornecedor}</TableCell>
-                        <TableCell className="td-numero tabular-nums">{produto.quantidadeOfertada}</TableCell>
-                        <TableCell className="td-numero tabular-nums">0</TableCell>
+                      <TableRow key={item.id}>
+                        <TableCell className="td-texto font-medium">{oferta.produto_base}</TableCell>
+                        <TableCell className="td-texto">{oferta.unidade}</TableCell>
+                        <TableCell className="td-valor">{formatBRL(oferta.valor)}</TableCell>
+                        <TableCell className="td-texto">{oferta.fornecedor}</TableCell>
+                        <TableCell className="td-numero tabular-nums">{oferta.quantidadeOfertada}</TableCell>
+                        <TableCell className="td-numero tabular-nums">
+                          <Input
+                            type="number"
+                            min={0}
+                            max={oferta.quantidadeOfertada}
+                            value={item.quantidade}
+                            onChange={(e) => handleQuantidadeChange(item.id, Number(e.target.value))}
+                            className="w-[60px] text-center tabular-nums mx-auto"
+                          />
+                        </TableCell>
                         <TableCell className="td-valor font-medium tabular-nums">
                           {formatBRL(valorAcumulado)}
                         </TableCell>
-                        <TableCell className="td-numero tabular-nums">{produto.quantidadeOfertada}</TableCell>
+                        <TableCell className="td-numero tabular-nums">
+                          <span className={disponiveis < 0 ? 'text-red-600' : ''}>
+                            {disponiveis}
+                          </span>
+                        </TableCell>
                         <TableCell className="td-icone">
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleRemoverProduto(produto.id)}
+                            onClick={() => {
+                              const groupKey = oferta.produto_base;
+                              handleClearGroup(groupKey);
+                            }}
                             className="h-8 w-8 mx-auto transition-opacity hover:opacity-70"
-                            aria-label={`Remover ${produto.nome}`}
+                            aria-label={`Remover ${oferta.produto_base}`}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -325,61 +403,71 @@ export default function AdminComposicaoVendaDiretaLiberar() {
           </Card>
         )}
 
-        {/* Todos os Produtos Ofertados */}
+        {/* Produtos Agrupados */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
-              <CardTitle>Todos os Produtos Ofertados</CardTitle>
-              <div className="relative w-64">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar produto ou fornecedor..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  className="pl-10"
-                />
+              <CardTitle>Produtos Ofertados</CardTitle>
+              <div className="flex items-center gap-2">
+                <div className="relative w-64">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar produto, fornecedor ou unidade..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
+                  className="whitespace-nowrap"
+                >
+                  {expandedGroups.size === productGroups.length ? (
+                    <>
+                      <ChevronUp className="h-4 w-4 mr-1" />
+                      Colapsar tudo
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-4 w-4 mr-1" />
+                      Expandir tudo
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="td-icone">Selecionar</TableHead>
-                  <TableHead className="td-texto">Produto</TableHead>
-                  <TableHead className="td-texto">Medida</TableHead>
-                  <TableHead className="td-valor">Valor Unit.</TableHead>
-                  <TableHead className="td-texto">Fornecedor</TableHead>
-                  <TableHead className="td-numero">Quantidade Ofertada</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {produtosFiltrados.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
-                      Nenhum produto encontrado.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  produtosFiltrados.map((produto) => (
-                    <TableRow key={produto.id}>
-                      <TableCell className="td-icone">
-                        <Checkbox
-                          checked={produto.selecionado}
-                          onCheckedChange={() => handleToggleProduto(produto.id)}
-                          className="mx-auto"
-                        />
-                      </TableCell>
-                      <TableCell className="td-texto font-medium">{produto.nome}</TableCell>
-                      <TableCell className="td-texto">{produto.unidade}</TableCell>
-                      <TableCell className="td-valor">{formatBRL(produto.valor)}</TableCell>
-                      <TableCell className="td-texto">{produto.fornecedor}</TableCell>
-                      <TableCell className="td-numero">{produto.quantidadeOfertada}</TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+            {isLoading ? (
+              <Skeleton className="h-64 w-full" />
+            ) : productGroups.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <p>Nenhuma oferta disponível para este ciclo.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {productGroups.map((group) => {
+                  const selectedVariantId = selectedByGroup.get(group.produto_base) || null;
+                  const quantidadePedida = selectedVariantId ? (composicao.get(selectedVariantId) || 0) : 0;
+
+                  return (
+                    <ProductGroupItem
+                      key={group.produto_base}
+                      group={group}
+                      selectedVariantId={selectedVariantId}
+                      quantidadePedida={quantidadePedida}
+                      onSelectVariant={(variantId) => handleSelectVariant(group.produto_base, variantId)}
+                      onQuantidadeChange={handleQuantidadeChange}
+                      onClear={() => handleClearGroup(group.produto_base)}
+                      isExpanded={expandedGroups.has(group.produto_base)}
+                      onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
+                    />
+                  );
+                })}
+              </div>
+            )}
 
             <div className="flex justify-end gap-4 mt-6">
               <Button 
@@ -411,6 +499,11 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                       <p>Acima do valor máximo — publicação permitida</p>
                     </TooltipContent>
                   )}
+                  {podePublicar && excedeuValor && (
+                    <TooltipContent>
+                      <p>Acima do valor máximo — publicação permitida</p>
+                    </TooltipContent>
+                  )}
                 </Tooltip>
               </TooltipProvider>
             </div>
@@ -431,7 +524,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
               <br />
               <strong>Ciclo:</strong> {ciclo.nome}
               <br />
-              <strong>Produtos:</strong> {produtosSelecionados.length}
+              <strong>Produtos:</strong> {selectedItems.length}
               <br />
               <strong>Valor Total:</strong> {formatBRL(valorTotal)}
               {excedeuValor && (
