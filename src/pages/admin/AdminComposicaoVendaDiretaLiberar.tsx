@@ -203,20 +203,6 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Qtd. Produtos</p>
-                        <p className="text-2xl font-bold">{quantidadeTotal}</p>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Total de produtos selecionados</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="text-right">
                         <p className="text-sm text-muted-foreground">Valor Máximo</p>
                         <p className="text-2xl font-bold">{formatBRL(ciclo.valorMaximo)}</p>
                       </div>
