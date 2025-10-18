@@ -273,7 +273,7 @@ export default function AdminCicloIndex() {
                             </SelectContent>
                           </Select>
                         </TableCell>
-                        <TableCell><Badge variant={ciclo.status === 'ativo' ? 'success' : 'destructive'}>{ciclo.status === 'ativo' ? 'Ativo' : 'Inativo'}</Badge></TableCell>
+                        <TableCell><Badge variant={ciclo.status === 'ativo' ? 'success' : 'warning'}>{ciclo.status === 'ativo' ? 'Ativo' : 'Inativo'}</Badge></TableCell>
                         <TableCell className="text-right">
                           <TooltipProvider>
                             <div className="flex justify-end gap-2">
@@ -283,9 +283,9 @@ export default function AdminCicloIndex() {
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/admin/ciclo/${ciclo.id}`)} 
-                                    className="h-10 w-10 border-2 border-orange-500 hover:bg-orange-500/10"
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <Pencil className="h-5 w-5 text-orange-500" />
+                                    <Pencil className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Editar Ciclo</p></TooltipContent>
@@ -296,9 +296,9 @@ export default function AdminCicloIndex() {
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/oferta/${ciclo.id}`)} 
-                                    className="h-10 w-10 border-2 border-orange-500 hover:bg-orange-500/10"
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <Tags className="h-5 w-5 text-orange-500" />
+                                    <Tags className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Inserir/editar ofertas</p></TooltipContent>
@@ -361,9 +361,9 @@ export default function AdminCicloIndex() {
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/admin/entregas-fornecedores/${ciclo.id}`)}
-                                    className="h-10 w-10 border-2 border-orange-500 hover:bg-orange-500/10"
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <Truck className="h-5 w-5 text-orange-500" />
+                                    <Truck className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Entregas dos Fornecedores</p></TooltipContent>
@@ -374,9 +374,9 @@ export default function AdminCicloIndex() {
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/admin/pedidos-consumidores/${ciclo.id}`)}
-                                    className="h-10 w-10 border-2 border-orange-500 hover:bg-orange-500/10"
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <Users className="h-5 w-5 text-orange-500" />
+                                    <Users className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Pedidos dos Consumidores</p></TooltipContent>
