@@ -66,6 +66,7 @@ import AdminRelatorioFornecedores from "./pages/admin/AdminRelatorioFornecedores
 import AdminRelatorioFornecedoresResultado from "./pages/admin/AdminRelatorioFornecedoresResultado";
 import AdminRelatorioConsumidores from "./pages/admin/AdminRelatorioConsumidores";
 import AdminRelatorioConsumidoresResultado from "./pages/admin/AdminRelatorioConsumidoresResultado";
+import AdminMigrarOfertas from "./pages/admin/AdminMigrarOfertas";
 import Usuarios from "./pages/Usuarios";
 import UsuarioIndex from "./pages/UsuarioIndex";
 import Usuario from "./pages/Usuario";
@@ -147,6 +148,7 @@ const App = () => (
           <Route path="/admin/relatorio-fornecedores/resultado" element={<AdminRelatorioFornecedoresResultado />} />
           <Route path="/admin/relatorio-consumidores" element={<AdminRelatorioConsumidores />} />
           <Route path="/admin/relatorio-consumidores/resultado" element={<AdminRelatorioConsumidoresResultado />} />
+          <Route path="/admin/migrar-ofertas/:idDestino" element={<AdminMigrarOfertas />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/usuario-index" element={<UsuarioIndex />} />
           <Route path="/usuario" element={<Usuario />} />
