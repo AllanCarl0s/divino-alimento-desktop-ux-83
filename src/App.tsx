@@ -63,7 +63,9 @@ import AdminComposicaoVendaDiretaCompor from "./pages/admin/AdminComposicaoVenda
 import AdminEntregasFornecedores from "./pages/admin/AdminEntregasFornecedores";
 import AdminPedidosConsumidores from "./pages/admin/AdminPedidosConsumidores";
 import AdminRelatorioFornecedores from "./pages/admin/AdminRelatorioFornecedores";
+import AdminRelatorioFornecedoresResultado from "./pages/admin/AdminRelatorioFornecedoresResultado";
 import AdminRelatorioConsumidores from "./pages/admin/AdminRelatorioConsumidores";
+import AdminRelatorioConsumidoresResultado from "./pages/admin/AdminRelatorioConsumidoresResultado";
 import Usuarios from "./pages/Usuarios";
 import UsuarioIndex from "./pages/UsuarioIndex";
 import Usuario from "./pages/Usuario";
@@ -141,8 +143,10 @@ const App = () => (
           <Route path="/admin/composicao-venda-direta-liberar/:id" element={<AdminComposicaoVendaDiretaLiberar />} />
               <Route path="/admin/entregas-fornecedores/:id" element={<AdminEntregasFornecedores />} />
               <Route path="/admin/pedidos-consumidores/:id" element={<AdminPedidosConsumidores />} />
-              <Route path="/admin/relatorio-fornecedores" element={<AdminRelatorioFornecedores />} />
-              <Route path="/admin/relatorio-consumidores" element={<AdminRelatorioConsumidores />} />
+          <Route path="/admin/relatorio-fornecedores" element={<AdminRelatorioFornecedores />} />
+          <Route path="/admin/relatorio-fornecedores/resultado" element={<AdminRelatorioFornecedoresResultado />} />
+          <Route path="/admin/relatorio-consumidores" element={<AdminRelatorioConsumidores />} />
+          <Route path="/admin/relatorio-consumidores/resultado" element={<AdminRelatorioConsumidoresResultado />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/usuario-index" element={<UsuarioIndex />} />
           <Route path="/usuario" element={<Usuario />} />
