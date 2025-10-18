@@ -38,8 +38,12 @@ export default function AdminComposicaoLote() {
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
-        setSelectedByGroup(new Map(parsed.selectedByGroup));
-        setComposicao(new Map(parsed.composicao));
+        // Converter arrays de volta para Sets com tipos corretos
+        const selectedMap = new Map<string, Set<string>>(
+          parsed.selectedByGroup.map(([key, value]: [string, string[]]) => [key, new Set<string>(value)])
+        );
+        setSelectedByGroup(selectedMap);
+        setComposicao(new Map<string, number>(parsed.composicao));
         toast({
           title: 'Composição carregada',
           description: 'Dados anteriores foram restaurados.',
