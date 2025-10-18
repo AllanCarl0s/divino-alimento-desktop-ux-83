@@ -408,18 +408,6 @@ export default function AdminComposicaoVendaDiretaCompor() {
                   })}
                 </TableBody>
               </Table>
-
-              <div className="flex justify-end gap-4 mt-6">
-                <Button variant="outline" onClick={() => navigate('/admin/ciclo-index')}>
-                  Voltar
-                </Button>
-                <Button 
-                  onClick={handleSalvar}
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Salvando...' : 'Salvar Composição'}
-                </Button>
-              </div>
             </CardContent>
           </Card>
         )}
@@ -496,6 +484,19 @@ export default function AdminComposicaoVendaDiretaCompor() {
             )}
           </CardContent>
         </Card>
+
+        {/* Botões de ação */}
+        <div className="flex justify-end gap-4 pb-6">
+          <Button variant="outline" onClick={() => navigate('/admin/ciclo-index')}>
+            Voltar
+          </Button>
+          <Button 
+            onClick={handleSalvar}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Salvando...' : 'Salvar Composição'}
+          </Button>
+        </div>
       </div>
     </ResponsiveLayout>
   );
