@@ -16,7 +16,9 @@ import {
   Calendar,
   DollarSign,
   FolderTree,
-  RefreshCcw
+  RefreshCcw,
+  Truck,
+  ShoppingBag
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -216,6 +218,60 @@ const AdminDashboard = () => {
                 </Card>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Relatórios Section */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <FileText className="w-5 h-5 mr-2 text-primary" />
+            Relatórios
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            {/* Card - Relatório Fornecedores */}
+            <Card 
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              onClick={() => navigate('/admin/relatorio-fornecedores')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-primary/10 rounded-full border-2 border-primary">
+                    <Truck className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
+                      Relatório Fornecedores
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Escolha os ciclos e gere o relatório com todas as movimentações dos fornecedores (entregas, valores e quantidades).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Card - Relatório Consumidores */}
+            <Card 
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              onClick={() => navigate('/admin/relatorio-consumidores')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-primary/10 rounded-full border-2 border-primary">
+                    <ShoppingBag className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
+                      Relatório Consumidores
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Escolha os ciclos e gere o relatório com todas as movimentações dos consumidores (por produto ou por cliente).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
