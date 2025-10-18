@@ -181,22 +181,22 @@ const PedidoConsumidores = () => {
     <ResponsiveLayout>
       <div className="p-4 space-y-6">
         {/* Header */}
-        <div className="space-y-2">
-          <Button
-            variant="ghost"
-            size="sm"
+        <div className="space-y-4">
+          <button
             onClick={() => navigate('/dashboard')}
-            className="mb-2"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
-          </Button>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-            Comprar Produtos Venda Direta
-          </h1>
-          <p className="text-muted-foreground">
-            Selecione produtos da feira direta com os produtores
-          </p>
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">Voltar</span>
+          </button>
+          <div className="space-y-2">
+            <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
+              Comprar Produtos Venda Direta
+            </h1>
+            <p className="text-muted-foreground">
+              Selecione produtos da feira direta com os produtores
+            </p>
+          </div>
         </div>
 
         {/* Ciclo Ativo */}
