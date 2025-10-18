@@ -300,7 +300,7 @@ export default function AdminComposicaoVendaDiretaCompor() {
             <CardTitle>Pedidos Finalizados (Base da Composição)</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
+            <Table className="tabela-pedidos-base">
               <TableHeader>
                 <TableRow>
                   <TableHead className="td-texto">Produto</TableHead>
@@ -319,10 +319,10 @@ export default function AdminComposicaoVendaDiretaCompor() {
                     <TableRow key={pedido.produto_id} className="opacity-70">
                       <TableCell className="td-texto font-medium">{pedido.nome_produto}</TableCell>
                       <TableCell className="td-texto">{pedido.unidade}</TableCell>
-                      <TableCell className="td-valor">{formatBRL(pedido.valor_unit)}</TableCell>
+                      <TableCell className="td-valor tabular-nums">{formatBRL(pedido.valor_unit)}</TableCell>
                       <TableCell className="td-texto">{pedido.fornecedor}</TableCell>
-                      <TableCell className="td-numero">{pedido.quantidade}</TableCell>
-                      <TableCell className="td-valor font-medium">
+                      <TableCell className="td-numero tabular-nums">{pedido.quantidade}</TableCell>
+                      <TableCell className="td-valor font-medium tabular-nums">
                         {formatBRL(valorTotal)}
                       </TableCell>
                     </TableRow>
@@ -337,19 +337,26 @@ export default function AdminComposicaoVendaDiretaCompor() {
         {composicao.size > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Produtos Selecionados</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Produtos Selecionados</CardTitle>
+                <div className="text-sm text-muted-foreground">
+                  {composicao.size} produto(s)
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              <Table>
+              <Table className="tabela-produtos-selecionados">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="td-texto">Produto</TableHead>
-                    <TableHead className="td-texto">Fornecedor</TableHead>
                     <TableHead className="td-texto">Medida</TableHead>
                     <TableHead className="td-valor">Valor Unit.</TableHead>
+                    <TableHead className="td-texto">Fornecedor</TableHead>
+                    <TableHead className="td-numero">Ofertados</TableHead>
                     <TableHead className="td-numero">Quantidade</TableHead>
-                    <TableHead className="td-valor">Total</TableHead>
-                    <TableHead className="td-icone"></TableHead>
+                    <TableHead className="td-valor">Valor Total</TableHead>
+                    <TableHead className="td-numero">Disponíveis</TableHead>
+                    <TableHead className="td-icone">Remover</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -357,31 +364,41 @@ export default function AdminComposicaoVendaDiretaCompor() {
                     const oferta = ofertas.find(o => o.id === ofertaId);
                     if (!oferta) return null;
 
+                    const valorTotal = oferta.valor * quantidade;
+                    const disponiveis = oferta.quantidadeOfertada - quantidade;
+
                     return (
                       <TableRow key={ofertaId}>
-                        <TableCell className="td-texto font-medium">{oferta.nome}</TableCell>
-                        <TableCell className="td-texto">{oferta.fornecedor}</TableCell>
+                        <TableCell className="td-texto font-medium">{oferta.produto_base}</TableCell>
                         <TableCell className="td-texto">{oferta.unidade}</TableCell>
-                        <TableCell className="td-valor">{formatBRL(oferta.valor)}</TableCell>
-                        <TableCell className="td-numero">
+                        <TableCell className="td-valor tabular-nums">{formatBRL(oferta.valor)}</TableCell>
+                        <TableCell className="td-texto">{oferta.fornecedor}</TableCell>
+                        <TableCell className="td-numero tabular-nums">{oferta.quantidadeOfertada}</TableCell>
+                        <TableCell className="td-numero tabular-nums">
                           <Input
                             type="number"
-                            min="0"
+                            min={0}
                             max={oferta.quantidadeOfertada}
                             value={quantidade}
                             onChange={(e) => handleQuantidadeChange(ofertaId, parseInt(e.target.value) || 0)}
-                            className="w-20 text-right"
+                            className="w-[60px] text-center tabular-nums mx-auto"
                           />
                         </TableCell>
-                        <TableCell className="td-valor font-medium">
-                          {formatBRL(oferta.valor * quantidade)}
+                        <TableCell className="td-valor font-medium tabular-nums">
+                          {formatBRL(valorTotal)}
+                        </TableCell>
+                        <TableCell className="td-numero tabular-nums">
+                          <span className={disponiveis < 0 ? 'text-red-600' : ''}>
+                            {disponiveis}
+                          </span>
                         </TableCell>
                         <TableCell className="td-icone">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => handleRemoveItem(ofertaId)}
-                            className="h-8 w-8"
+                            className="h-8 w-8 mx-auto transition-opacity hover:opacity-70"
+                            aria-label={`Remover ${oferta.produto_base}`}
                           >
                             <X className="h-4 w-4" />
                           </Button>
