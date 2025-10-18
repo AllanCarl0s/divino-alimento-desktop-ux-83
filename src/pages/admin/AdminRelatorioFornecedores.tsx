@@ -9,9 +9,9 @@ import { toast } from 'sonner';
 
 // Mock data - ciclos disponíveis
 const ciclosDisponiveis = [
-  { id: 1, nome: "Ciclo 01/2024 - Janeiro", status: "Finalizado", dataEntrega: "15/01/2024" },
-  { id: 2, nome: "Ciclo 02/2024 - Fevereiro", status: "Finalizado", dataEntrega: "15/02/2024" },
-  { id: 3, nome: "Ciclo 03/2024 - Março", status: "Ativo", dataEntrega: "15/03/2024" },
+  { id: 1, nome: "1º Ciclo de Outubro", status: "Finalizado", dataEntrega: "15/10/2024" },
+  { id: 2, nome: "2º Ciclo de Outubro", status: "Finalizado", dataEntrega: "30/10/2024" },
+  { id: 3, nome: "1º Ciclo de Novembro", status: "Ativo", dataEntrega: "15/11/2024" },
 ];
 
 const AdminRelatorioFornecedores = () => {

@@ -10,28 +10,28 @@ import { toast } from 'sonner';
 
 // Mock data - ciclos disponíveis
 const ciclosDisponiveis = [
-  { id: 1, nome: "Ciclo 01/2024 - Janeiro", status: "Finalizado" },
-  { id: 2, nome: "Ciclo 02/2024 - Fevereiro", status: "Finalizado" },
-  { id: 3, nome: "Ciclo 03/2024 - Março", status: "Ativo" },
+  { id: 1, nome: "1º Ciclo de Outubro", status: "Finalizado" },
+  { id: 2, nome: "2º Ciclo de Outubro", status: "Finalizado" },
+  { id: 3, nome: "1º Ciclo de Novembro", status: "Ativo" },
 ];
 
 // Mock data - entregas (conforme especificação)
 const mockEntregas = [
-  // Ciclo 01/2024 - Janeiro (Finalizado)
-  { id: 1, fornecedor: "Sítio Boa Vista", ciclo: "Ciclo 01/2024 - Janeiro", produto: "Ovos Caipiras", medida: "dúzia", quantidade: 20, valorUnitario: 15.00, total: 300.00 },
-  { id: 2, fornecedor: "João Produtor", ciclo: "Ciclo 01/2024 - Janeiro", produto: "Banana Prata", medida: "kg", quantidade: 30, valorUnitario: 5.00, total: 150.00 },
+  // 1º Ciclo de Outubro (Finalizado)
+  { id: 1, fornecedor: "Sítio Boa Vista", ciclo: "1º Ciclo de Outubro", produto: "Ovos Caipiras", medida: "dúzia", quantidade: 20, valorUnitario: 15.00, total: 300.00 },
+  { id: 2, fornecedor: "João Produtor", ciclo: "1º Ciclo de Outubro", produto: "Banana Prata", medida: "kg", quantidade: 30, valorUnitario: 5.00, total: 150.00 },
   
-  // Ciclo 02/2024 - Fevereiro (Finalizado)
-  { id: 3, fornecedor: "João Produtor", ciclo: "Ciclo 02/2024 - Fevereiro", produto: "Tomate Orgânico", medida: "kg", quantidade: 50, valorUnitario: 4.50, total: 225.00 },
-  { id: 4, fornecedor: "Maria Horta", ciclo: "Ciclo 02/2024 - Fevereiro", produto: "Alface Crespa", medida: "maço", quantidade: 30, valorUnitario: 2.00, total: 60.00 },
+  // 2º Ciclo de Outubro (Finalizado)
+  { id: 3, fornecedor: "João Produtor", ciclo: "2º Ciclo de Outubro", produto: "Tomate Orgânico", medida: "kg", quantidade: 50, valorUnitario: 4.50, total: 225.00 },
+  { id: 4, fornecedor: "Maria Horta", ciclo: "2º Ciclo de Outubro", produto: "Alface Crespa", medida: "maço", quantidade: 30, valorUnitario: 2.00, total: 60.00 },
   
-  // Ciclo 03/2024 - Março (Ativo)
-  { id: 5, fornecedor: "Sítio Verde", ciclo: "Ciclo 03/2024 - Março", produto: "Tomate Orgânico", medida: "kg", quantidade: 30, valorUnitario: 4.20, total: 126.00 },
-  { id: 6, fornecedor: "Sítio Boa Vista", ciclo: "Ciclo 03/2024 - Março", produto: "Ovos Caipiras", medida: "dúzia", quantidade: 100, valorUnitario: 15.00, total: 1500.00 },
-  { id: 7, fornecedor: "João Produtor", ciclo: "Ciclo 03/2024 - Março", produto: "Banana Prata", medida: "kg", quantidade: 60, valorUnitario: 5.00, total: 300.00 },
-  { id: 8, fornecedor: "João Produtor", ciclo: "Ciclo 03/2024 - Março", produto: "Tomate Orgânico", medida: "kg", quantidade: 25, valorUnitario: 4.50, total: 112.50 },
-  { id: 9, fornecedor: "Maria Horta", ciclo: "Ciclo 03/2024 - Março", produto: "Tomate Orgânico", medida: "kg", quantidade: 25, valorUnitario: 4.20, total: 105.00 },
-  { id: 10, fornecedor: "Sítio Verde", ciclo: "Ciclo 03/2024 - Março", produto: "Tomate Orgânico", medida: "kg", quantidade: 25, valorUnitario: 4.80, total: 120.00 },
+  // 1º Ciclo de Novembro (Ativo)
+  { id: 5, fornecedor: "Sítio Verde", ciclo: "1º Ciclo de Novembro", produto: "Tomate Orgânico", medida: "kg", quantidade: 30, valorUnitario: 4.20, total: 126.00 },
+  { id: 6, fornecedor: "Sítio Boa Vista", ciclo: "1º Ciclo de Novembro", produto: "Ovos Caipiras", medida: "dúzia", quantidade: 100, valorUnitario: 15.00, total: 1500.00 },
+  { id: 7, fornecedor: "João Produtor", ciclo: "1º Ciclo de Novembro", produto: "Banana Prata", medida: "kg", quantidade: 60, valorUnitario: 5.00, total: 300.00 },
+  { id: 8, fornecedor: "João Produtor", ciclo: "1º Ciclo de Novembro", produto: "Tomate Orgânico", medida: "kg", quantidade: 25, valorUnitario: 4.50, total: 112.50 },
+  { id: 9, fornecedor: "Maria Horta", ciclo: "1º Ciclo de Novembro", produto: "Tomate Orgânico", medida: "kg", quantidade: 25, valorUnitario: 4.20, total: 105.00 },
+  { id: 10, fornecedor: "Sítio Verde", ciclo: "1º Ciclo de Novembro", produto: "Tomate Orgânico", medida: "kg", quantidade: 25, valorUnitario: 4.80, total: 120.00 },
 ];
 
 const AdminRelatorioFornecedoresResultado = () => {

@@ -10,17 +10,17 @@ import { toast } from 'sonner';
 
 // Mock data - ciclos disponíveis
 const ciclosDisponiveis = [
-  { id: 1, nome: "Ciclo 01/2024 - Janeiro", status: "Finalizado" },
-  { id: 2, nome: "Ciclo 02/2024 - Fevereiro", status: "Finalizado" },
-  { id: 3, nome: "Ciclo 03/2024 - Março", status: "Ativo" },
+  { id: 1, nome: "1º Ciclo de Outubro", status: "Finalizado" },
+  { id: 2, nome: "2º Ciclo de Outubro", status: "Finalizado" },
+  { id: 3, nome: "1º Ciclo de Novembro", status: "Ativo" },
 ];
 
 // Mock data - pedidos de consumidores (conforme especificação)
 const mockPedidos = [
-  { id: 1, consumidor: "Ana Souza", ciclo: "Ciclo 02/2024 - Fevereiro", produto: "Alface Crespa", medida: "maço", quantidade: 3, valorUnitario: 2.00, total: 6.00 },
-  { id: 2, consumidor: "Carlos Lima", ciclo: "Ciclo 03/2024 - Março", produto: "Tomate Orgânico", medida: "kg", quantidade: 5, valorUnitario: 4.50, total: 22.50 },
-  { id: 3, consumidor: "Beatriz Ramos", ciclo: "Ciclo 01/2024 - Janeiro", produto: "Ovos Caipiras", medida: "dúzia", quantidade: 2, valorUnitario: 15.00, total: 30.00 },
-  { id: 4, consumidor: "Diego Alves", ciclo: "Ciclo 03/2024 - Março", produto: "Banana Prata", medida: "kg", quantidade: 4, valorUnitario: 5.00, total: 20.00 },
+  { id: 1, consumidor: "Ana Souza", ciclo: "2º Ciclo de Outubro", produto: "Alface Crespa", medida: "maço", quantidade: 3, valorUnitario: 2.00, total: 6.00 },
+  { id: 2, consumidor: "Carlos Lima", ciclo: "1º Ciclo de Novembro", produto: "Tomate Orgânico", medida: "kg", quantidade: 5, valorUnitario: 4.50, total: 22.50 },
+  { id: 3, consumidor: "Beatriz Ramos", ciclo: "1º Ciclo de Outubro", produto: "Ovos Caipiras", medida: "dúzia", quantidade: 2, valorUnitario: 15.00, total: 30.00 },
+  { id: 4, consumidor: "Diego Alves", ciclo: "1º Ciclo de Novembro", produto: "Banana Prata", medida: "kg", quantidade: 4, valorUnitario: 5.00, total: 20.00 },
 ];
 
 const AdminRelatorioConsumidoresResultado = () => {
