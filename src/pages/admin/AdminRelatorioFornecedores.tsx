@@ -53,13 +53,13 @@ const AdminRelatorioFornecedores = () => {
 
   return (
     <ResponsiveLayout
-      headerContent={
+      leftHeaderContent={
         <button
           onClick={() => navigate('/admin/dashboard')}
-          className="flex items-center text-primary-foreground hover:underline focus-ring"
+          className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
+          aria-label="Voltar"
         >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Voltar
+          <ArrowLeft className="w-5 h-5" />
         </button>
       }
     >
