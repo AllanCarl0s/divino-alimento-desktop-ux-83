@@ -42,10 +42,7 @@ import AdminProdutoEditar from "./pages/admin/AdminProdutoEditar";
 import AdminProdutosComercialivaveis from "./pages/admin/AdminProdutosComercialivaveis";
 import AdminProdutoComercializavelNovo from "./pages/admin/AdminProdutoComercializavelNovo";
 import AdminProdutoComercializavelEditar from "./pages/admin/AdminProdutoComercializavelEditar";
-import AdminProdutosSubmissoes from "./pages/admin/AdminProdutosSubmissoes";
-import AdminEstoque from "./pages/admin/AdminEstoque";
 import AdminConfig from "./pages/admin/AdminConfig";
-import AdminVenda from "./pages/admin/AdminVenda";
 import AdminCestas from "./pages/admin/AdminCestas";
 import AdminComposicao from "./pages/admin/AdminComposicao";
 import AdminResumo from "./pages/admin/AdminResumo";
@@ -56,7 +53,6 @@ import AdminKitandinhaNovoCiclo from "./pages/admin/AdminKitandinhaNovoCiclo";
 import AdminKitandinhaComposicao from "./pages/admin/AdminKitandinhaComposicao";
 import AdminKitandinhaResumo from "./pages/admin/AdminKitandinhaResumo";
 import AdminKitandinhaGestao from "./pages/admin/AdminKitandinhaGestao";
-import AdminRelatorios from "./pages/admin/AdminRelatorios";
 import AdminCicloIndex from "./pages/admin/AdminCicloIndex";
 import AdminCiclo from "./pages/admin/AdminCiclo";
 import AdminOferta from "./pages/admin/AdminOferta";
@@ -123,10 +119,7 @@ const App = () => (
           <Route path="/admin/produtos-comercializaveis" element={<AdminProdutosComercialivaveis />} />
           <Route path="/admin/produto-comercializavel" element={<AdminProdutoComercializavelNovo />} />
           <Route path="/admin/produto-comercializavel/:id" element={<AdminProdutoComercializavelEditar />} />
-          <Route path="/admin/produtos-submissoes" element={<AdminProdutosSubmissoes />} />
-          <Route path="/admin/estoque" element={<AdminEstoque />} />
           <Route path="/admin/config" element={<AdminConfig />} />
-          <Route path="/admin/venda" element={<AdminVenda />} />
           <Route path="/admin/cestas" element={<AdminCestas />} />
           <Route path="/admin/cestas/composicao/:id" element={<AdminComposicao />} />
           <Route path="/admin/cestas/resumo/:id" element={<AdminResumo />} />
@@ -138,7 +131,6 @@ const App = () => (
           <Route path="/admin/kitandinha/composicao/:id" element={<AdminKitandinhaComposicao />} />
           <Route path="/admin/kitandinha/resumo/:id" element={<AdminKitandinhaResumo />} />
           <Route path="/admin/kitandinha/gestao/:id" element={<AdminKitandinhaGestao />} />
-          <Route path="/admin/relatorios" element={<AdminRelatorios />} />
           <Route path="/admin/ciclo-index" element={<AdminCicloIndex />} />
           <Route path="/admin/ciclo" element={<AdminCiclo />} />
           <Route path="/admin/ciclo/:id" element={<AdminCiclo />} />

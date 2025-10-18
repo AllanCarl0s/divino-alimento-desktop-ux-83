@@ -67,20 +67,6 @@ const AdminDashboard = () => {
       badge: null
     },
     {
-      title: 'Produtos (Submissões)',
-      description: 'Aprovar produtos enviados por fornecedores',
-      icon: Package,
-      route: '/admin/produtos-submissoes',
-      badge: '8 pendentes'
-    },
-    {
-      title: 'Estoque',
-      description: 'Controle de estoque e disponibilidade',
-      icon: Warehouse,
-      route: '/admin/estoque',
-      badge: null
-    },
-    {
       title: 'Categorias de Produtos',
       description: 'Gerenciar categorias dos produtos comercializados',
       icon: FolderTree,
@@ -99,20 +85,6 @@ const AdminDashboard = () => {
       description: 'Gerenciar perfis e acessos',
       icon: Users,
       route: '/usuario-index',
-      badge: null
-    },
-    {
-      title: 'Página de Venda',
-      description: 'Configurar ofertas e cestas',
-      icon: ShoppingCart,
-      route: '/admin/venda',
-      badge: null
-    },
-    {
-      title: 'Relatórios',
-      description: 'Relatórios gerenciais e analytics',
-      icon: FileText,
-      route: '/admin/relatorios',
       badge: null
     },
     {
