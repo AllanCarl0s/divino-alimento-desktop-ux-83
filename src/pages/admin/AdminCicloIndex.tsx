@@ -288,29 +288,6 @@ export default function AdminCicloIndex() {
                               </Tooltip>
                               {mercadoAtual && (
                                 <>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button 
-                                        variant="outline" 
-                                        size="icon" 
-                                        onClick={() => handleComposicao(ciclo, mercadoAtual)}
-                                        disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
-                                        className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
-                                        aria-label={getComposicaoTooltip(mercadoAtual.tipo_venda)}
-                                      >
-                                        {(() => {
-                                          const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
-                                          return <Icon className="h-5 w-5 text-success" />;
-                                        })()}
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>{isMercadoBloqueado(ciclo, mercadoAtual) 
-                                        ? 'Esse mercado está bloqueado até compor o anterior' 
-                                        : getComposicaoTooltip(mercadoAtual.tipo_venda)}
-                                      </p>
-                                    </TooltipContent>
-                                  </Tooltip>
                                   {mercadoAtual.tipo_venda === 'venda_direta' && (
                                     <Tooltip>
                                       <TooltipTrigger asChild>
@@ -334,6 +311,29 @@ export default function AdminCicloIndex() {
                                       </TooltipContent>
                                     </Tooltip>
                                   )}
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button 
+                                        variant="outline" 
+                                        size="icon" 
+                                        onClick={() => handleComposicao(ciclo, mercadoAtual)}
+                                        disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
+                                        className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                                        aria-label={getComposicaoTooltip(mercadoAtual.tipo_venda)}
+                                      >
+                                        {(() => {
+                                          const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
+                                          return <Icon className="h-5 w-5 text-success" />;
+                                        })()}
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>{isMercadoBloqueado(ciclo, mercadoAtual) 
+                                        ? 'Esse mercado está bloqueado até compor o anterior' 
+                                        : getComposicaoTooltip(mercadoAtual.tipo_venda)}
+                                      </p>
+                                    </TooltipContent>
+                                  </Tooltip>
                                 </>
                               )}
                               <Tooltip>
