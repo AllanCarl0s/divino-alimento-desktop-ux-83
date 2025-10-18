@@ -38,7 +38,8 @@ export default function AdminCicloIndex() {
   const [mercadoSelecionado, setMercadoSelecionado] = useState<Record<string, string>>({
     '1': 'm2',
     '2': 'm4',
-    '3': 'm6'
+    '3': 'm6',
+    '4': 'm10'
   });
   const [ciclos, setCiclos] = useState<Ciclo[]>([
     { 
@@ -66,6 +67,21 @@ export default function AdminCicloIndex() {
       mercados: [
         { id: 'm4', ciclo_id: '2', mercado_id: '1', nome_mercado: 'Mercado Central', tipo_venda: 'cesta', ordem: 1, status_composicao: 'concluida' },
         { id: 'm5', ciclo_id: '2', mercado_id: '2', nome_mercado: 'Mercado Zona Norte', tipo_venda: 'lote', ordem: 2, status_composicao: 'concluida' }
+      ]
+    },
+    { 
+      id: '4', 
+      nome: '3º Ciclo de Setembro', 
+      inicio_ofertas: '2025-09-09', 
+      fim_ofertas: '2025-09-16',
+      status: 'inativo',
+      admin_responsavel_id: '4',
+      admin_responsavel_nome: 'Pedro Almeida',
+      mercados: [
+        { id: 'm7', ciclo_id: '4', mercado_id: '1', nome_mercado: 'Mercado 1', tipo_venda: 'lote', ordem: 1, status_composicao: 'concluida' },
+        { id: 'm8', ciclo_id: '4', mercado_id: '2', nome_mercado: 'Mercado 2', tipo_venda: 'venda_direta', ordem: 2, status_composicao: 'concluida' },
+        { id: 'm9', ciclo_id: '4', mercado_id: '3', nome_mercado: 'Mercado 3', tipo_venda: 'cesta', ordem: 3, status_composicao: 'concluida' },
+        { id: 'm10', ciclo_id: '4', mercado_id: '4', nome_mercado: 'Mercado 4', tipo_venda: 'cesta', ordem: 4, status_composicao: 'concluida' }
       ]
     },
     { 
@@ -162,6 +178,7 @@ export default function AdminCicloIndex() {
   };
 
   const isMercadoBloqueado = (ciclo: Ciclo, mercado: CicloMercado): boolean => {
+    if (ciclo.status === 'inativo') return true;
     if (mercado.ordem === 1) return false;
     const mercadoAnterior = ciclo.mercados.find(m => m.ordem === mercado.ordem - 1);
     return mercadoAnterior ? mercadoAnterior.status_composicao !== 'concluida' : true;
@@ -256,7 +273,7 @@ export default function AdminCicloIndex() {
                             </SelectContent>
                           </Select>
                         </TableCell>
-                        <TableCell><Badge variant={ciclo.status === 'ativo' ? 'success' : 'warning'}>{ciclo.status === 'ativo' ? 'Ativo' : 'Inativo'}</Badge></TableCell>
+                        <TableCell><Badge variant={ciclo.status === 'ativo' ? 'success' : 'destructive'}>{ciclo.status === 'ativo' ? 'Ativo' : 'Inativo'}</Badge></TableCell>
                         <TableCell className="text-right">
                           <TooltipProvider>
                             <div className="flex justify-end gap-2">
@@ -311,29 +328,31 @@ export default function AdminCicloIndex() {
                                       </TooltipContent>
                                     </Tooltip>
                                   )}
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button 
-                                        variant="outline" 
-                                        size="icon" 
-                                        onClick={() => handleComposicao(ciclo, mercadoAtual)}
-                                        disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
-                                        className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
-                                        aria-label={getComposicaoTooltip(mercadoAtual.tipo_venda)}
-                                      >
-                                        {(() => {
-                                          const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
-                                          return <Icon className="h-5 w-5 text-success" />;
-                                        })()}
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>{isMercadoBloqueado(ciclo, mercadoAtual) 
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button 
+                                      variant="outline" 
+                                      size="icon" 
+                                      onClick={() => handleComposicao(ciclo, mercadoAtual)}
+                                      disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
+                                      className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                                      aria-label={getComposicaoTooltip(mercadoAtual.tipo_venda)}
+                                    >
+                                      {(() => {
+                                        const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
+                                        return <Icon className="h-5 w-5 text-success" />;
+                                      })()}
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>{ciclo.status === 'inativo' 
+                                      ? 'Ciclo finalizado' 
+                                      : isMercadoBloqueado(ciclo, mercadoAtual) 
                                         ? 'Esse mercado está bloqueado até compor o anterior' 
                                         : getComposicaoTooltip(mercadoAtual.tipo_venda)}
-                                      </p>
-                                    </TooltipContent>
-                                  </Tooltip>
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
                                 </>
                               )}
                               <Tooltip>
