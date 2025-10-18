@@ -316,7 +316,7 @@ export default function AdminComposicaoVendaDiretaCompor() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between gap-4">
-              <CardTitle>Produtos Ofertados</CardTitle>
+              <CardTitle>Produtos com mais de um fornecedor (selecione a origem)</CardTitle>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
