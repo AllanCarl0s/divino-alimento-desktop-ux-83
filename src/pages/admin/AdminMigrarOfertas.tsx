@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Edit2 } from "lucide-react";
+import { ArrowLeft, Edit2, Check } from "lucide-react";
+import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -233,33 +234,31 @@ const AdminMigrarOfertas = () => {
   const totalValor = produtosSelecionados.reduce((sum, p) => sum + (p.qtdMigrar * p.valor), 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      {/* Header */}
-      <div className="bg-warning p-4">
-        <div className="container mx-auto flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/admin/ciclo-index")}
-            className="text-warning-foreground hover:bg-warning-foreground/10"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="flex-1">
-            <h1 className="text-xl font-bold text-warning-foreground">Migrar Ofertas entre Ciclos</h1>
-            <p className="text-sm text-warning-foreground/80">
-              Selecione o ciclo de destino e as origens de onde deseja migrar produtos
-            </p>
-          </div>
+    <ResponsiveLayout 
+      leftHeaderContent={
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => navigate('/admin/ciclo-index')} 
+          className="text-white hover:bg-white/20"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+      }
+    >
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">Migrar Ofertas entre Ciclos</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
+            Selecione o ciclo de destino e as origens de onde deseja migrar produtos
+          </p>
         </div>
-      </div>
 
-      <div className="container mx-auto py-8">
         {/* Seleção de Ciclo Destino (se não houver destinoId válido) */}
         {!cicloDestino && (
-          <Card className="mb-6 border-warning/50 bg-warning/5">
+          <Card>
             <CardHeader>
-              <CardTitle>Selecione o Ciclo de Destino</CardTitle>
+              <CardTitle className="text-primary">Selecione o Ciclo de Destino</CardTitle>
               <CardDescription>
                 Escolha um ciclo ativo para onde deseja migrar as ofertas
               </CardDescription>
@@ -284,16 +283,16 @@ const AdminMigrarOfertas = () => {
         {/* Card do Ciclo Destino */}
         {cicloDestino && (
           <>
-            <Card className="mb-6 border-primary/20 bg-card">
+            <Card className="shadow-sm">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
                     <CardTitle className="text-primary">Ciclo de Destino</CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-base">
                       {cicloDestino.nome} • {cicloDestino.periodo}
                     </CardDescription>
                   </div>
-                  <Badge className="bg-green-500 text-white">
+                  <Badge variant="success">
                     {cicloDestino.status}
                   </Badge>
                 </div>
@@ -301,9 +300,9 @@ const AdminMigrarOfertas = () => {
             </Card>
 
             {/* Seleção de Ciclos de Origem */}
-            <Card className="mb-6">
+            <Card className="shadow-sm">
               <CardHeader>
-                <CardTitle>Selecione os ciclos que deseja migrar as sobras</CardTitle>
+                <CardTitle className="text-primary">Selecione os ciclos que deseja migrar as sobras</CardTitle>
                 <CardDescription>
                   Você pode selecionar múltiplos ciclos finalizados
                 </CardDescription>
@@ -318,8 +317,12 @@ const AdminMigrarOfertas = () => {
                     {ciclosFinalizados.map((ciclo) => (
                       <Card
                         key={ciclo.id}
-                        className={`cursor-pointer transition-all hover:border-primary/50 ${ciclosOrigemIds.includes(ciclo.id) ? 'border-primary bg-primary/5' : ''
-                          }`}
+                        className={`cursor-pointer transition-all hover:shadow-md ${
+                          ciclosOrigemIds.includes(ciclo.id) 
+                            ? 'border-primary border-2 bg-primary/5' 
+                            : 'border hover:border-primary/50'
+                        }`}
+                        onClick={() => handleToggleCicloOrigem(ciclo.id)}
                       >
                         <CardHeader className="p-4">
                           <div className="flex items-center gap-4">
@@ -328,10 +331,10 @@ const AdminMigrarOfertas = () => {
                               onCheckedChange={() => handleToggleCicloOrigem(ciclo.id)}
                             />
                             <div className="flex-1">
-                              <CardTitle className="text-base">{ciclo.nome}</CardTitle>
+                              <CardTitle className="text-base font-semibold">{ciclo.nome}</CardTitle>
                               <CardDescription className="text-sm">{ciclo.periodo}</CardDescription>
                             </div>
-                            <Badge className="bg-orange-500 text-white">
+                            <Badge variant="warning">
                               {ciclo.status}
                             </Badge>
                           </div>
@@ -350,7 +353,7 @@ const AdminMigrarOfertas = () => {
                   <Button
                     onClick={handleCarregarSobras}
                     disabled={ciclosOrigemIds.length === 0}
-                    className="bg-green-600 hover:bg-green-700 text-white"
+                    variant="success"
                   >
                     Carregar sobras selecionadas
                   </Button>
@@ -362,11 +365,11 @@ const AdminMigrarOfertas = () => {
 
         {/* Tabela de Produtos (quando houver produtos carregados) */}
         {produtos.length > 0 && (
-          <Card>
+          <Card className="shadow-sm">
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <CardTitle>Produtos que sobraram</CardTitle>
+                  <CardTitle className="text-primary">Produtos que sobraram</CardTitle>
                   <CardDescription>
                     Selecione os produtos e quantidades que deseja migrar
                   </CardDescription>
@@ -376,6 +379,7 @@ const AdminMigrarOfertas = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleSelecionarTodos}
+                    className="border-primary text-primary hover:bg-primary/10"
                   >
                     Selecionar todos
                   </Button>
@@ -383,6 +387,7 @@ const AdminMigrarOfertas = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleLimparSelecao}
+                    className="border-primary text-primary hover:bg-primary/10"
                   >
                     Limpar seleção
                   </Button>
@@ -497,10 +502,10 @@ const AdminMigrarOfertas = () => {
                                     <Button
                                       size="sm"
                                       onClick={() => handleSalvarEdicao(produto.id)}
-                                      className="bg-green-600 hover:bg-green-700 text-white"
-                                    >
-                                      Salvar
-                                    </Button>
+                                     variant="success"
+                                   >
+                                     Salvar
+                                   </Button>
                                   </div>
                                 </div>
                               </PopoverContent>
@@ -515,22 +520,22 @@ const AdminMigrarOfertas = () => {
 
               {/* Totais */}
               <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                <Card className="border-primary/20 bg-primary/5">
+                <Card className="border-primary/20 bg-primary/5 shadow-sm">
                   <CardHeader className="pb-3">
-                    <CardDescription>Itens selecionados</CardDescription>
-                    <CardTitle className="text-2xl">{totalItens}</CardTitle>
+                    <CardDescription className="text-sm font-medium">Itens selecionados</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-primary">{totalItens}</CardTitle>
                   </CardHeader>
                 </Card>
-                <Card className="border-primary/20 bg-primary/5">
+                <Card className="border-primary/20 bg-primary/5 shadow-sm">
                   <CardHeader className="pb-3">
-                    <CardDescription>Quantidade total</CardDescription>
-                    <CardTitle className="text-2xl">{totalQtd}</CardTitle>
+                    <CardDescription className="text-sm font-medium">Quantidade total</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-primary">{totalQtd}</CardTitle>
                   </CardHeader>
                 </Card>
-                <Card className="border-primary/20 bg-primary/5">
+                <Card className="border-primary/20 bg-primary/5 shadow-sm">
                   <CardHeader className="pb-3">
-                    <CardDescription>Valor estimado</CardDescription>
-                    <CardTitle className="text-2xl">{formatBRL(totalValor)}</CardTitle>
+                    <CardDescription className="text-sm font-medium">Valor estimado</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-primary">{formatBRL(totalValor)}</CardTitle>
                   </CardHeader>
                 </Card>
               </div>
@@ -548,16 +553,18 @@ const AdminMigrarOfertas = () => {
                 <Button
                   onClick={handleSalvarMigracao}
                   disabled={produtosSelecionados.length === 0}
-                  className="bg-green-600 hover:bg-green-700 text-white"
+                  variant="success"
+                  className="gap-2"
                 >
+                  <Check className="h-4 w-4" />
                   Salvar no ciclo destino ({totalItens} {totalItens === 1 ? 'item' : 'itens'})
                 </Button>
               </div>
             </CardContent>
           </Card>
-        )}
+         )}
       </div>
-    </div>
+    </ResponsiveLayout>
   );
 };
 
