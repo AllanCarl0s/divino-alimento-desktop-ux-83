@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -10,9 +10,9 @@ import { ProductGroup, Oferta } from '@/utils/product-grouping';
 
 interface ProductGroupItemProps {
   group: ProductGroup;
-  selectedVariantId: string | null;
-  quantidadePedida: number;
-  onSelectVariant: (variantId: string) => void;
+  selectedVariantIds: Set<string>;
+  quantidades: Map<string, number>;
+  onToggleVariant: (variantId: string) => void;
   onQuantidadeChange: (variantId: string, quantidade: number) => void;
   onClear: () => void;
   isExpanded: boolean;
@@ -21,21 +21,20 @@ interface ProductGroupItemProps {
 
 export function ProductGroupItem({
   group,
-  selectedVariantId,
-  quantidadePedida,
-  onSelectVariant,
+  selectedVariantIds,
+  quantidades,
+  onToggleVariant,
   onQuantidadeChange,
   onClear,
   isExpanded,
   onToggleExpand,
 }: ProductGroupItemProps) {
-  const selectedVariant = group.variantes.find(v => v.id === selectedVariantId);
 
   const handleEscolherMaisBarato = () => {
     const maisBarato = group.variantes.reduce((prev, current) => 
       current.valor < prev.valor ? current : prev
     );
-    onSelectVariant(maisBarato.id);
+    onToggleVariant(maisBarato.id);
   };
 
   return (
@@ -81,89 +80,88 @@ export function ProductGroupItem({
             >
               Mais barato
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onClear}
-              disabled={!selectedVariantId}
-              className="text-xs"
-            >
-              Limpar
-            </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onClear}
+                disabled={selectedVariantIds.size === 0}
+                className="text-xs"
+              >
+                Limpar
+              </Button>
           </div>
         </div>
 
         {/* Linhas-filhas */}
         <CollapsibleContent>
           <div className="p-4 pt-0">
-            <RadioGroup value={selectedVariantId || ''} onValueChange={onSelectVariant}>
-              <div className="space-y-2 mt-4">
-                {/* Header */}
-                <div className="grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
-                  <div className="col-span-1">Sel.</div>
-                  <div className="col-span-2">Unidade</div>
-                  <div className="col-span-3">Fornecedor</div>
-                  <div className="col-span-2">Preço Unit.</div>
-                  <div className="col-span-2">Ofertados</div>
-                  <div className="col-span-2">Pedidos</div>
-                </div>
-
-                {/* Variantes */}
-                {group.variantes.map((variante) => {
-                  const isSelected = selectedVariantId === variante.id;
-                  const pedidos = isSelected ? quantidadePedida : 0;
-
-                  return (
-                    <div
-                      key={variante.id}
-                      className={`grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
-                        isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
-                      }`}
-                    >
-                      <div className="col-span-1">
-                        <RadioGroupItem
-                          value={variante.id}
-                          id={variante.id}
-                          disabled={variante.quantidadeOfertada === 0}
-                        />
-                      </div>
-                      <div className="col-span-2">
-                        <Label htmlFor={variante.id} className="cursor-pointer">
-                          {variante.unidade}
-                        </Label>
-                      </div>
-                      <div className="col-span-3">
-                        <Label htmlFor={variante.id} className="cursor-pointer truncate block">
-                          {variante.fornecedor}
-                        </Label>
-                      </div>
-                      <div className="col-span-2">
-                        <Label htmlFor={variante.id} className="cursor-pointer">
-                          R$ {variante.valor.toFixed(2).replace('.', ',')}
-                        </Label>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-sm">{variante.quantidadeOfertada}</span>
-                      </div>
-                      <div className="col-span-2">
-                        {isSelected ? (
-                          <Input
-                            type="number"
-                            value={pedidos}
-                            onChange={(e) => onQuantidadeChange(variante.id, parseInt(e.target.value) || 0)}
-                            className="w-full"
-                            min="0"
-                            max={variante.quantidadeOfertada}
-                          />
-                        ) : (
-                          <span className="text-sm text-muted-foreground">-</span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+            <div className="space-y-2 mt-4">
+              {/* Header */}
+              <div className="grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
+                <div className="col-span-1">Sel.</div>
+                <div className="col-span-2">Unidade</div>
+                <div className="col-span-3">Fornecedor</div>
+                <div className="col-span-2">Preço Unit.</div>
+                <div className="col-span-2">Ofertados</div>
+                <div className="col-span-2">Pedidos</div>
               </div>
-            </RadioGroup>
+
+              {/* Variantes */}
+              {group.variantes.map((variante) => {
+                const isSelected = selectedVariantIds.has(variante.id);
+                const pedidos = quantidades.get(variante.id) || 0;
+
+                return (
+                  <div
+                    key={variante.id}
+                    className={`grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
+                      isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
+                    }`}
+                  >
+                    <div className="col-span-1">
+                      <Checkbox
+                        id={variante.id}
+                        checked={isSelected}
+                        onCheckedChange={() => onToggleVariant(variante.id)}
+                        disabled={variante.quantidadeOfertada === 0}
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <Label htmlFor={variante.id} className="cursor-pointer">
+                        {variante.unidade}
+                      </Label>
+                    </div>
+                    <div className="col-span-3">
+                      <Label htmlFor={variante.id} className="cursor-pointer truncate block">
+                        {variante.fornecedor}
+                      </Label>
+                    </div>
+                    <div className="col-span-2">
+                      <Label htmlFor={variante.id} className="cursor-pointer">
+                        R$ {variante.valor.toFixed(2).replace('.', ',')}
+                      </Label>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-sm">{variante.quantidadeOfertada}</span>
+                    </div>
+                    <div className="col-span-2">
+                      {isSelected ? (
+                        <Input
+                          type="number"
+                          value={pedidos}
+                          onChange={(e) => onQuantidadeChange(variante.id, parseInt(e.target.value) || 0)}
+                          className="w-full"
+                          min="0"
+                          max={variante.quantidadeOfertada}
+                        />
+                      ) : (
+                        <span className="text-sm text-muted-foreground">-</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </CollapsibleContent>
       </div>

@@ -26,8 +26,8 @@ export default function AdminComposicaoLote() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   
-  // selectedByGroup: groupKey -> variantId
-  const [selectedByGroup, setSelectedByGroup] = useState<Map<string, string>>(new Map());
+  // selectedByGroup: groupKey -> Set of variantIds
+  const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
   // composicao: variantId -> quantidade
   const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
 
@@ -142,18 +142,20 @@ export default function AdminComposicaoLote() {
   // Calcular itens selecionados
   const selectedItems = useMemo(() => {
     const items: Array<{ id: string; valor: number; quantidade: number }> = [];
-    selectedByGroup.forEach((variantId) => {
-      const quantidade = composicao.get(variantId) || 0;
-      if (quantidade > 0) {
-        const oferta = ofertas.find(o => o.id === variantId);
-        if (oferta) {
-          items.push({
-            id: variantId,
-            valor: oferta.valor,
-            quantidade,
-          });
+    selectedByGroup.forEach((variantIds) => {
+      variantIds.forEach(variantId => {
+        const quantidade = composicao.get(variantId) || 0;
+        if (quantidade > 0) {
+          const oferta = ofertas.find(o => o.id === variantId);
+          if (oferta) {
+            items.push({
+              id: variantId,
+              valor: oferta.valor,
+              quantidade,
+            });
+          }
         }
-      }
+      });
     });
     return items;
   }, [selectedByGroup, composicao, ofertas]);
@@ -166,17 +168,36 @@ export default function AdminComposicaoLote() {
   const saldo = ciclo.valorMaximo - valorAtual;
   const totalItens = selectedItems.reduce((acc, item) => acc + item.quantidade, 0);
 
-  const handleSelectVariant = (groupKey: string, variantId: string) => {
+  const handleToggleVariant = (groupKey: string, variantId: string) => {
     setSelectedByGroup(prev => {
       const newMap = new Map(prev);
-      newMap.set(groupKey, variantId);
+      const currentSet = newMap.get(groupKey) || new Set();
+      const newSet = new Set(currentSet);
+      
+      if (newSet.has(variantId)) {
+        newSet.delete(variantId);
+        // Remove quantidade também
+        setComposicao(prevComp => {
+          const newComp = new Map(prevComp);
+          newComp.delete(variantId);
+          return newComp;
+        });
+      } else {
+        newSet.add(variantId);
+      }
+      
+      if (newSet.size === 0) {
+        newMap.delete(groupKey);
+      } else {
+        newMap.set(groupKey, newSet);
+      }
       return newMap;
     });
   };
 
   const handleClearGroup = (groupKey: string) => {
-    const variantId = selectedByGroup.get(groupKey);
-    if (variantId) {
+    const variantIds = selectedByGroup.get(groupKey);
+    if (variantIds) {
       setSelectedByGroup(prev => {
         const newMap = new Map(prev);
         newMap.delete(groupKey);
@@ -184,7 +205,7 @@ export default function AdminComposicaoLote() {
       });
       setComposicao(prev => {
         const newMap = new Map(prev);
-        newMap.delete(variantId);
+        variantIds.forEach(id => newMap.delete(id));
         return newMap;
       });
     }
@@ -526,16 +547,15 @@ export default function AdminComposicaoLote() {
             ) : (
               <div className="space-y-3">
                 {productGroups.map((group) => {
-                  const selectedVariantId = selectedByGroup.get(group.produto_base) || null;
-                  const quantidadePedida = selectedVariantId ? (composicao.get(selectedVariantId) || 0) : 0;
+                  const selectedVariantIds = selectedByGroup.get(group.produto_base) || new Set();
 
                   return (
                     <ProductGroupItem
                       key={group.produto_base}
                       group={group}
-                      selectedVariantId={selectedVariantId}
-                      quantidadePedida={quantidadePedida}
-                      onSelectVariant={(variantId) => handleSelectVariant(group.produto_base, variantId)}
+                      selectedVariantIds={selectedVariantIds}
+                      quantidades={composicao}
+                      onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
                       onQuantidadeChange={handleQuantidadeChange}
                       onClear={() => handleClearGroup(group.produto_base)}
                       isExpanded={expandedGroups.has(group.produto_base)}

@@ -31,7 +31,9 @@ export default function AdminComposicaoVendaDiretaCompor() {
   const [isLoading, setIsLoading] = useState(false);
   const [busca, setBusca] = useState('');
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
-  const [selectedByGroup, setSelectedByGroup] = useState<Map<string, string>>(new Map());
+  // selectedByGroup: groupKey -> Set of variantIds
+  const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
+  // composicao: variantId -> quantidade
   const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
 
   // Pedidos finalizados (base para composição)
@@ -153,15 +155,34 @@ export default function AdminComposicaoVendaDiretaCompor() {
     setExpandedGroups(new Set());
   };
 
-  const handleSelectVariant = (groupKey: string, variantId: string) => {
+  const handleToggleVariant = (groupKey: string, variantId: string) => {
     setSelectedByGroup(prev => {
       const newMap = new Map(prev);
-      newMap.set(groupKey, variantId);
+      const currentSet = newMap.get(groupKey) || new Set();
+      const newSet = new Set(currentSet);
+      
+      if (newSet.has(variantId)) {
+        newSet.delete(variantId);
+        // Remove quantidade também
+        setComposicao(prevComp => {
+          const newComp = new Map(prevComp);
+          newComp.delete(variantId);
+          return newComp;
+        });
+      } else {
+        newSet.add(variantId);
+      }
+      
+      if (newSet.size === 0) {
+        newMap.delete(groupKey);
+      } else {
+        newMap.set(groupKey, newSet);
+      }
       return newMap;
     });
   };
 
-  const handleQuantityChange = (variantId: string, quantidade: number) => {
+  const handleQuantidadeChange = (variantId: string, quantidade: number) => {
     setComposicao(prev => {
       const newMap = new Map(prev);
       if (quantidade > 0) {
@@ -174,11 +195,11 @@ export default function AdminComposicaoVendaDiretaCompor() {
   };
 
   const handleClearSelection = (groupKey: string) => {
-    const variantId = selectedByGroup.get(groupKey);
-    if (variantId) {
+    const variantIds = selectedByGroup.get(groupKey);
+    if (variantIds) {
       setComposicao(prev => {
         const newMap = new Map(prev);
-        newMap.delete(variantId);
+        variantIds.forEach(id => newMap.delete(id));
         return newMap;
       });
       setSelectedByGroup(prev => {
@@ -365,17 +386,17 @@ export default function AdminComposicaoVendaDiretaCompor() {
             ) : (
               <div className="space-y-2">
                 {gruposFiltrados.map((group) => {
-                  const selectedId = selectedByGroup.get(group.produto_base);
+                  const selectedVariantIds = selectedByGroup.get(group.produto_base) || new Set();
                   return (
                     <ProductGroupItem
                       key={group.produto_base}
                       group={group}
                       isExpanded={expandedGroups.has(group.produto_base)}
                       onToggleExpand={() => handleToggleGroup(group.produto_base)}
-                      selectedVariantId={selectedId || null}
-                      onSelectVariant={(variantId) => handleSelectVariant(group.produto_base, variantId)}
-                      quantidadePedida={composicao.get(selectedId || '') || 0}
-                      onQuantidadeChange={handleQuantityChange}
+                      selectedVariantIds={selectedVariantIds}
+                      onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
+                      quantidades={composicao}
+                      onQuantidadeChange={handleQuantidadeChange}
                       onClear={() => handleClearSelection(group.produto_base)}
                     />
                   );
@@ -421,7 +442,7 @@ export default function AdminComposicaoVendaDiretaCompor() {
                             min="0"
                             max={oferta.quantidadeOfertada}
                             value={quantidade}
-                            onChange={(e) => handleQuantityChange(ofertaId, parseInt(e.target.value) || 0)}
+                            onChange={(e) => handleQuantidadeChange(ofertaId, parseInt(e.target.value) || 0)}
                             className="w-20 text-right"
                           />
                         </TableCell>
