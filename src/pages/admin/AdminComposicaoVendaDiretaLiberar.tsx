@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { toast } from '@/hooks/use-toast';
@@ -129,24 +130,45 @@ export default function AdminComposicaoVendaDiretaLiberar() {
   };
 
   const executarPublicacao = () => {
+    const payload = {
+      cicloId: id,
+      mercadoId,
+      produtos: produtosSelecionados.map(p => ({
+        id: p.id,
+        quantidade: p.quantidadeOfertada,
+        valor: p.valor
+      })),
+      valorTotal,
+      valorMaximo: ciclo.valorMaximo,
+      saldo
+    };
+
     setIsLoading(true);
     setShowConfirmModal(false);
     
     setTimeout(() => {
       setIsLoading(false);
+      
+      const mensagem = excedeuValor 
+        ? 'Venda direta publicada (acima do valor máximo)'
+        : 'Venda direta publicada com sucesso';
+      
       toast({
-        title: "Venda direta publicada com sucesso!",
-        className: "bg-green-600 text-white border-green-700",
+        title: mensagem,
+        description: `${produtosSelecionados.length} produto(s), ${formatBRL(valorTotal)}`,
+        className: excedeuValor ? 'bg-yellow-600 text-white border-yellow-700' : 'bg-green-600 text-white border-green-700',
+        duration: 5000,
       });
       
-      console.log('Venda direta publicada:', {
-        cicloId: id,
-        mercadoId,
-        produtos: produtosSelecionados.map(p => ({
-          id: p.id,
-          quantidade: p.quantidadeOfertada,
-        }))
+      console.log('Auditoria - Venda Direta Publicada:', {
+        timestamp: new Date().toISOString(),
+        acima_do_limite: excedeuValor,
+        payload,
       });
+
+      setTimeout(() => {
+        navigate('/admin/ciclo-index');
+      }, 1000);
     }, 1000);
   };
 
@@ -176,52 +198,98 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                   Tipo: {ciclo.tipo} • {ciclo.mercado}
                 </p>
               </div>
-              <div className="flex gap-4">
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground">Qtd. Produtos</p>
-                  <p className="text-2xl font-bold">{quantidadeTotal}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground">Valor Máximo</p>
-                  <p className="text-2xl font-bold">{formatBRL(ciclo.valorMaximo)}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground">Valor Total</p>
-                  <p className="text-2xl font-bold">{formatBRL(valorTotal)}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground">Saldo</p>
-                  <p className={`text-2xl font-bold ${saldo >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {formatBRL(saldo)}
-                  </p>
-                </div>
+              <div className="flex gap-6">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Qtd. Produtos</p>
+                        <p className="text-2xl font-bold">{quantidadeTotal}</p>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Total de produtos selecionados</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Valor Máximo</p>
+                        <p className="text-2xl font-bold">{formatBRL(ciclo.valorMaximo)}</p>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Orçamento máximo aprovado para este mercado</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Valor Total</p>
+                        <p className="text-2xl font-bold">{formatBRL(valorTotal)}</p>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Soma dos produtos × quantidades oferecidas</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Saldo</p>
+                        <p className={`text-2xl font-bold ${saldo >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {formatBRL(saldo)}
+                        </p>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Valor Máximo – Valor Total</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </div>
           </CardHeader>
         </Card>
 
-        {/* Banner de alerta quando excede valor máximo */}
+        {/* Banner de alerta fixo quando excede valor máximo */}
         {excedeuValor && (
-          <Alert 
-            variant="destructive" 
-            className="border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]"
-            role="alert"
-          >
-            <AlertTriangle className="h-4 w-4" aria-label="Aviso" />
-            <AlertDescription className="text-sm">
-              ⚠️ Valor atual excede o valor máximo permitido para este mercado.
-            </AlertDescription>
-          </Alert>
+          <div className="sticky top-40 z-30">
+            <Alert 
+              variant="destructive" 
+              className="border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]"
+              role="alert"
+            >
+              <AlertTriangle className="h-4 w-4" aria-label="Aviso" />
+              <AlertDescription className="text-sm font-medium">
+                ⚠️ Valor atual excede o valor máximo permitido para este mercado.
+              </AlertDescription>
+            </Alert>
+          </div>
         )}
 
         {/* Produtos Selecionados */}
         {produtosSelecionados.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Produtos Selecionados para Venda Direta</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Produtos Selecionados para Venda Direta</CardTitle>
+                <div className="text-sm text-muted-foreground">
+                  {produtosSelecionados.length} produto(s)
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              <Table>
+              <Table className="tabela-produtos-selecionados">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="td-texto">Produto</TableHead>
@@ -245,18 +313,19 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                         <TableCell className="td-texto">{produto.unidade}</TableCell>
                         <TableCell className="td-valor">{formatBRL(produto.valor)}</TableCell>
                         <TableCell className="td-texto">{produto.fornecedor}</TableCell>
-                        <TableCell className="td-numero">{produto.quantidadeOfertada}</TableCell>
-                        <TableCell className="td-numero">0</TableCell>
-                        <TableCell className="td-valor font-medium">
+                        <TableCell className="td-numero tabular-nums">{produto.quantidadeOfertada}</TableCell>
+                        <TableCell className="td-numero tabular-nums">0</TableCell>
+                        <TableCell className="td-valor font-medium tabular-nums">
                           {formatBRL(valorAcumulado)}
                         </TableCell>
-                        <TableCell className="td-numero">{produto.quantidadeOfertada}</TableCell>
+                        <TableCell className="td-numero tabular-nums">{produto.quantidadeOfertada}</TableCell>
                         <TableCell className="td-icone">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => handleRemoverProduto(produto.id)}
                             className="h-8 w-8 mx-auto transition-opacity hover:opacity-70"
+                            aria-label={`Remover ${produto.nome}`}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -327,15 +396,37 @@ export default function AdminComposicaoVendaDiretaLiberar() {
             </Table>
 
             <div className="flex justify-end gap-4 mt-6">
-              <Button variant="outline" onClick={() => navigate('/admin/ciclo-index')}>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/admin/ciclo-index')}
+                disabled={isLoading}
+              >
                 Voltar
               </Button>
-              <Button 
-                onClick={handlePublicarClick}
-                disabled={!podePublicar || isLoading}
-              >
-                {isLoading ? 'Publicando...' : 'Publicar Venda Direta'}
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Button 
+                        onClick={handlePublicarClick}
+                        disabled={!podePublicar || isLoading}
+                      >
+                        {isLoading ? 'Publicando...' : 'Publicar Venda Direta'}
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  {!podePublicar && (
+                    <TooltipContent>
+                      <p>Selecione pelo menos um produto para publicar</p>
+                    </TooltipContent>
+                  )}
+                  {podePublicar && excedeuValor && (
+                    <TooltipContent>
+                      <p>Acima do valor máximo — publicação permitida</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </CardContent>
         </Card>
@@ -345,12 +436,21 @@ export default function AdminComposicaoVendaDiretaLiberar() {
       <AlertDialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Liberar venda direta?</AlertDialogTitle>
+            <AlertDialogTitle>Confirmar Publicação</AlertDialogTitle>
             <AlertDialogDescription>
-              Isso publicará a venda direta do <strong>{ciclo.mercado}</strong> no ciclo <strong>{ciclo.nome}</strong> para os consumidores.
+              Deseja publicar esta venda direta para os consumidores?
+              <br />
+              <br />
+              <strong>Mercado:</strong> {ciclo.mercado}
+              <br />
+              <strong>Ciclo:</strong> {ciclo.nome}
+              <br />
+              <strong>Produtos:</strong> {produtosSelecionados.length}
+              <br />
+              <strong>Valor Total:</strong> {formatBRL(valorTotal)}
               {excedeuValor && (
-                <span className="block mt-2 text-orange-600">
-                  ⚠️ O valor total excede o limite permitido.
+                <span className="block mt-3 text-[#B54708] font-semibold">
+                  ⚠️ O valor total excede o limite permitido de {formatBRL(ciclo.valorMaximo)}.
                 </span>
               )}
             </AlertDialogDescription>
@@ -358,7 +458,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={executarPublicacao}>
-              Liberar Venda
+              Publicar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
