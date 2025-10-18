@@ -333,79 +333,6 @@ export default function AdminComposicaoVendaDiretaCompor() {
           </CardContent>
         </Card>
 
-        {/* Produtos Ofertados */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between gap-4">
-              <CardTitle>Produtos com mais de um fornecedor (selecione a origem)</CardTitle>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleExpandAll}
-                  className="h-8"
-                >
-                  <ChevronDown className="h-4 w-4 mr-1" />
-                  Expandir tudo
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCollapseAll}
-                  className="h-8"
-                >
-                  <ChevronUp className="h-4 w-4 mr-1" />
-                  Colapsar tudo
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Buscar por produto, fornecedor ou unidade..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-
-            {isLoading ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className="h-20 w-full" />
-                ))}
-              </div>
-            ) : gruposFiltrados.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                Nenhum produto encontrado
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {gruposFiltrados.map((group) => {
-                  const selectedVariantIds = selectedByGroup.get(group.produto_base) || new Set();
-                  return (
-                    <ProductGroupItem
-                      key={group.produto_base}
-                      group={group}
-                      isExpanded={expandedGroups.has(group.produto_base)}
-                      onToggleExpand={() => handleToggleGroup(group.produto_base)}
-                      selectedVariantIds={selectedVariantIds}
-                      onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
-                      quantidades={composicao}
-                      onQuantidadeChange={handleQuantidadeChange}
-                      onClear={() => handleClearSelection(group.produto_base)}
-                    />
-                  );
-                })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
         {/* Produtos Selecionados */}
         {composicao.size > 0 && (
           <Card>
@@ -479,6 +406,79 @@ export default function AdminComposicaoVendaDiretaCompor() {
             </CardContent>
           </Card>
         )}
+
+        {/* Produtos Ofertados */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between gap-4">
+              <CardTitle>Produtos com mais de um fornecedor (selecione a origem)</CardTitle>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExpandAll}
+                  className="h-8"
+                >
+                  <ChevronDown className="h-4 w-4 mr-1" />
+                  Expandir tudo
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCollapseAll}
+                  className="h-8"
+                >
+                  <ChevronUp className="h-4 w-4 mr-1" />
+                  Colapsar tudo
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="mb-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Buscar por produto, fornecedor ou unidade..."
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            {isLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-20 w-full" />
+                ))}
+              </div>
+            ) : gruposFiltrados.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                Nenhum produto encontrado
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {gruposFiltrados.map((group) => {
+                  const selectedVariantIds = selectedByGroup.get(group.produto_base) || new Set();
+                  return (
+                    <ProductGroupItem
+                      key={group.produto_base}
+                      group={group}
+                      isExpanded={expandedGroups.has(group.produto_base)}
+                      onToggleExpand={() => handleToggleGroup(group.produto_base)}
+                      selectedVariantIds={selectedVariantIds}
+                      onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
+                      quantidades={composicao}
+                      onQuantidadeChange={handleQuantidadeChange}
+                      onClear={() => handleClearSelection(group.produto_base)}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </ResponsiveLayout>
   );
