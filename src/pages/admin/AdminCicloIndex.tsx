@@ -283,9 +283,9 @@ export default function AdminCicloIndex() {
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/admin/ciclo/${ciclo.id}`)} 
-                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
+                                    className="h-10 w-10 border-2 border-orange-500 hover:bg-orange-500/10"
                                   >
-                                    <Pencil className="h-5 w-5 text-primary" />
+                                    <Pencil className="h-5 w-5 text-orange-500" />
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Editar Ciclo</p></TooltipContent>
@@ -296,9 +296,9 @@ export default function AdminCicloIndex() {
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/oferta/${ciclo.id}`)} 
-                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
+                                    className="h-10 w-10 border-2 border-orange-500 hover:bg-orange-500/10"
                                   >
-                                    <Tags className="h-5 w-5 text-primary" />
+                                    <Tags className="h-5 w-5 text-orange-500" />
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Inserir/editar ofertas</p></TooltipContent>
@@ -361,9 +361,9 @@ export default function AdminCicloIndex() {
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/admin/entregas-fornecedores/${ciclo.id}`)}
-                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
+                                    className="h-10 w-10 border-2 border-orange-500 hover:bg-orange-500/10"
                                   >
-                                    <Truck className="h-5 w-5 text-primary" />
+                                    <Truck className="h-5 w-5 text-orange-500" />
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Entregas dos Fornecedores</p></TooltipContent>
@@ -374,9 +374,9 @@ export default function AdminCicloIndex() {
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/admin/pedidos-consumidores/${ciclo.id}`)}
-                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
+                                    className="h-10 w-10 border-2 border-orange-500 hover:bg-orange-500/10"
                                   >
-                                    <Users className="h-5 w-5 text-primary" />
+                                    <Users className="h-5 w-5 text-orange-500" />
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Pedidos dos Consumidores</p></TooltipContent>
