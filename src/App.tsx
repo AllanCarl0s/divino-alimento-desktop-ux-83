@@ -13,6 +13,7 @@ import Resumo from "./pages/Resumo";
 import Relatorio from "./pages/Relatorio";
 import Pagamentos from "./pages/Pagamentos";
 import Configuracoes from "./pages/Configuracoes";
+import PedidoConsumidores from "./pages/PedidoConsumidores";
 import NotFound from "./pages/NotFound";
 
 // Fornecedor pages
@@ -87,6 +88,7 @@ const App = () => (
           <Route path="/relatorio" element={<Relatorio />} />
           <Route path="/pagamentos" element={<Pagamentos />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
+          <Route path="/pedidoConsumidores/:id" element={<PedidoConsumidores />} />
           
           {/* Fornecedor Routes */}
           <Route path="/fornecedor/login" element={<FornecedorLogin />} />

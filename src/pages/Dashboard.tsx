@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import { ShoppingBasket, FileText, CreditCard, Settings, ChevronRight } from 'lucide-react';
+import { ShoppingBasket, FileText, CreditCard, Settings, ChevronRight, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useConsumer } from '@/contexts/ConsumerContext';
 import { useCycle } from '@/hooks/useCycle';
@@ -28,6 +28,12 @@ const Dashboard = () => {
       description: getMenuDescription(),
       path: '/cesta',
       badge: 'Nova'
+    },
+    {
+      icon: ShoppingCart,
+      title: 'Pedido Consumidores',
+      description: 'Comprar produtos da feira direta',
+      path: '/pedidoConsumidores/1?cst=1&usr=1'
     },
     {
       icon: FileText,
