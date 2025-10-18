@@ -148,7 +148,7 @@ const App = () => (
           <Route path="/admin/relatorio-fornecedores/resultado" element={<AdminRelatorioFornecedoresResultado />} />
           <Route path="/admin/relatorio-consumidores" element={<AdminRelatorioConsumidores />} />
           <Route path="/admin/relatorio-consumidores/resultado" element={<AdminRelatorioConsumidoresResultado />} />
-          <Route path="/admin/migrar-ofertas/:idDestino" element={<AdminMigrarOfertas />} />
+          <Route path="/admin/migrar-ofertas/:destinoId" element={<AdminMigrarOfertas />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/usuario-index" element={<UsuarioIndex />} />
           <Route path="/usuario" element={<Usuario />} />

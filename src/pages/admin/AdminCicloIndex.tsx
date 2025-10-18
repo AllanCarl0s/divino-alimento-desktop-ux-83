@@ -311,6 +311,7 @@ export default function AdminCicloIndex() {
                                     onClick={() => navigate(`/admin/migrar-ofertas/${ciclo.id}`)} 
                                     disabled={ciclo.status !== 'ativo'}
                                     className="h-10 w-10 border-2 border-primary hover:bg-primary/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                                    title="Migrar ofertas de outro ciclo"
                                   >
                                     <RefreshCw className="h-5 w-5 text-primary" />
                                   </Button>

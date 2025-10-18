@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, RefreshCw } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,20 +21,28 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
 
 type ProdutoMigracao = {
   id: string;
   produto: string;
   fornecedor: string;
   unidade: string;
-  disponivel: number;
+  ofertados: number;
+  pedidos: number;
+  sobraram: number;
   valor: number;
   selecionado: boolean;
   qtdMigrar: number;
 };
 
 export default function AdminMigrarOfertas() {
-  const { idDestino } = useParams<{ idDestino: string }>();
+  const { destinoId } = useParams<{ destinoId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -44,9 +52,12 @@ export default function AdminMigrarOfertas() {
   const [busca, setBusca] = useState("");
   const [showFornecedorDialog, setShowFornecedorDialog] = useState(false);
   const [fornecedorPendente, setFornecedorPendente] = useState("");
+  const [editandoProduto, setEditandoProduto] = useState<string | null>(null);
+  const [editFornecedor, setEditFornecedor] = useState("");
+  const [editPreco, setEditPreco] = useState("");
 
-  const cicloDestino = ciclos.find(c => c.id === idDestino);
-  const ciclosFinalizados = ciclos.filter(c => c.status === "Finalizado");
+  const cicloDestino = ciclos.find(c => c.id === destinoId);
+  const ciclosFinalizados = ciclos.filter(c => c.status === "Finalizado" && c.id !== destinoId);
   const cicloOrigem = ciclos.find(c => c.id === cicloOrigemId);
 
   const produtosFiltrados = useMemo(() => {
@@ -66,12 +77,40 @@ export default function AdminMigrarOfertas() {
   const handleAvancarEtapa1 = () => {
     if (!cicloOrigemId) return;
     
+    if (cicloOrigemId === destinoId) {
+      toast({
+        title: "Erro",
+        description: "Selecione um ciclo finalizado diferente do destino.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const sobras = sobrasPorCiclo[cicloOrigemId] || [];
-    setProdutos(sobras.map(p => ({
-      ...p,
-      selecionado: false,
-      qtdMigrar: p.disponivel
-    })));
+    const produtosComSobra = sobras.map(p => {
+      const ofertados = p.disponivel;
+      const pedidos = Math.floor(Math.random() * ofertados * 0.6); // Mock: 0-60% vendido
+      const sobraram = Math.max(ofertados - pedidos, 0);
+      return {
+        ...p,
+        ofertados,
+        pedidos,
+        sobraram,
+        selecionado: false,
+        qtdMigrar: sobraram
+      };
+    });
+    setProdutos(produtosComSobra);
+    
+    if (produtosComSobra.every(p => p.sobraram === 0)) {
+      toast({
+        title: "Aviso",
+        description: "Nenhum item disponível para migração neste ciclo.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setEtapa(2);
   };
 
@@ -85,10 +124,47 @@ export default function AdminMigrarOfertas() {
     const qtd = parseInt(value) || 0;
     setProdutos(prev => prev.map(p => {
       if (p.id === id) {
-        return { ...p, qtdMigrar: Math.min(Math.max(1, qtd), p.disponivel) };
+        return { ...p, qtdMigrar: Math.min(Math.max(1, qtd), p.sobraram) };
       }
       return p;
     }));
+  };
+
+  const handleSelecionarTodos = () => {
+    setProdutos(prev => prev.map(p => ({
+      ...p,
+      selecionado: p.sobraram > 0
+    })));
+  };
+
+  const handleLimparSelecao = () => {
+    setProdutos(prev => prev.map(p => ({
+      ...p,
+      selecionado: false
+    })));
+  };
+
+  const handleEditarProduto = (id: string) => {
+    const produto = produtos.find(p => p.id === id);
+    if (produto) {
+      setEditandoProduto(id);
+      setEditFornecedor(produto.fornecedor);
+      setEditPreco(produto.valor.toString());
+    }
+  };
+
+  const handleSalvarEdicao = (id: string) => {
+    setProdutos(prev => prev.map(p => {
+      if (p.id === id) {
+        return {
+          ...p,
+          fornecedor: editFornecedor,
+          valor: parseFloat(editPreco) || p.valor
+        };
+      }
+      return p;
+    }));
+    setEditandoProduto(null);
   };
 
   const handleMigrarSelecionados = () => {
@@ -114,17 +190,41 @@ export default function AdminMigrarOfertas() {
 
   const handleSalvarMigracao = () => {
     toast({
-      title: "Ofertas migradas com sucesso",
+      title: "Ofertas migradas com sucesso!",
       description: `${totalItens} produtos migrados para o ciclo destino.`,
       className: "bg-success text-success-foreground"
     });
-    navigate(`/oferta/${idDestino}`);
+    navigate("/admin/ciclo-index");
   };
 
   if (!cicloDestino) {
     return (
       <div className="min-h-screen bg-background p-6">
-        <p>Ciclo destino não encontrado.</p>
+        <div className="max-w-2xl mx-auto text-center py-12">
+          <h2 className="text-2xl font-semibold mb-4">Ciclo destino não encontrado</h2>
+          <p className="text-muted-foreground mb-6">
+            O ciclo solicitado não existe ou não está disponível.
+          </p>
+          <Button onClick={() => navigate("/admin/ciclo-index")}>
+            Voltar para Gestão de Ciclos
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (cicloDestino.status !== "Ativo") {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-2xl mx-auto text-center py-12">
+          <h2 className="text-2xl font-semibold mb-4">Ciclo não está ativo</h2>
+          <p className="text-muted-foreground mb-6">
+            O ciclo de destino precisa estar Ativo para receber migração.
+          </p>
+          <Button onClick={() => navigate("/admin/ciclo-index")}>
+            Voltar para Gestão de Ciclos
+          </Button>
+        </div>
       </div>
     );
   }
@@ -143,21 +243,28 @@ export default function AdminMigrarOfertas() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold">Migração de Ofertas Entre Ciclos</h1>
+            <h1 className="text-2xl font-bold">Migrar Ofertas entre Ciclos</h1>
             <p className="text-white/90 text-sm mt-1">
               Selecione o ciclo de origem e os produtos que deseja migrar.
             </p>
           </div>
         </div>
         
-        {/* Badge do ciclo destino */}
-        <div className="flex items-center gap-2 mt-4">
-          <Badge variant="default" className="bg-white text-orange-500 hover:bg-white">
-            {cicloDestino.nome}
-          </Badge>
-          <Badge variant="success">{cicloDestino.status}</Badge>
-          <span className="text-sm text-white/90">{cicloDestino.periodo}</span>
-        </div>
+        {/* Card-resumo do Ciclo Destino */}
+        <Card className="mt-4 bg-white/10 border-white/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex-1">
+                <p className="text-sm text-white/70">Ciclo Destino</p>
+                <h3 className="text-lg font-semibold">{cicloDestino.nome}</h3>
+                <p className="text-sm text-white/90">{cicloDestino.periodo}</p>
+              </div>
+              <Badge className="bg-success text-success-foreground">
+                {cicloDestino.status}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Wizard de etapas */}
@@ -182,13 +289,13 @@ export default function AdminMigrarOfertas() {
         </div>
         <div className="flex justify-center gap-24 mt-2">
           <span className={`text-sm ${etapa >= 1 ? "font-medium" : "text-muted-foreground"}`}>
-            Selecionar Origem
+            Escolher Ciclo de Origem
           </span>
           <span className={`text-sm ${etapa >= 2 ? "font-medium" : "text-muted-foreground"}`}>
-            Selecionar Produtos
+            Selecionar Itens para Migrar
           </span>
           <span className={`text-sm ${etapa >= 3 ? "font-medium" : "text-muted-foreground"}`}>
-            Revisar e Salvar
+            Revisar e Confirmar
           </span>
         </div>
       </div>
@@ -198,41 +305,51 @@ export default function AdminMigrarOfertas() {
         {etapa === 1 && (
           <div className="max-w-4xl mx-auto">
             <h2 className="text-xl font-semibold mb-4">Selecione o ciclo de origem</h2>
-            <div className="space-y-3">
-              {ciclosFinalizados.map((ciclo) => (
-                <Card 
-                  key={ciclo.id}
-                  className={`cursor-pointer transition-all hover:shadow-md ${
-                    cicloOrigemId === ciclo.id ? "ring-2 ring-primary" : ""
-                  }`}
-                  onClick={() => setCicloOrigemId(ciclo.id)}
-                >
-                  <CardContent className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <Checkbox 
-                        checked={cicloOrigemId === ciclo.id}
-                        onCheckedChange={() => setCicloOrigemId(ciclo.id)}
-                      />
-                      <div>
-                        <h3 className="font-semibold">{ciclo.nome}</h3>
-                        <p className="text-sm text-muted-foreground">{ciclo.periodo}</p>
-                      </div>
-                    </div>
-                    <Badge variant="warning">{ciclo.status}</Badge>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            
-            <div className="flex justify-end mt-6">
-              <Button 
-                onClick={handleAvancarEtapa1}
-                disabled={!cicloOrigemId}
-                size="lg"
-              >
-                Avançar
-              </Button>
-            </div>
+            {ciclosFinalizados.length === 0 ? (
+              <Card>
+                <CardContent className="p-8 text-center text-muted-foreground">
+                  Não há ciclos finalizados para selecionar como origem.
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                <div className="space-y-3">
+                  {ciclosFinalizados.map((ciclo) => (
+                    <Card 
+                      key={ciclo.id}
+                      className={`cursor-pointer transition-all hover:shadow-md ${
+                        cicloOrigemId === ciclo.id ? "ring-2 ring-primary" : ""
+                      }`}
+                      onClick={() => setCicloOrigemId(ciclo.id)}
+                    >
+                      <CardContent className="p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <Checkbox 
+                            checked={cicloOrigemId === ciclo.id}
+                            onCheckedChange={() => setCicloOrigemId(ciclo.id)}
+                          />
+                          <div>
+                            <h3 className="font-semibold">{ciclo.nome}</h3>
+                            <p className="text-sm text-muted-foreground">{ciclo.periodo}</p>
+                          </div>
+                        </div>
+                        <Badge variant="warning">{ciclo.status}</Badge>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                
+                <div className="flex justify-end mt-6">
+                  <Button 
+                    onClick={handleAvancarEtapa1}
+                    disabled={!cicloOrigemId}
+                    size="lg"
+                  >
+                    Avançar
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -240,17 +357,25 @@ export default function AdminMigrarOfertas() {
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-xl font-semibold">Selecione os produtos a migrar</h2>
+                <h2 className="text-xl font-semibold">Produtos que sobraram no ciclo de origem</h2>
                 <p className="text-sm text-muted-foreground">
                   Origem: {cicloOrigem?.nome}
                 </p>
               </div>
-              <Input
-                placeholder="Buscar por produto ou fornecedor..."
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                className="max-w-xs"
-              />
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={handleSelecionarTodos}>
+                  Selecionar todos
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleLimparSelecao}>
+                  Limpar seleção
+                </Button>
+                <Input
+                  placeholder="Buscar por produto ou fornecedor..."
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                  className="max-w-xs"
+                />
+              </div>
             </div>
 
             <div className="border rounded-lg overflow-hidden">
@@ -259,40 +384,98 @@ export default function AdminMigrarOfertas() {
                   <TableRow className="bg-muted/50">
                     <TableHead className="w-12"></TableHead>
                     <TableHead>Produto</TableHead>
+                    <TableHead>Medida</TableHead>
                     <TableHead>Fornecedor</TableHead>
-                    <TableHead>Unidade</TableHead>
-                    <TableHead className="text-right">Qtd Disponível</TableHead>
-                    <TableHead className="text-right">Valor Unit.</TableHead>
-                    <TableHead className="text-center">Qtd Migrar</TableHead>
+                    <TableHead className="text-right">Preço Unit.</TableHead>
+                    <TableHead className="text-right">Ofertados</TableHead>
+                    <TableHead className="text-right">Pedidos</TableHead>
+                    <TableHead className="text-right">Sobraram</TableHead>
+                    <TableHead className="text-center">Migrar (qtde)</TableHead>
+                    <TableHead className="w-12"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {produtosFiltrados.map((produto) => (
-                    <TableRow key={produto.id}>
-                      <TableCell>
-                        <Checkbox
-                          checked={produto.selecionado}
-                          onCheckedChange={(checked) => handleToggleProduto(produto.id, checked as boolean)}
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">{produto.produto}</TableCell>
-                      <TableCell>{produto.fornecedor}</TableCell>
-                      <TableCell>{produto.unidade}</TableCell>
-                      <TableCell className="text-right">{produto.disponivel}</TableCell>
-                      <TableCell className="text-right">{formatBRL(produto.valor)}</TableCell>
-                      <TableCell className="text-center">
-                        <Input
-                          type="number"
-                          min={1}
-                          max={produto.disponivel}
-                          value={produto.qtdMigrar}
-                          onChange={(e) => handleQtdChange(produto.id, e.target.value)}
-                          disabled={!produto.selecionado}
-                          className="w-20 mx-auto text-center"
-                        />
+                  {produtosFiltrados.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
+                        Nenhum item disponível para migração
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    produtosFiltrados.map((produto) => (
+                      <TableRow 
+                        key={produto.id}
+                        className={produto.sobraram === 0 ? "opacity-50" : ""}
+                      >
+                        <TableCell>
+                          <Checkbox
+                            checked={produto.selecionado}
+                            disabled={produto.sobraram === 0}
+                            onCheckedChange={(checked) => handleToggleProduto(produto.id, checked as boolean)}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">{produto.produto}</TableCell>
+                        <TableCell>{produto.unidade}</TableCell>
+                        <TableCell>{produto.fornecedor}</TableCell>
+                        <TableCell className="text-right">{formatBRL(produto.valor)}</TableCell>
+                        <TableCell className="text-right">{produto.ofertados}</TableCell>
+                        <TableCell className="text-right">{produto.pedidos}</TableCell>
+                        <TableCell className="text-right font-semibold">{produto.sobraram}</TableCell>
+                        <TableCell className="text-center">
+                          <Input
+                            type="number"
+                            min={1}
+                            max={produto.sobraram}
+                            value={produto.qtdMigrar}
+                            onChange={(e) => handleQtdChange(produto.id, e.target.value)}
+                            disabled={!produto.selecionado || produto.sobraram === 0}
+                            className="w-20 mx-auto text-center"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                disabled={produto.sobraram === 0}
+                                onClick={() => handleEditarProduto(produto.id)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80">
+                              <div className="space-y-4">
+                                <h4 className="font-medium">Editar {produto.produto}</h4>
+                                <div className="space-y-2">
+                                  <Label>Fornecedor</Label>
+                                  <Input
+                                    value={editandoProduto === produto.id ? editFornecedor : produto.fornecedor}
+                                    onChange={(e) => setEditFornecedor(e.target.value)}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Preço Unitário (R$)</Label>
+                                  <Input
+                                    type="number"
+                                    step="0.01"
+                                    value={editandoProduto === produto.id ? editPreco : produto.valor}
+                                    onChange={(e) => setEditPreco(e.target.value)}
+                                  />
+                                </div>
+                                <Button 
+                                  onClick={() => handleSalvarEdicao(produto.id)}
+                                  className="w-full"
+                                >
+                                  Salvar
+                                </Button>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -327,8 +510,9 @@ export default function AdminMigrarOfertas() {
                 onClick={handleMigrarSelecionados}
                 disabled={produtosSelecionados.length === 0}
                 size="lg"
+                className="bg-success hover:bg-success/90"
               >
-                Migrar selecionados
+                Migrar {produtosSelecionados.length} {produtosSelecionados.length === 1 ? 'item' : 'itens'}
               </Button>
             </div>
           </div>
@@ -336,7 +520,31 @@ export default function AdminMigrarOfertas() {
 
         {etapa === 3 && (
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-xl font-semibold mb-4">Revisar e salvar migração</h2>
+            <h2 className="text-xl font-semibold mb-4">Revisar e Confirmar Migração</h2>
+            
+            {/* Card resumo */}
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Ciclo Destino</p>
+                    <p className="font-semibold">{cicloDestino.nome}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Ciclo Origem</p>
+                    <p className="font-semibold">{cicloOrigem?.nome}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Qtde de Itens</p>
+                    <p className="font-semibold text-primary">{totalItens}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Valor Estimado</p>
+                    <p className="font-semibold text-primary">{formatBRL(totalValor)}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
             
             <div className="border rounded-lg overflow-hidden">
               <Table>
@@ -379,8 +587,12 @@ export default function AdminMigrarOfertas() {
               <Button variant="outline" onClick={() => setEtapa(2)}>
                 Cancelar
               </Button>
-              <Button onClick={handleSalvarMigracao} size="lg">
-                Salvar e Finalizar Migração
+              <Button 
+                onClick={handleSalvarMigracao} 
+                size="lg"
+                className="bg-success hover:bg-success/90"
+              >
+                Confirmar Migração
               </Button>
             </div>
           </div>
