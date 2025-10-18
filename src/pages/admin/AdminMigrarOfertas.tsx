@@ -219,8 +219,8 @@ const AdminMigrarOfertas = () => {
       description: `${selecionados.length} produtos foram adicionados ao ciclo de destino.`,
     });
 
-    // Redirecionar para oferta do destino
-    navigate(`/admin/oferta/${destinoSelecionadoId}`);
+    // Redirecionar para gestão de ciclos
+    navigate('/admin/ciclo-index');
   };
 
   const produtosFiltrados = produtos.filter(p =>
