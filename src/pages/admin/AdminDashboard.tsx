@@ -18,7 +18,9 @@ import {
   FolderTree,
   RefreshCcw,
   Truck,
-  ShoppingBag
+  ShoppingBag,
+  ReceiptText,
+  Wallet
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -239,6 +241,60 @@ const AdminDashboard = () => {
                     </h3>
                     <p className="text-sm text-muted-foreground">
                       Escolha os ciclos e gere o relatório com todas as movimentações dos consumidores (por produto ou por cliente).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Pagamentos Section */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <Wallet className="w-5 h-5 mr-2 text-primary" />
+            Pagamentos
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            {/* Card - Gerar Lista de Pagamentos */}
+            <Card 
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              onClick={() => navigate('/admin/pagamentos-gerar')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-primary/10 rounded-full border-2 border-primary">
+                    <ReceiptText className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
+                      Gerar Lista de Pagamentos
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Gere automaticamente os registros de pagamentos de um ciclo finalizado (fornecedores e consumidores).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Card - Gerir Lista de Pagamentos */}
+            <Card 
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              onClick={() => navigate('/admin/pagamentos-gerir')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-primary/10 rounded-full border-2 border-primary">
+                    <Wallet className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
+                      Gerir Lista de Pagamentos
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Acompanhe, edite e registre os pagamentos pendentes e realizados.
                     </p>
                   </div>
                 </div>
