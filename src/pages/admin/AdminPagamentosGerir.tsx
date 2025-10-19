@@ -161,17 +161,15 @@ const AdminPagamentosGerir = () => {
 
   return (
     <ResponsiveLayout
-      headerContent={
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/admin/ciclo-index")}
-            className="text-white hover:bg-white/20"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </div>
+      leftHeaderContent={
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate("/admin/dashboard")}
+          className="text-white hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
       }
     >
       <div className="container max-w-6xl mx-auto py-8 px-4">
@@ -330,7 +328,7 @@ const AdminPagamentosGerir = () => {
         <div className="flex justify-end">
           <Button
             variant="outline"
-            onClick={() => navigate("/admin/ciclo-index")}
+            onClick={() => navigate("/admin/dashboard")}
           >
             Voltar
           </Button>
