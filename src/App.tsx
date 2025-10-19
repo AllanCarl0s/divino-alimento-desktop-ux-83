@@ -67,6 +67,8 @@ import AdminRelatorioFornecedoresResultado from "./pages/admin/AdminRelatorioFor
 import AdminRelatorioConsumidores from "./pages/admin/AdminRelatorioConsumidores";
 import AdminRelatorioConsumidoresResultado from "./pages/admin/AdminRelatorioConsumidoresResultado";
 import AdminMigrarOfertas from "./pages/admin/AdminMigrarOfertas";
+import AdminPagamentosGerar from "./pages/admin/AdminPagamentosGerar";
+import AdminPagamentosGerir from "./pages/admin/AdminPagamentosGerir";
 import Usuarios from "./pages/Usuarios";
 import UsuarioIndex from "./pages/UsuarioIndex";
 import Usuario from "./pages/Usuario";
@@ -149,6 +151,8 @@ const App = () => (
           <Route path="/admin/relatorio-consumidores" element={<AdminRelatorioConsumidores />} />
           <Route path="/admin/relatorio-consumidores/resultado" element={<AdminRelatorioConsumidoresResultado />} />
           <Route path="/admin/migrar-ofertas/:destinoId" element={<AdminMigrarOfertas />} />
+          <Route path="/admin/pagamentos-gerar" element={<AdminPagamentosGerar />} />
+          <Route path="/admin/pagamentos-gerir" element={<AdminPagamentosGerir />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/usuario-index" element={<UsuarioIndex />} />
           <Route path="/usuario" element={<Usuario />} />
