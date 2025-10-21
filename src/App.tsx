@@ -26,6 +26,8 @@ import PainelGestao from "./pages/fornecedor/PainelGestao";
 import FornecedorConfiguracoes from "./pages/fornecedor/FornecedorConfiguracoes";
 import Cronograma from "./pages/fornecedor/Cronograma";
 import ProdutosVencidos from "./pages/fornecedor/ProdutosVencidos";
+import FornecedorRelatorioEntregas from "./pages/fornecedor/FornecedorRelatorioEntregas";
+import FornecedorPagamentos from "./pages/fornecedor/FornecedorPagamentos";
 
 // Admin pages
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -108,6 +110,9 @@ const App = () => (
           <Route path="/fornecedor/cronograma" element={<Cronograma />} />
           <Route path="/fornecedor/produtos-vencidos" element={<ProdutosVencidos />} />
           <Route path="/fornecedor/configuracoes" element={<FornecedorConfiguracoes />} />
+          <Route path="/fornecedor/relatorio-entregas" element={<FornecedorRelatorioEntregas />} />
+          <Route path="/fornecedor/pagamentos" element={<FornecedorPagamentos />} />
+          <Route path="/fornecedor/ofertas" element={<LojaProdutor />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />

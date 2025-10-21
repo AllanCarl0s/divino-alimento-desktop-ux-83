@@ -1,488 +1,287 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import ReuseOfferModal from '@/components/fornecedor/ReuseOfferModal';
-import ProductAnalysisModal from '@/components/fornecedor/ProductAnalysisModal';
-import ProductCycleCard from '@/components/fornecedor/ProductCycleCard';
-import { Plus, Package, Calendar, Settings, LogOut, AlertTriangle, CheckCircle, Clock, FileDown, RefreshCw } from 'lucide-react';
+import { 
+  ArrowLeft,
+  ShoppingBag,
+  Truck,
+  Wallet,
+  UserCircle,
+  Calendar,
+  Package,
+  DollarSign,
+  AlertCircle
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { ProductInCycle, PreviousCycleData } from '@/types/product-cycle';
 
-// Mock data - Products in current cycle
-const mockCycleProducts: ProductInCycle[] = [
-  {
-    id: '1',
-    productId: 'prod-1',
-    name: 'Tomate Orgânico',
-    unit: 'kg',
-    conversionFactor: 1,
-    pricePerUnit: 4.50,
-    expiryDate: new Date('2024-02-15'),
-    availableQuantity: 120,
-    status: 'approved',
-    certified: true,
-    familyFarming: true,
-    description: 'Tomate orgânico cultivado sem agrotóxicos',
-    lastUpdated: new Date('2024-01-15'),
-    updatedBy: 'João da Silva',
-    metadados: {
-      mercado_prioritario_id: 'mc',
-      mercado_prioritario_nome: 'Mercado Central',
-      mercado_prioritario_tipo: 'Cestas',
-      certificado: true,
-      agricultura_familiar: true,
-      meses_colheita: ['janeiro', 'fevereiro', 'março']
-    }
-  },
-  {
-    id: '2',
-    productId: 'prod-2',
-    name: 'Alface Hidropônica',
-    unit: 'unidade',
-    conversionFactor: 0.3,
-    pricePerUnit: 2.80,
-    expiryDate: new Date('2024-02-10'),
-    availableQuantity: 45,
-    status: 'draft',
-    certified: false,
-    familyFarming: true,
-    description: 'Alface hidropônica fresca',
-    lastUpdated: new Date('2024-01-20'),
-    updatedBy: 'João da Silva',
-    metadados: {
-      mercado_prioritario_id: 'fo',
-      mercado_prioritario_nome: 'Feira Orgânica',
-      mercado_prioritario_tipo: 'Cestas',
-      agricultura_familiar: true,
-      meses_colheita: ['abril', 'maio', 'junho']
-    }
-  },
-  {
-    id: '3',
-    productId: 'prod-3',
-    name: 'Cenoura Baby',
-    unit: 'kg',
-    conversionFactor: 1,
-    status: 'draft',
-    certified: true,
-    familyFarming: false,
-    description: 'Cenoura baby orgânica',
-    lastUpdated: new Date('2024-01-10'),
-    updatedBy: 'João da Silva'
-  }
-];
-
-// Mock previous cycle data
-const mockPreviousCycle: PreviousCycleData = {
-  cycleId: 'cycle-prev',
-  totalProducts: 3,
-  products: [
+// Mock data - in real app would come from API/context
+const mockFornecedorData = {
+  proximaEntrega: '15/11/2025 18:25',
+  itensAEntregar: 12,
+  valorEstimado: 1850.50,
+  pagamentosPendentes: 3,
+  ciclos: [
     {
-      id: 'prev-1',
-      productId: 'prod-1',
-      name: 'Tomate Orgânico',
-      unit: 'kg',
-      conversionFactor: 1,
-      pricePerUnit: 4.20,
-      expiryDate: new Date('2024-01-30'),
-      availableQuantity: 100,
-      status: 'approved',
-      certified: true,
-      familyFarming: true,
-      lastUpdated: new Date('2024-01-01'),
-      updatedBy: 'João da Silva'
+      id: 'c_nov_1',
+      nome: '1º Ciclo de Novembro 2025',
+      status: 'Ativo',
+      periodoOferta: { inicio: '31/10/2025', fim: '03/11/2025' },
+      dataEntrega: '15/11/2025 18:25',
+      localEntrega: 'Mercado Central',
+      dentroJanelaOferta: true
     },
     {
-      id: 'prev-2',
-      productId: 'prod-4',
-      name: 'Pepino Japonês',
-      unit: 'kg',
-      conversionFactor: 1,
-      pricePerUnit: 3.80,
-      status: 'approved',
-      certified: false,
-      familyFarming: true,
-      lastUpdated: new Date('2024-01-01'),
-      updatedBy: 'João da Silva'
+      id: 'c_out_2',
+      nome: '2º Ciclo de Outubro 2025',
+      status: 'Finalizado',
+      periodoOferta: { inicio: '20/10/2025', fim: '23/10/2025' },
+      dataEntrega: '30/10/2025 14:00',
+      localEntrega: 'Feira Livre',
+      dentroJanelaOferta: false
     }
   ]
 };
 
 const LojaProdutor = () => {
-  const [activeTab, setActiveTab] = useState('todos');
-  const [cycleProducts, setCycleProducts] = useState<ProductInCycle[]>(mockCycleProducts);
-  const [showReuseModal, setShowReuseModal] = useState(false);
-  const [showAnalysisModal, setShowAnalysisModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<ProductInCycle | null>(null);
-  const [hasPreviousCycle] = useState(true);
-  const [isFirstAccess] = useState(true); // Simulate first access to cycle
-  
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { proximaEntrega, itensAEntregar, valorEstimado, pagamentosPendentes, ciclos } = mockFornecedorData;
 
-  // Check for previous cycle on component mount
-  useEffect(() => {
-    if (isFirstAccess && hasPreviousCycle) {
-      setShowReuseModal(true);
+  const kpis = [
+    { 
+      label: 'Próxima Entrega', 
+      value: proximaEntrega || '—', 
+      icon: Calendar,
+      color: 'text-blue-600'
+    },
+    { 
+      label: 'Itens a Entregar', 
+      value: itensAEntregar.toString(), 
+      icon: Package,
+      color: 'text-green-600'
+    },
+    { 
+      label: 'Valor Estimado', 
+      value: `R$ ${valorEstimado.toFixed(2).replace('.', ',')}`, 
+      icon: DollarSign,
+      color: 'text-emerald-600'
+    },
+    { 
+      label: 'Pagamentos Pendentes', 
+      value: pagamentosPendentes.toString(), 
+      icon: Wallet,
+      color: 'text-orange-600'
     }
-  }, [isFirstAccess, hasPreviousCycle]);
+  ];
 
-  const handleLogout = () => {
-    localStorage.removeItem('fornecedorAuth');
-    navigate('/');
-  };
-
-  const handleReuseOffers = () => {
-    // Get current cycle dates (mock - in real app this would come from API)
-    const currentCycleStart = new Date('2024-02-01');
-    const currentCycleEnd = new Date('2024-02-07');
-    
-    // Filter products that don't already exist in current cycle
-    const existingProductIds = cycleProducts.map(p => p.productId);
-    const eligibleProducts = mockPreviousCycle.products.filter(
-      product => !existingProductIds.includes(product.productId)
-    );
-    
-    if (eligibleProducts.length === 0) {
-      toast({
-        title: "Nenhum produto elegível",
-        description: "Nenhum produto elegível no ciclo anterior.",
-      });
-      setShowReuseModal(false);
-      return;
+  const acoes = [
+    {
+      title: 'Ofertar Produtos',
+      description: 'Publique/edite seus produtos nos ciclos ativos, dentro do período de oferta.',
+      icon: ShoppingBag,
+      route: '/fornecedor/ofertas',
+      enabled: ciclos.some(c => c.dentroJanelaOferta),
+      badge: ciclos.some(c => c.dentroJanelaOferta) ? null : 'Fora do período',
+      cicloAtivo: ciclos.find(c => c.dentroJanelaOferta)
+    },
+    {
+      title: 'Relatório de Entregas',
+      description: 'Veja o que entregar por ciclo (produtos, quantidades, local e horário).',
+      icon: Truck,
+      route: '/fornecedor/relatorio-entregas',
+      enabled: true,
+      badge: null
+    },
+    {
+      title: 'Meus Pagamentos',
+      description: 'Acompanhe registros a receber e pagos.',
+      icon: Wallet,
+      route: '/fornecedor/pagamentos',
+      enabled: true,
+      badge: null
+    },
+    {
+      title: 'Dados Pessoais',
+      description: 'Atualize seus dados de perfil e contato.',
+      icon: UserCircle,
+      route: '/dados-pessoais',
+      enabled: true,
+      badge: null
     }
-    
-    const reusedProducts = eligibleProducts.map(product => {
-      // Check if expiry date is within current cycle
-      let expiryDate = product.expiryDate;
-      let needsDateReview = false;
-      
-      if (expiryDate && (expiryDate < currentCycleStart || expiryDate > currentCycleEnd)) {
-        expiryDate = undefined; // Clear invalid date
-        needsDateReview = true;
-      }
-      
-      return {
-        ...product,
-        id: `reused-${Date.now()}-${product.productId}`,
-        status: 'draft' as const,
-        lastUpdated: new Date(),
-        expiryDate,
-        needsDateReview // Flag to show warning later
-      };
-    });
-    
-    setCycleProducts(prev => [...prev, ...reusedProducts]);
-    setShowReuseModal(false);
-    
-    const dateReviewCount = reusedProducts.filter(p => p.needsDateReview).length;
-    
-    toast({
-      title: "Produtos reutilizados",
-      description: `${reusedProducts.length} produtos foram trazidos do ciclo anterior como rascunho.${dateReviewCount > 0 ? ` ${dateReviewCount} produto(s) precisam de nova data de validade.` : ''}`,
-    });
-  };
-
-  const handleStartFresh = () => {
-    setShowReuseModal(false);
-    toast({
-      title: "Novo ciclo iniciado",
-      description: "Você pode começar a adicionar produtos para este ciclo",
-    });
-  };
-
-  const handleUpdateProduct = (updatedProduct: ProductInCycle) => {
-    setCycleProducts(prev => 
-      prev.map(p => p.id === updatedProduct.id ? updatedProduct : p)
-    );
-    
-    toast({
-      title: "Produto atualizado",
-      description: "As alterações foram salvas",
-    });
-  };
-
-  const handleEditProduct = (product: ProductInCycle) => {
-    setSelectedProduct(product);
-    setShowAnalysisModal(true);
-  };
-
-  const handleRemoveProduct = (productId: string) => {
-    setCycleProducts(prev => prev.filter(p => p.id !== productId));
-    
-    toast({
-      title: "Produto removido",
-      description: "O produto foi removido do ciclo atual",
-    });
-  };
-
-  const handleSaveDraft = (product: ProductInCycle) => {
-    setCycleProducts(prev => 
-      prev.map(p => p.id === product.id ? { ...product, lastUpdated: new Date(), updatedBy: 'João da Silva' } : p)
-    );
-    
-    toast({
-      title: "Rascunho salvo",
-      description: "As alterações foram salvas como rascunho",
-    });
-  };
-
-  const handleApproveProduct = (product: ProductInCycle) => {
-    setCycleProducts(prev => 
-      prev.map(p => p.id === product.id ? { ...product, status: 'approved', lastUpdated: new Date(), updatedBy: 'João da Silva' } : p)
-    );
-    
-    toast({
-      title: "Produto aprovado",
-      description: "O produto foi aprovado e está disponível para oferta",
-    });
-  };
-
-  const filterProducts = (products: ProductInCycle[]) => {
-    if (activeTab === 'todos') return products;
-    return products.filter(product => product.status === activeTab);
-  };
-
-  const filteredProducts = filterProducts(cycleProducts);
-  const approvedCount = cycleProducts.filter(p => p.status === 'approved').length;
-  const draftCount = cycleProducts.filter(p => p.status === 'draft').length;
+  ];
 
   return (
     <ResponsiveLayout 
-      headerContent={
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={handleLogout}
-          className="focus-ring text-primary-foreground hover:bg-primary-hover"
+      leftHeaderContent={
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/dashboard')}
+          className="text-white hover:text-primary transition-colors"
         >
-          <LogOut className="w-4 h-4 mr-1" />
-          <span className="hidden md:inline">Sair</span>
+          <ArrowLeft className="h-5 w-5" />
         </Button>
       }
     >
-      <div className="space-y-4 lg:space-y-6">
-        {/* Header with Settings */}
-        <div className="flex flex-col space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+      <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8">
+        {/* Header */}
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Loja do Produtor</h1>
-            <p className="text-sm text-muted-foreground">Gerencie seus produtos e ofertas</p>
+            <h1 className="text-3xl font-bold text-gradient-primary">
+              Painel do Fornecedor
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Gerencie suas ofertas, entregas e pagamentos
+            </p>
           </div>
-          <div className="flex items-center space-x-2 lg:space-x-3">
-            <Button 
-              onClick={() => navigate('/fornecedor/pre-cadastro-produtos')}
-              size="sm"
-              className="flex items-center space-x-1 flex-1 lg:flex-none"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="lg:inline">Adicionar Produto</span>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => navigate('/fornecedor/configuracoes')}
-              size="sm"
-              className="flex items-center space-x-1 lg:space-x-2 flex-1 lg:flex-none lg:px-4 lg:py-2 lg:h-10"
-            >
-              <Settings className="w-4 h-4 lg:w-5 lg:h-5 text-primary" />
-              <span className="font-medium hidden lg:inline">Configurações</span>
-            </Button>
-          </div>
+          <Badge className="bg-gradient-to-r from-primary to-accent text-white">
+            Fornecedor Ativo
+          </Badge>
         </div>
 
-        {/* Quick Access Menu */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-          <Button
-            variant="outline"
-            onClick={() => navigate('/fornecedor/pedidos-aberto')}
-            className="h-16 lg:h-20 flex flex-col items-center justify-center space-y-1 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20 hover:border-primary/40"
-          >
-            <Package className="w-6 h-6 text-primary" />
-            <span className="text-sm font-medium text-center">Pedidos em Aberto</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={() => navigate('/fornecedor/painel-gestao')}
-            className="h-16 lg:h-20 flex flex-col items-center justify-center space-y-1 bg-gradient-to-br from-secondary/5 to-warning/5 border-secondary/20 hover:border-secondary/40"
-          >
-            <Calendar className="w-6 h-6 text-secondary" />
-            <span className="text-sm font-medium text-center">Painel de Gestão</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() => navigate('/fornecedor/cronograma')}
-            className="h-16 lg:h-20 flex flex-col items-center justify-center space-y-1 bg-gradient-to-br from-accent/5 to-primary/5 border-accent/20 hover:border-accent/40"
-          >
-            <Calendar className="w-6 h-6 text-accent" />
-            <span className="text-sm font-medium text-center">Cronograma</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() => navigate('/fornecedor/produtos-vencidos')}
-            className="h-16 lg:h-20 flex flex-col items-center justify-center space-y-1 bg-gradient-to-br from-red-500/10 to-orange-500/10 border-red-400/30 hover:border-red-500/50"
-          >
-            <AlertTriangle className="w-6 h-6 text-red-500" />
-            <span className="text-sm font-medium text-center">Produtos Vencidos</span>
-          </Button>
+        {/* KPIs */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {kpis.map((kpi, index) => (
+            <Card key={index} className="shadow-sm hover:shadow-md transition-all duration-200">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">{kpi.label}</p>
+                    <p className="text-xl font-bold text-foreground">{kpi.value}</p>
+                  </div>
+                  <kpi.icon className={`w-5 h-5 ${kpi.color}`} />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-
-        {/* Cycle Status Summary */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-          <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200">
-            <CheckCircle className="w-8 h-8 text-green-600" />
-            <div>
-              <p className="text-2xl font-bold text-green-700">{approvedCount}</p>
-              <p className="text-sm text-green-600">Aprovados</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg border border-yellow-200">
-            <Clock className="w-8 h-8 text-yellow-600" />
-            <div>
-              <p className="text-2xl font-bold text-yellow-700">{draftCount}</p>
-              <p className="text-sm text-yellow-600">Rascunhos</p>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200">
-            <Package className="w-8 h-8 text-blue-600" />
-            <div>
-              <p className="text-2xl font-bold text-blue-700">{cycleProducts.length}</p>
-              <p className="text-sm text-blue-600">Total</p>
-            </div>
-          </div>
-
-          <div className="col-span-2 lg:col-span-1 space-y-2">
-            <Button
-              variant="outline"
-              className="w-full h-full flex flex-col items-center justify-center space-y-1 bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200 hover:border-purple-300"
-              onClick={() => {
-                // Export cycle report
-                toast({ title: "Exportando relatório", description: "O download será iniciado em breve" });
-              }}
-            >
-              <FileDown className="w-6 h-6 text-purple-600" />
-              <span className="text-sm font-medium text-purple-700">Exportar Ciclo</span>
-            </Button>
-            
-            {hasPreviousCycle && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowReuseModal(true)}
-                className="w-full text-xs text-muted-foreground hover:text-primary flex items-center justify-center space-x-1"
+        {/* Ações Rápidas */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Package className="w-5 h-5 text-primary" />
+            Ações Rápidas
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {acoes.map((acao, index) => (
+              <Card 
+                key={index}
+                className={`shadow-sm transition-all duration-200 ${
+                  acao.enabled 
+                    ? 'hover:shadow-md cursor-pointer hover:scale-[1.02]' 
+                    : 'opacity-60 cursor-not-allowed'
+                }`}
+                onClick={() => acao.enabled && navigate(acao.route)}
               >
-                <RefreshCw className="w-3 h-3" />
-                <span>Reutilizar ciclo anterior</span>
-              </Button>
-            )}
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-3 rounded-lg ${acao.enabled ? 'bg-primary/10' : 'bg-muted'}`}>
+                        <acao.icon className={`w-6 h-6 ${acao.enabled ? 'text-primary' : 'text-muted-foreground'}`} />
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg">{acao.title}</CardTitle>
+                        {acao.badge && (
+                          <Badge variant="secondary" className="mt-1">
+                            {acao.badge}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <CardDescription className="mt-2">{acao.description}</CardDescription>
+                  {acao.cicloAtivo && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Badge variant="outline" className="text-xs">
+                        {acao.cicloAtivo.nome}
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        Oferta: {acao.cicloAtivo.periodoOferta.inicio} - {acao.cicloAtivo.periodoOferta.fim}
+                      </Badge>
+                    </div>
+                  )}
+                </CardHeader>
+              </Card>
+            ))}
           </div>
         </div>
 
-        {/* Meus Produtos no Ciclo */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Meus Produtos no Ciclo</h2>
-
-          {/* Tabs for filtering */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="todos" className="text-xs">
-                Todos ({cycleProducts.length})
-              </TabsTrigger>
-              <TabsTrigger value="approved" className="text-xs">
-                Aprovados ({approvedCount})
-              </TabsTrigger>
-              <TabsTrigger value="draft" className="text-xs">
-                Rascunhos ({draftCount})
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value={activeTab} className="space-y-4 mt-4">
-              {filteredProducts.length === 0 ? (
-                <Card className="text-center py-12">
-                  <CardContent className="space-y-4">
-                    <Package className="w-16 h-16 mx-auto text-muted-foreground" />
-                    <div>
-                      <h3 className="text-lg font-medium text-foreground">
-                        {activeTab === 'todos' 
-                          ? 'Nenhum produto no ciclo'
-                          : `Nenhum produto ${activeTab === 'approved' ? 'aprovado' : 'em rascunho'}`
-                        }
-                      </h3>
-                      <p className="text-sm text-muted-foreground mt-2">
-                        {activeTab === 'todos' 
-                          ? 'Adicione produtos para começar a ofertar neste ciclo'
-                          : `Não há produtos ${activeTab === 'approved' ? 'aprovados' : 'salvos como rascunho'} ainda`
-                        }
-                      </p>
+        {/* Meus Ciclos */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-primary" />
+            Meus Ciclos
+          </h2>
+          {ciclos.length === 0 ? (
+            <Card className="text-center py-12">
+              <CardContent className="space-y-4">
+                <AlertCircle className="w-16 h-16 mx-auto text-muted-foreground" />
+                <div>
+                  <h3 className="text-lg font-medium text-foreground">
+                    Nenhum ciclo encontrado
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Volte mais tarde ou complete seu cadastro.
+                  </p>
+                </div>
+                <Button onClick={() => navigate('/dados-pessoais')}>
+                  <UserCircle className="w-4 h-4 mr-2" />
+                  Ir para Dados Pessoais
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {ciclos.map((ciclo) => (
+                <Card key={ciclo.id} className="shadow-sm hover:shadow-md transition-all">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-semibold">{ciclo.nome}</h3>
+                          <Badge variant={ciclo.status === 'Ativo' ? 'default' : 'secondary'}>
+                            {ciclo.status}
+                          </Badge>
+                        </div>
+                        <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                          <Badge variant="outline" className="text-xs">
+                            Período: {ciclo.periodoOferta.inicio} - {ciclo.periodoOferta.fim}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            Entrega: {ciclo.dataEntrega}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            Local: {ciclo.localEntrega}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant={ciclo.dentroJanelaOferta ? 'default' : 'outline'}
+                          disabled={!ciclo.dentroJanelaOferta}
+                          onClick={() => navigate(`/fornecedor/ofertas?ciclo=${ciclo.id}`)}
+                        >
+                          <ShoppingBag className="w-4 h-4 mr-2" />
+                          Ofertar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => navigate(`/fornecedor/relatorio-entregas?ciclo=${ciclo.id}`)}
+                        >
+                          <Truck className="w-4 h-4 mr-2" />
+                          Ver Entregas
+                        </Button>
+                      </div>
                     </div>
-                    <Button onClick={() => navigate('/fornecedor/pre-cadastro-produtos')}>
-                      <Plus className="w-4 h-4 mr-2" />
-                      Adicionar Primeiro Produto
-                    </Button>
                   </CardContent>
                 </Card>
-              ) : (
-                <div className="space-y-4">
-                  {filteredProducts.map((product) => (
-                    <ProductCycleCard
-                      key={product.id}
-                      product={product}
-                      onUpdate={handleUpdateProduct}
-                      onEdit={handleEditProduct}
-                      onRemove={handleRemoveProduct}
-                    />
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
+              ))}
+            </div>
+          )}
         </div>
-
-        {/* Publish Cycle Button */}
-        {approvedCount > 0 && (
-          <div className="flex justify-center pt-6">
-            <Button 
-              size="lg"
-              className="px-8 py-3 text-base font-medium"
-              onClick={() => {
-                toast({
-                  title: "Produtos ofertados",
-                  description: `${approvedCount} produtos foram publicados para oferta`,
-                });
-              }}
-            >
-              <CheckCircle className="w-5 h-5 mr-2" />
-              Ofertar Produtos ({approvedCount} produtos)
-            </Button>
-          </div>
-        )}
-
-        {/* Reuse Previous Cycle Modal */}
-        <ReuseOfferModal
-          isOpen={showReuseModal}
-          onClose={() => setShowReuseModal(false)}
-          previousCycleData={hasPreviousCycle ? mockPreviousCycle : null}
-          onReuseOffers={handleReuseOffers}
-          onStartFresh={handleStartFresh}
-        />
-
-        {/* Product Analysis Modal */}
-        <ProductAnalysisModal
-          isOpen={showAnalysisModal}
-          onClose={() => setShowAnalysisModal(false)}
-          product={selectedProduct}
-          onSaveDraft={handleSaveDraft}
-          onApprove={handleApproveProduct}
-        />
-
       </div>
     </ResponsiveLayout>
   );
