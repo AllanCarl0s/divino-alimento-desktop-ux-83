@@ -14,6 +14,8 @@ import Relatorio from "./pages/Relatorio";
 import Pagamentos from "./pages/Pagamentos";
 import Configuracoes from "./pages/Configuracoes";
 import PedidoConsumidores from "./pages/PedidoConsumidores";
+import ConsumidorRelatorio from "./pages/consumidor/ConsumidorRelatorio";
+import ConsumidorPagamentos from "./pages/consumidor/ConsumidorPagamentos";
 import NotFound from "./pages/NotFound";
 
 // Fornecedor pages
@@ -97,6 +99,10 @@ const App = () => (
           <Route path="/pagamentos" element={<Pagamentos />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
           <Route path="/pedidoConsumidores/:id" element={<PedidoConsumidores />} />
+          
+          {/* Consumidor Routes */}
+          <Route path="/consumidor/relatorio/:id" element={<ConsumidorRelatorio />} />
+          <Route path="/consumidor/pagamentos" element={<ConsumidorPagamentos />} />
           
           {/* Fornecedor Routes */}
           <Route path="/fornecedor/login" element={<FornecedorLogin />} />

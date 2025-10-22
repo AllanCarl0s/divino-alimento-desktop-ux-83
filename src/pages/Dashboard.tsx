@@ -1,148 +1,151 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import { ShoppingBasket, FileText, CreditCard, Settings, ChevronRight, ShoppingCart } from 'lucide-react';
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { ShoppingCart, FileText, Wallet, UserCircle, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useConsumer } from '@/contexts/ConsumerContext';
 import { useCycle } from '@/hooks/useCycle';
+import { Button } from '@/components/ui/button';
 
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { consumerType } = useConsumer();
   const { currentCycle } = useCycle();
 
-  const getMenuDescription = () => {
-    const cycleTypeName = currentCycle.type === 'semanal' ? 'semana' : 'quinzena';
-    return consumerType === 'cesta' 
-      ? `Ver produtos da ${cycleTypeName} e extras`
-      : 'Ver produtos disponíveis para compra';
-  };
+  // Mock data - in production this would come from API
+  const kpis = [
+    { label: 'Cestas do ciclo', value: '4', color: 'text-primary' },
+    { label: 'Total extras', value: 'R$ 156', color: 'text-accent' },
+    { label: 'Produtos favoritos', value: '12', color: 'text-secondary' },
+    { label: 'Satisfação', value: '85%', color: 'text-warning' }
+  ];
 
-  const menuItems = [
+  const acoes = [
     {
-      icon: ShoppingBasket,
-      title: 'Meu Pedido',
-      description: getMenuDescription(),
-      path: '/cesta',
-      badge: 'Nova'
+      titulo: 'Pedido Consumidores',
+      descricao: 'Comprar produtos da feira direta',
+      icone: ShoppingCart,
+      rota: '/pedidoConsumidores/1',
+      habilitado: true
     },
     {
-      icon: ShoppingCart,
-      title: 'Pedido Consumidores',
-      description: 'Comprar produtos da feira direta',
-      path: '/pedidoConsumidores/1?cst=1&usr=1'
+      titulo: 'Relatório de Recebimentos',
+      descricao: 'Veja o que você irá receber por ciclo (data/hora e local)',
+      icone: FileText,
+      rota: '/consumidor/relatorio/1',
+      habilitado: true
     },
     {
-      icon: FileText,
-      title: 'Resumo',
-      description: 'Total consolidado e pagamentos',
-      path: '/resumo'
-    },
-    {
-      icon: FileText,
-      title: 'Relatórios',
-      description: 'Histórico e status dos pedidos',
-      path: '/relatorio'
-    },
-    {
-      icon: CreditCard,
-      title: 'Pagamentos',
-      description: 'Gestão de assinaturas e extras',
-      path: '/pagamentos',
+      titulo: 'Meus Pagamentos',
+      descricao: 'Acompanhe seus pagamentos (em aberto e quitados)',
+      icone: Wallet,
+      rota: '/consumidor/pagamentos',
+      habilitado: true,
       badge: 'Pendente'
     },
     {
-      icon: Settings,
-      title: 'Configurações',
-      description: 'Perfil, notificações e preferências',
-      path: '/configuracoes'
+      titulo: 'Dados Pessoais',
+      descricao: 'Atualize seu perfil e contato',
+      icone: UserCircle,
+      rota: '/usuario/1',
+      habilitado: true
+    }
+  ];
+
+  // Mock cycles data - in production this would come from API
+  const ciclos = [
+    {
+      id: 1,
+      nome: '1º Ciclo de Novembro 2025',
+      status: 'Ativo',
+      janela_compra: { inicio: '01/11/2025', fim: '05/11/2025', ativo: true },
+      entrega: { data: '15/11/2025', hora: '14:00', local: 'Mercado Central' }
+    },
+    {
+      id: 2,
+      nome: '2º Ciclo de Novembro 2025',
+      status: 'Finalizado',
+      janela_compra: { inicio: '08/11/2025', fim: '12/11/2025', ativo: false },
+      entrega: { data: '22/11/2025', hora: '14:00', local: 'Feira Livre' }
     }
   ];
 
   return (
-    <ResponsiveLayout>
-      {/* Desktop Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 lg:p-0">
-        
-        {/* Welcome Section - Desktop 12 col */}
-        <div className="lg:col-span-12 text-center py-6">
-          <h1 className="font-poppins text-2xl lg:text-3xl font-bold text-gradient-primary mb-2">
+    <ResponsiveLayout
+      leftHeaderContent={
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => navigate('/')} 
+          className="text-white hover:bg-white/20"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+      }
+    >
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">
             Bem-vindo de volta!
           </h1>
-          <p className="text-muted-foreground lg:text-lg">
+          <p className="text-sm md:text-base text-muted-foreground mt-1">
             Gerencie suas cestas e pedidos
           </p>
         </div>
 
-        {/* Quick Stats - Desktop 2 col responsive */}
-        <div className="lg:col-span-12">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            <Card className="text-center">
-              <CardContent className="p-4 lg:p-6">
-                <div className="text-2xl lg:text-3xl font-bold text-primary">4</div>
-                <div className="text-xs lg:text-sm text-muted-foreground">Cestas do ciclo</div>
+        {/* KPIs */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {kpis.map((kpi, idx) => (
+            <Card key={idx}>
+              <CardContent className="p-4 text-center">
+                <div className={`text-2xl md:text-3xl font-bold ${kpi.color}`}>
+                  {kpi.value}
+                </div>
+                <div className="text-xs md:text-sm text-muted-foreground mt-1">
+                  {kpi.label}
+                </div>
               </CardContent>
             </Card>
-            <Card className="text-center">
-              <CardContent className="p-4 lg:p-6">
-                <div className="text-2xl lg:text-3xl font-bold text-accent">R$ 156</div>
-                <div className="text-xs lg:text-sm text-muted-foreground">Total extras</div>
-              </CardContent>
-            </Card>
-            {/* Desktop additional stats */}
-            <Card className="text-center hidden lg:block">
-              <CardContent className="p-6">
-                <div className="text-3xl font-bold text-secondary">12</div>
-                <div className="text-sm text-muted-foreground">Produtos favoritos</div>
-              </CardContent>
-            </Card>
-            <Card className="text-center hidden lg:block">
-              <CardContent className="p-6">
-                <div className="text-3xl font-bold text-warning">85%</div>
-                <div className="text-sm text-muted-foreground">Satisfação</div>
-              </CardContent>
-            </Card>
-          </div>
+          ))}
         </div>
 
-        {/* Menu Items - Desktop 3 col grid */}
-        <div className="lg:col-span-12">
-          <h2 className="font-poppins text-lg lg:text-xl font-semibold text-foreground mb-4 lg:mb-6">
-            Menu Principal
+        {/* Ações Rápidas */}
+        <div>
+          <h2 className="text-lg md:text-xl font-semibold text-foreground mb-4">
+            Ações Rápidas
           </h2>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-            {menuItems.map((item, index) => (
-              <Card 
-                key={index} 
-                className="hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02]"
-                onClick={() => navigate(item.path)}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {acoes.map((acao, idx) => (
+              <Card
+                key={idx}
+                className={`hover:shadow-lg transition-all cursor-pointer ${
+                  !acao.habilitado ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                onClick={() => acao.habilitado && navigate(acao.rota)}
               >
-                <CardContent className="p-4 lg:p-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center">
-                      <item.icon className="w-6 h-6 lg:w-7 lg:h-7 text-primary" />
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <acao.icone className="w-6 h-6 text-primary" />
                     </div>
-                    
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-2">
-                        <h3 className="font-medium text-foreground lg:text-lg">{item.title}</h3>
-                        {item.badge && (
-                          <Badge 
-                            variant={item.badge === 'Pendente' ? 'destructive' : 'secondary'}
-                            className="text-xs px-2 py-0"
-                          >
-                            {item.badge}
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-foreground">
+                          {acao.titulo}
+                        </h3>
+                        {acao.badge && (
+                          <Badge variant="destructive" className="text-xs">
+                            {acao.badge}
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm lg:text-base text-muted-foreground">{item.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {acao.descricao}
+                      </p>
                     </div>
-                    
-                    <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                    <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
                   </div>
                 </CardContent>
               </Card>
@@ -150,37 +153,108 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Current Cycle Info - Desktop 8 col centered */}
-        <div className="lg:col-start-3 lg:col-span-8">
-          <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base lg:text-lg font-poppins text-gradient-primary">
-                {currentCycle.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="flex items-center justify-between text-sm lg:text-base">
-                <span className="text-muted-foreground">Período:</span>
-                <span className="font-medium">
-                  {currentCycle.startDate.toLocaleDateString('pt-BR')} - {currentCycle.endDate.toLocaleDateString('pt-BR')}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-sm lg:text-base mt-2">
-                <span className="text-muted-foreground">Tipo:</span>
-                <span className="font-medium">
-                  {currentCycle.type === 'semanal' ? 'Semanal (7 dias)' : 'Quinzenal (15 dias)'}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-sm lg:text-base mt-2">
-                <span className="text-muted-foreground">Status:</span>
-                <Badge variant="default" className="bg-primary">
-                  {currentCycle.status === 'active' ? 'Ativo' : 
-                   currentCycle.status === 'upcoming' ? 'Em breve' : 'Encerrado'}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Meus Ciclos */}
+        <div>
+          <h2 className="text-lg md:text-xl font-semibold text-foreground mb-4">
+            Meus Ciclos
+          </h2>
+          {ciclos.length === 0 ? (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <p className="text-muted-foreground mb-4">
+                  Nenhum ciclo encontrado no momento.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {ciclos.map((ciclo) => (
+                <Card key={ciclo.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-semibold text-foreground">
+                            {ciclo.nome}
+                          </h3>
+                          <Badge variant={ciclo.status === 'Ativo' ? 'default' : 'secondary'}>
+                            {ciclo.status}
+                          </Badge>
+                        </div>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex items-center gap-2">
+                            <span className="text-muted-foreground">Janela de Compra:</span>
+                            <Badge variant={ciclo.janela_compra.ativo ? 'default' : 'secondary'}>
+                              {ciclo.janela_compra.ativo ? 'Ativo' : 'Encerrado'}
+                            </Badge>
+                            <span className="text-muted-foreground">
+                              {ciclo.janela_compra.inicio} - {ciclo.janela_compra.fim}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-muted-foreground">Entrega:</span>
+                            <span className="font-medium">
+                              {ciclo.entrega.data} às {ciclo.entrega.hora} • {ciclo.entrega.local}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 flex-shrink-0">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/pedidoConsumidores/${ciclo.id}`)}
+                          disabled={!ciclo.janela_compra.ativo}
+                          className="border-primary text-primary hover:bg-primary/10"
+                        >
+                          Comprar
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/consumidor/relatorio/${ciclo.id}`)}
+                          className="border-primary text-primary hover:bg-primary/10"
+                        >
+                          Ver Pedido
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
+
+        {/* Current Cycle Info */}
+        <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base md:text-lg font-poppins text-gradient-primary">
+              {currentCycle.name}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="flex items-center justify-between text-sm md:text-base">
+              <span className="text-muted-foreground">Período:</span>
+              <span className="font-medium">
+                {currentCycle.startDate.toLocaleDateString('pt-BR')} - {currentCycle.endDate.toLocaleDateString('pt-BR')}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm md:text-base mt-2">
+              <span className="text-muted-foreground">Tipo:</span>
+              <span className="font-medium">
+                {currentCycle.type === 'semanal' ? 'Semanal (7 dias)' : 'Quinzenal (15 dias)'}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm md:text-base mt-2">
+              <span className="text-muted-foreground">Status:</span>
+              <Badge variant="default" className="bg-primary">
+                {currentCycle.status === 'active' ? 'Ativo' : 
+                 currentCycle.status === 'upcoming' ? 'Em breve' : 'Encerrado'}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </ResponsiveLayout>
   );
