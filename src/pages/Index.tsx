@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import CycleCard from '@/components/ui/CycleCard';
-import BannerCarousel from '@/components/ui/BannerCarousel';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import AppBarDivino from '@/components/layout/AppBarDivino';
 import LeafIcon from '@/components/ui/LeafIcon';
@@ -24,9 +23,6 @@ const Index = () => {
       <AppBarDivino showLoginButton={true} />
       
       <ResponsiveLayout className="pt-0" showHeader={false}>
-        {/* Dynamic Banner Carousel */}
-        <BannerCarousel className="mb-8" />
-        
         {/* Hero Section - Desktop centered 8-10 columns */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 py-6 lg:py-12">
         <div className="lg:col-start-2 lg:col-span-10 xl:col-start-3 xl:col-span-8 text-center">
