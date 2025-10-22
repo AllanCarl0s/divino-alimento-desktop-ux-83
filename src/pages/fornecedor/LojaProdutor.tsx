@@ -80,7 +80,7 @@ const LojaProdutor = () => {
       title: 'Ofertar Produtos',
       description: 'Publique/edite seus produtos nos ciclos ativos, dentro do período de oferta.',
       icon: ShoppingBag,
-      route: '/fornecedor/ofertas',
+      route: ciclos.find(c => c.dentroJanelaOferta) ? `/oferta/${ciclos.find(c => c.dentroJanelaOferta)?.id}` : '/oferta/1',
       enabled: ciclos.some(c => c.dentroJanelaOferta),
       badge: ciclos.some(c => c.dentroJanelaOferta) ? null : 'Fora do período',
       cicloAtivo: ciclos.find(c => c.dentroJanelaOferta)
@@ -89,7 +89,7 @@ const LojaProdutor = () => {
       title: 'Relatório de Entregas',
       description: 'Veja o que entregar por ciclo (produtos, quantidades, local e horário).',
       icon: Truck,
-      route: '/fornecedor/relatorio-entregas',
+      route: `/fornecedor/entregas/${ciclos[0]?.id || '1'}`,
       enabled: true,
       badge: null
     },
@@ -105,7 +105,7 @@ const LojaProdutor = () => {
       title: 'Dados Pessoais',
       description: 'Atualize seus dados de perfil e contato.',
       icon: UserCircle,
-      route: '/dados-pessoais',
+      route: '/usuario/1',
       enabled: true,
       badge: null
     }
@@ -261,7 +261,7 @@ const LojaProdutor = () => {
                           size="sm"
                           variant={ciclo.dentroJanelaOferta ? 'default' : 'outline'}
                           disabled={!ciclo.dentroJanelaOferta}
-                          onClick={() => navigate(`/fornecedor/ofertas?ciclo=${ciclo.id}`)}
+                          onClick={() => navigate(`/oferta/${ciclo.id}`)}
                         >
                           <ShoppingBag className="w-4 h-4 mr-2" />
                           Ofertar
@@ -269,7 +269,7 @@ const LojaProdutor = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => navigate(`/fornecedor/relatorio-entregas?ciclo=${ciclo.id}`)}
+                          onClick={() => navigate(`/fornecedor/entregas/${ciclo.id}`)}
                         >
                           <Truck className="w-4 h-4 mr-2" />
                           Ver Entregas
