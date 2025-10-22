@@ -28,6 +28,7 @@ import Cronograma from "./pages/fornecedor/Cronograma";
 import ProdutosVencidos from "./pages/fornecedor/ProdutosVencidos";
 import FornecedorRelatorioEntregas from "./pages/fornecedor/FornecedorRelatorioEntregas";
 import FornecedorPagamentos from "./pages/fornecedor/FornecedorPagamentos";
+import FornecedorEntregas from "./pages/fornecedor/FornecedorEntregas";
 
 // Admin pages
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -111,6 +112,7 @@ const App = () => (
           <Route path="/fornecedor/produtos-vencidos" element={<ProdutosVencidos />} />
           <Route path="/fornecedor/configuracoes" element={<FornecedorConfiguracoes />} />
           <Route path="/fornecedor/relatorio-entregas" element={<FornecedorRelatorioEntregas />} />
+          <Route path="/fornecedor/entregas/:cicloId" element={<FornecedorEntregas />} />
           <Route path="/fornecedor/pagamentos" element={<FornecedorPagamentos />} />
           <Route path="/fornecedor/ofertas" element={<LojaProdutor />} />
           
