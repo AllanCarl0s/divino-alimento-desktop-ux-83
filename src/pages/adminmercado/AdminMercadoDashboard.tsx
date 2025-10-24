@@ -44,7 +44,7 @@ const AdminMercadoDashboard = () => {
       title: 'Criar/Editar Ciclo',
       description: 'Configure e edite ciclos de vendas e ofertas.',
       icon: RefreshCcw,
-      route: '/adminmercado/ciclos',
+      route: '/adminmercado/ciclo-index',
       badge: null
     },
     {
