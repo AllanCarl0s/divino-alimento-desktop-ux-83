@@ -35,6 +35,7 @@ import FornecedorEntregas from "./pages/fornecedor/FornecedorEntregas";
 // Admin pages
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminMercadoDashboard from "./pages/adminmercado/AdminMercadoDashboard";
 import AdminMercados from "./pages/admin/AdminMercados";
 import AdminPrecos from "./pages/admin/AdminPrecos";
 import AdminPrecosLista from "./pages/admin/AdminPrecosLista";
@@ -125,6 +126,10 @@ const App = () => (
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          
+          {/* Admin Mercado Routes */}
+          <Route path="/adminmercado/dashboard" element={<AdminMercadoDashboard />} />
+          
           <Route path="/admin/mercados" element={<AdminMercados />} />
           <Route path="/admin/precos" element={<AdminPrecosLista />} />
           <Route path="/admin/precos/:id" element={<AdminPrecos />} />
