@@ -281,6 +281,7 @@ export default function AdminMercadoCicloIndex() {
                         <TableCell className="text-right">
                           <TooltipProvider>
                             <div className="flex justify-end gap-2">
+                              {/* 1. Editar Ciclo */}
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button 
@@ -294,6 +295,8 @@ export default function AdminMercadoCicloIndex() {
                                 </TooltipTrigger>
                                 <TooltipContent><p>Editar Ciclo</p></TooltipContent>
                               </Tooltip>
+
+                              {/* 2. Migrar Ofertas */}
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button 
@@ -302,15 +305,19 @@ export default function AdminMercadoCicloIndex() {
                                     onClick={() => navigate(`/adminmercado/migrar-ofertas/${ciclo.id}`)} 
                                     disabled={ciclo.status !== 'ativo'}
                                     className="h-10 w-10 border-2 border-primary hover:bg-primary/10 disabled:opacity-40 disabled:cursor-not-allowed"
-                                    title="Migrar ofertas de outro ciclo"
                                   >
                                     <RefreshCw className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Migrar ofertas de outro ciclo</p></TooltipContent>
+                                <TooltipContent>
+                                  <p>{ciclo.status === 'ativo' ? 'Migrar ofertas de outro ciclo' : 'Ciclo inativo'}</p>
+                                </TooltipContent>
                               </Tooltip>
+
+                              {/* Botões específicos por tipo de mercado */}
                               {mercadoAtual && (
                                 <>
+                                  {/* 3. Liberar Venda Direta (apenas para Venda Direta) */}
                                   {mercadoAtual.tipo_venda === 'venda_direta' && (
                                     <Tooltip>
                                       <TooltipTrigger asChild>
@@ -320,7 +327,6 @@ export default function AdminMercadoCicloIndex() {
                                           onClick={() => handlePublishClick(ciclo, mercadoAtual)}
                                           disabled={!canPublishVendaDireta(ciclo, mercadoAtual).can}
                                           className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
-                                          aria-label="Liberar venda direta para consumidores"
                                         >
                                           <Megaphone className="h-5 w-5 text-success" />
                                         </Button>
@@ -334,52 +340,69 @@ export default function AdminMercadoCicloIndex() {
                                       </TooltipContent>
                                     </Tooltip>
                                   )}
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button 
-                                      variant="outline" 
-                                      size="icon" 
-                                      onClick={() => handleComposicao(ciclo, mercadoAtual)}
-                                      disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
-                                      className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
-                                      aria-label={getComposicaoTooltip(mercadoAtual.tipo_venda)}
-                                    >
-                                      {(() => {
-                                        const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
-                                        return <Icon className="h-5 w-5 text-success" />;
-                                      })()}
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent><p>{getComposicaoTooltip(mercadoAtual.tipo_venda)}</p></TooltipContent>
-                                </Tooltip>
+
+                                  {/* 4. Compor Mercado (Lote ou Venda Direta) */}
+                                  {(mercadoAtual.tipo_venda === 'lote' || mercadoAtual.tipo_venda === 'venda_direta') && (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button 
+                                          variant="outline" 
+                                          size="icon" 
+                                          onClick={() => handleComposicao(ciclo, mercadoAtual)}
+                                          disabled={isMercadoBloqueado(ciclo, mercadoAtual)}
+                                          className="h-10 w-10 border-2 border-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                                        >
+                                          {(() => {
+                                            const Icon = getComposicaoIcon(mercadoAtual.tipo_venda);
+                                            return <Icon className="h-5 w-5 text-success" />;
+                                          })()}
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>
+                                          {ciclo.status === 'inativo' 
+                                            ? 'Ciclo finalizado' 
+                                            : isMercadoBloqueado(ciclo, mercadoAtual) 
+                                              ? 'Esse mercado está bloqueado até compor o anterior' 
+                                              : getComposicaoTooltip(mercadoAtual.tipo_venda)}
+                                        </p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  )}
                                 </>
                               )}
+
+                              {/* 5. Relatório Fornecedores */}
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button 
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/adminmercado/relatorio-fornecedores/${ciclo.id}`)} 
-                                    className="h-10 w-10 border-2 border-info hover:bg-info/10"
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <Truck className="h-5 w-5 text-info" />
+                                    <Truck className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Relatório de Fornecedores</p></TooltipContent>
+                                <TooltipContent><p>Gerar Relatório Pedidos Fornecedores</p></TooltipContent>
                               </Tooltip>
+
+                              {/* 6. Relatório Consumidores */}
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button 
                                     variant="outline" 
                                     size="icon" 
                                     onClick={() => navigate(`/adminmercado/relatorio-consumidores/${ciclo.id}`)} 
-                                    className="h-10 w-10 border-2 border-info hover:bg-info/10"
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <Users className="h-5 w-5 text-info" />
+                                    <Users className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Relatório de Consumidores</p></TooltipContent>
+                                <TooltipContent><p>Gerar Relatório Pedidos Consumidores</p></TooltipContent>
                               </Tooltip>
+
+                              {/* 7. Excluir Ciclo */}
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button 
