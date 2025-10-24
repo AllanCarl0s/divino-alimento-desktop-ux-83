@@ -35,10 +35,6 @@ import FornecedorEntregas from "./pages/fornecedor/FornecedorEntregas";
 // Admin pages
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminMercadoDashboard from "./pages/adminmercado/AdminMercadoDashboard";
-import AdminMercadoMercados from "./pages/adminmercado/AdminMercadoMercados";
-import AdminMercadoPrecos from "./pages/adminmercado/AdminMercadoPrecos";
-import AdminMercadoPrecosDetalhes from "./pages/adminmercado/AdminMercadoPrecosDetalhes";
 import AdminMercados from "./pages/admin/AdminMercados";
 import AdminPrecos from "./pages/admin/AdminPrecos";
 import AdminPrecosLista from "./pages/admin/AdminPrecosLista";
@@ -82,6 +78,12 @@ import Usuarios from "./pages/Usuarios";
 import UsuarioIndex from "./pages/UsuarioIndex";
 import Usuario from "./pages/Usuario";
 import UsuarioDados from "./pages/UsuarioDados";
+import AdminMercadoDashboard from './pages/adminmercado/AdminMercadoDashboard';
+import AdminMercadoMercados from './pages/adminmercado/AdminMercadoMercados';
+import AdminMercadoPrecos from './pages/adminmercado/AdminMercadoPrecos';
+import AdminMercadoPrecosDetalhes from './pages/adminmercado/AdminMercadoPrecosDetalhes';
+import AdminMercadoCicloIndex from './pages/adminmercado/AdminMercadoCicloIndex';
+import AdminMercadoCiclo from './pages/adminmercado/AdminMercadoCiclo';
 
 const queryClient = new QueryClient();
 
@@ -135,6 +137,9 @@ const App = () => (
           <Route path="/adminmercado/mercados" element={<AdminMercadoMercados />} />
           <Route path="/adminmercado/precos" element={<AdminMercadoPrecos />} />
           <Route path="/adminmercado/precos/:id" element={<AdminMercadoPrecosDetalhes />} />
+          <Route path="/adminmercado/ciclo-index" element={<AdminMercadoCicloIndex />} />
+          <Route path="/adminmercado/ciclo" element={<AdminMercadoCiclo />} />
+          <Route path="/adminmercado/ciclo/:id" element={<AdminMercadoCiclo />} />
           
           <Route path="/admin/mercados" element={<AdminMercados />} />
           <Route path="/admin/precos" element={<AdminPrecosLista />} />
