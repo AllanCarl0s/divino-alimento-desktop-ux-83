@@ -8,14 +8,12 @@ import {
   Store, 
   DollarSign, 
   RefreshCcw, 
-  Package, 
-  ShoppingCart, 
   FileText, 
   Truck, 
   ShoppingBag, 
   ReceiptText,
   Wallet,
-  ArrowLeftRight
+  UserCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -50,45 +48,10 @@ const AdminMercadoDashboard = () => {
       badge: null
     },
     {
-      title: 'Compor Mercado Tipo Lote',
-      description: 'Configure os lotes de produtos e suas ofertas.',
-      icon: Package,
-      route: '/adminmercado/lote',
-      badge: null
-    },
-    {
-      title: 'Compor Mercado Tipo Venda Direta – Liberar para Venda',
-      description: 'Libere produtos selecionados para venda direta.',
-      icon: ShoppingCart,
-      route: '/adminmercado/vendadireta/liberar',
-      badge: null
-    },
-    {
-      title: 'Compor Mercado Tipo Venda Direta – Compor Vendas',
-      description: 'Visualize e gerencie as vendas diretas por ciclo.',
-      icon: ShoppingBag,
-      route: '/adminmercado/vendadireta/compor',
-      badge: null
-    },
-    {
-      title: 'Gerar Relatório Pedidos Fornecedores',
-      description: 'Consulte pedidos dos fornecedores do seu mercado.',
-      icon: Truck,
-      route: '/adminmercado/relatorio-fornecedores',
-      badge: null
-    },
-    {
-      title: 'Gerar Relatório Pedidos Consumidores',
-      description: 'Consulte pedidos dos consumidores por ciclo.',
-      icon: FileText,
-      route: '/adminmercado/relatorio-consumidores',
-      badge: null
-    },
-    {
-      title: 'Migrar Ofertas de um Ciclo para Outro',
-      description: 'Copie as ofertas ativas para um novo ciclo.',
-      icon: ArrowLeftRight,
-      route: '/adminmercado/migrar-ofertas',
+      title: 'Dados Pessoais',
+      description: 'Atualize seus dados pessoais',
+      icon: UserCircle,
+      route: '/usuario/1',
       badge: null
     }
   ];
