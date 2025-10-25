@@ -160,7 +160,7 @@ export default function AdminMercadoCicloIndex() {
     const rotas = { 
       cesta: `/adminmercado/composicao-cesta/${ciclo.id}?mercado=${mercadoAlvo.id}`, 
       lote: `/adminmercado/composicao-lote/${ciclo.id}?mercado=${mercadoAlvo.id}`, 
-      venda_direta: `/adminmercado/composicao-venda-direta/${ciclo.id}?mercado=${mercadoAlvo.id}` 
+      venda_direta: `/adminmercado/vendadireta-compor/${ciclo.id}?mercado=${mercadoAlvo.id}` 
     };
     navigate(rotas[mercadoAlvo.tipo_venda]);
   };
@@ -205,7 +205,7 @@ export default function AdminMercadoCicloIndex() {
   };
 
   const handlePublishClick = (ciclo: Ciclo, mercado: CicloMercado) => {
-    navigate(`/adminmercado/composicao-venda-direta-liberar/${ciclo.id}?mercado=${mercado.id}`);
+    navigate(`/adminmercado/vendadireta-liberar/${ciclo.id}?mercado=${mercado.id}`);
   };
 
   return (
@@ -378,13 +378,19 @@ export default function AdminMercadoCicloIndex() {
                                   <Button 
                                     variant="outline" 
                                     size="icon" 
-                                    onClick={() => navigate(`/adminmercado/relatorio-fornecedores/${ciclo.id}`)} 
-                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
+                                    onClick={() => {
+                                      const mercadoId = mercadoAtual?.id || '';
+                                      navigate(`/adminmercado/relatorio-fornecedores/${ciclo.id}?mercado=${mercadoId}`);
+                                    }} 
+                                    disabled={!mercadoAtual}
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10 disabled:opacity-40 disabled:cursor-not-allowed"
                                   >
                                     <Truck className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Gerar Relatório Pedidos Fornecedores</p></TooltipContent>
+                                <TooltipContent>
+                                  <p>{mercadoAtual ? 'Gerar Relatório Pedidos Fornecedores' : 'Selecione um mercado'}</p>
+                                </TooltipContent>
                               </Tooltip>
 
                               {/* 6. Relatório Consumidores */}
@@ -393,13 +399,19 @@ export default function AdminMercadoCicloIndex() {
                                   <Button 
                                     variant="outline" 
                                     size="icon" 
-                                    onClick={() => navigate(`/adminmercado/relatorio-consumidores/${ciclo.id}`)} 
-                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
+                                    onClick={() => {
+                                      const mercadoId = mercadoAtual?.id || '';
+                                      navigate(`/adminmercado/relatorio-consumidores/${ciclo.id}?mercado=${mercadoId}`);
+                                    }} 
+                                    disabled={!mercadoAtual}
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10 disabled:opacity-40 disabled:cursor-not-allowed"
                                   >
                                     <Users className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Gerar Relatório Pedidos Consumidores</p></TooltipContent>
+                                <TooltipContent>
+                                  <p>{mercadoAtual ? 'Gerar Relatório Pedidos Consumidores' : 'Selecione um mercado'}</p>
+                                </TooltipContent>
                               </Tooltip>
 
                               {/* 7. Excluir Ciclo */}
