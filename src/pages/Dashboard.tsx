@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
-import { ShoppingCart, FileText, Wallet, UserCircle, ChevronRight, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, FileText, Wallet, UserCircle, ChevronRight, ArrowLeft, ShoppingBasket } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useConsumer } from '@/contexts/ConsumerContext';
 import { useCycle } from '@/hooks/useCycle';
@@ -25,8 +25,8 @@ const Dashboard = () => {
     {
       titulo: 'Minha Cesta',
       descricao: 'Ver itens da sua cesta no ciclo atual',
-      icone: ShoppingCart,
-      rota: '/pedidoConsumidores/1',
+      icone: ShoppingBasket,
+      rota: '/minhaCesta/1',
       habilitado: true
     },
     {

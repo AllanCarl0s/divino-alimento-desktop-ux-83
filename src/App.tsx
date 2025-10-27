@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
 import Cesta from "./pages/Cesta";
+import MinhaCesta from "./pages/MinhaCesta";
 import Resumo from "./pages/Resumo";
 import Relatorio from "./pages/Relatorio";
 import Pagamentos from "./pages/Pagamentos";
@@ -108,6 +109,7 @@ const App = () => (
           <Route path="/verificar-email" element={<VerifyEmail />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/cesta" element={<Cesta />} />
+          <Route path="/minhaCesta/:id" element={<MinhaCesta />} />
           <Route path="/resumo" element={<Resumo />} />
           <Route path="/relatorio" element={<Relatorio />} />
           <Route path="/pagamentos" element={<Pagamentos />} />

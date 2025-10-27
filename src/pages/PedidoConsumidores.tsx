@@ -178,25 +178,26 @@ const PedidoConsumidores = () => {
   }, [selectedProducts, quantities]);
 
   return (
-    <ResponsiveLayout>
+    <ResponsiveLayout
+      leftHeaderContent={
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
+          aria-label="Voltar"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+      }
+    >
       <div className="p-4 space-y-6">
         {/* Header */}
-        <div className="space-y-4">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Voltar</span>
-          </button>
-          <div className="space-y-2">
-            <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-              Comprar Produtos Venda Direta
-            </h1>
-            <p className="text-muted-foreground">
-              Selecione produtos da feira direta com os produtores
-            </p>
-          </div>
+        <div className="space-y-2">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
+            Comprar Produtos Venda Direta
+          </h1>
+          <p className="text-muted-foreground">
+            Selecione produtos da feira direta com os produtores
+          </p>
         </div>
 
         {/* Ciclo Ativo */}
