@@ -1,4 +1,5 @@
 import React from 'react';
+import logoDivino from '@/assets/LOGO_DIVINO_ALIMENTOS.png';
 
 interface CoBrandAkaruiProps {
   className?: string;
@@ -8,18 +9,19 @@ export const CoBrandAkarui = ({ className }: CoBrandAkaruiProps) => {
   return (
     <div className={`text-center mb-8 ${className}`}>
       <div className="flex justify-center mb-4">
-        <img 
-          src="/lovable-uploads/462db28b-ff03-4183-a5cc-69b691bfa845.png"
-          alt="Akarui - Parceiro Oficial"
-          className="h-32 lg:h-40 object-contain"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
+        <a 
+          href="https://github.com/AssociacaoAkarui/DivinoAlimento"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block"
+        >
+          <img 
+            src={logoDivino}
+            alt="Divino Alimento"
+            className="h-32 lg:h-40 object-contain hover:opacity-80 transition-opacity"
+          />
+        </a>
       </div>
-      <p className="text-sm lg:text-base text-muted-foreground">
-        Em parceria com Akarui
-      </p>
     </div>
   );
 };

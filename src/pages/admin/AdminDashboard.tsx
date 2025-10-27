@@ -32,69 +32,52 @@ const AdminDashboard = () => {
     navigate('/');
   };
 
-  const kpis = [
-    { label: 'Produtos Aguardando', value: '8', trend: '+2', route: '/admin/produtos' },
-    { label: 'Ciclos Ativos', value: '3', trend: '0', route: '/admin/cestas' },
-    { label: 'Fornecedores', value: '24', trend: '+4', route: '/admin/estoque' },
-    { label: 'Mercados', value: '12', trend: '+1', route: '/admin/mercados' }
-  ];
 
-  const shortcuts = [
+  const gestaoAlimentos = [
     {
-      title: 'Cadastro de Mercado',
+      title: 'Cadastro de Alimentos',
+      description: 'Gerencie seu portfólio de alimentos',
+      icon: Package,
+      route: '/admin/produtos'
+    },
+    {
+      title: 'Cadastro de Mercados',
       description: 'Gerenciar mercados e pontos de venda',
       icon: Store,
-      route: '/admin/mercados',
-      badge: null
+      route: '/admin/mercados'
     },
     {
-      title: 'Gestão de Preços',
+      title: 'Gestão Preço por Mercado',
       description: 'Definir preços específicos por mercado',
       icon: DollarSign,
-      route: '/admin/precos',
-      badge: null
+      route: '/admin/precos'
     },
     {
-      title: 'Produtos',
-      description: 'Gerencie produtos base do catálogo',
-      icon: Package,
-      route: '/admin/produtos',
-      badge: null
-    },
-    {
-      title: 'Produtos Comercializáveis',
+      title: 'Gestão de Preço e Peso dos Alimentos',
       description: 'Gerenciar variações comerciais por unidade, peso e preço',
       icon: ShoppingCart,
-      route: '/admin/produtos-comercializaveis',
-      badge: null
+      route: '/admin/produtos-comercializaveis'
     },
     {
       title: 'Categorias de Produtos',
       description: 'Gerenciar categorias dos produtos comercializados',
       icon: FolderTree,
-      route: '/admin/categorias',
-      badge: null
-    },
-    {
-      title: 'Ciclos',
-      description: 'Gerencie períodos de oferta e operação por mercado',
-      icon: RefreshCcw,
-      route: '/admin/ciclo-index',
-      badge: null
-    },
+      route: '/admin/categorias'
+    }
+  ];
+
+  const administracaoGeral = [
     {
       title: 'Usuários',
       description: 'Gerenciar perfis e acessos',
       icon: Users,
-      route: '/usuario-index',
-      badge: null
+      route: '/usuario-index'
     },
     {
       title: 'Dados Pessoais',
       description: 'Atualize seus dados pessoais',
       icon: Users,
-      route: '/usuario/1',
-      badge: null
+      route: '/usuario/1'
     }
   ];
 
@@ -131,66 +114,65 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* KPIs - Responsive Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-          {kpis.map((kpi, index) => (
-            <Card 
-              key={index} 
-              className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] md:hover:scale-105"
-              onClick={() => navigate(kpi.route)}
-            >
-              <CardContent className="p-4 md:p-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <div className="mb-2 md:mb-0">
-                    <p className="text-sm text-muted-foreground">{kpi.label}</p>
-                    <p className="text-xl md:text-2xl font-bold text-primary">{kpi.value}</p>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <TrendingUp className="w-4 h-4 text-green-500" />
-                    <span className="text-xs text-green-500">{kpi.trend}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Quick Actions - Desktop Grid, Mobile List */}
+        {/* Gestão de Ciclo */}
         <div>
           <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
-            <Calendar className="w-5 h-5 mr-2 text-primary" />
-            Ações Rápidas
+            <RefreshCcw className="w-5 h-5 mr-2 text-primary" />
+            Gestão de Ciclo
+          </h2>
+          
+          <Card 
+            className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+            onClick={() => navigate('/admin/ciclo-index')}
+          >
+            <CardHeader className="pb-3 md:pb-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                  <RefreshCcw className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-sm md:text-base font-poppins">
+                    Ciclos
+                  </CardTitle>
+                  <p className="text-xs md:text-sm text-muted-foreground">
+                    Gerencie períodos de oferta e operação por mercado
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Gestão de Alimentos */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <Package className="w-5 h-5 mr-2 text-primary" />
+            Gestão de Alimentos
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {shortcuts.map((shortcut, index) => (
-              <div key={index} className="relative">
-                {shortcut.badge && (
-                  <Badge variant="outline" className="absolute -top-2 -right-2 z-10 text-xs bg-background border-destructive text-destructive">
-                    {shortcut.badge}
-                  </Badge>
-                )}
-                <Card 
-                  className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] md:hover:scale-105"
-                  onClick={() => navigate(shortcut.route)}
-                >
-                  <CardHeader className="pb-3 md:pb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
-                        <shortcut.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <CardTitle className="text-sm md:text-base font-poppins truncate">
-                          {shortcut.title}
-                        </CardTitle>
-                        <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
-                          {shortcut.description}
-                        </p>
-                      </div>
+            {gestaoAlimentos.map((item, index) => (
+              <Card 
+                key={index}
+                className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] md:hover:scale-105"
+                onClick={() => navigate(item.route)}
+              >
+                <CardHeader className="pb-3 md:pb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                      <item.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                     </div>
-                  </CardHeader>
-                </Card>
-              </div>
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-sm md:text-base font-poppins truncate">
+                        {item.title}
+                      </CardTitle>
+                      <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+              </Card>
             ))}
           </div>
         </div>
@@ -257,7 +239,7 @@ const AdminDashboard = () => {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-            {/* Card - Gerar Lista de Pagamentos */}
+            {/* Card - Lista de Pagamentos */}
             <Card 
               className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
               onClick={() => navigate('/admin/pagamentos-gerar')}
@@ -269,17 +251,17 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
-                      Gerar Lista de Pagamentos
+                      Lista de Pagamentos
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      Gere automaticamente os registros de pagamentos de um ciclo finalizado (fornecedores e consumidores).
+                      Registros de pagamentos de consumidores e fornecedores
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Card - Gerir Lista de Pagamentos */}
+            {/* Card - Editar Lista de Pagamentos */}
             <Card 
               className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
               onClick={() => navigate('/admin/pagamentos-gerir')}
@@ -291,15 +273,49 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
-                      Gerir Lista de Pagamentos
+                      Editar Lista de Pagamentos
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      Acompanhe, edite e registre os pagamentos pendentes e realizados.
+                      Acompanhe, edite e registre os pagamentos pendentes e realizados
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </div>
+
+        {/* Administração Geral */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <Settings className="w-5 h-5 mr-2 text-primary" />
+            Administração Geral
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            {administracaoGeral.map((item, index) => (
+              <Card 
+                key={index}
+                className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] md:hover:scale-105"
+                onClick={() => navigate(item.route)}
+              >
+                <CardHeader className="pb-3 md:pb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                      <item.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-sm md:text-base font-poppins truncate">
+                        {item.title}
+                      </CardTitle>
+                      <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+              </Card>
+            ))}
           </div>
         </div>
 
