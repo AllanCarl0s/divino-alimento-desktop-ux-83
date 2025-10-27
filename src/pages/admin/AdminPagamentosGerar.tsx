@@ -58,13 +58,24 @@ const ciclosFinalizados: Ciclo[] = [
 
 const AdminPagamentosGerar = () => {
   const navigate = useNavigate();
-  const [cicloSelecionado, setCicloSelecionado] = useState<string>("");
+  const [ciclosSelecionados, setCiclosSelecionados] = useState<string[]>([]);
   const [pagamentos, setPagamentos] = useState<Pagamento[]>([]);
   const [editandoPagamento, setEditandoPagamento] = useState<Pagamento | null>(null);
   const [novoValor, setNovoValor] = useState<string>("");
   const [dialogAberto, setDialogAberto] = useState(false);
 
-  const ciclo = ciclosFinalizados.find(c => c.id === cicloSelecionado);
+  const handleToggleCiclo = (cicloId: string) => {
+    setCiclosSelecionados(prev => 
+      prev.includes(cicloId)
+        ? prev.filter(id => id !== cicloId)
+        : [...prev, cicloId]
+    );
+  };
+
+  const ciclosSelecionadosData = ciclosFinalizados.filter(c => ciclosSelecionados.includes(c.id));
+  const totalFornecedores = ciclosSelecionadosData.reduce((sum, c) => sum + c.totalFornecedores, 0);
+  const totalConsumidores = ciclosSelecionadosData.reduce((sum, c) => sum + c.totalConsumidores, 0);
+  const todosFinalizados = ciclosSelecionadosData.every(c => c.status === "Finalizado");
 
   const gerarListaPagamentos = () => {
     const mockPagamentos: Pagamento[] = [
@@ -192,52 +203,72 @@ const AdminPagamentosGerar = () => {
           </p>
         </div>
 
-        {/* Seleção de Ciclo */}
+        {/* Seleção de Ciclos */}
         <Card className="mb-6 shadow-md">
           <CardHeader>
-            <CardTitle className="text-primary">Selecionar Ciclo Finalizado</CardTitle>
+            <CardTitle className="text-primary">Selecionar Ciclos Finalizados</CardTitle>
             <CardDescription>
-              Escolha o ciclo para gerar a lista de pagamentos
+              Marque os ciclos que deseja incluir na lista de pagamentos
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Select value={cicloSelecionado} onValueChange={setCicloSelecionado}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione um ciclo finalizado..." />
-              </SelectTrigger>
-              <SelectContent>
-                {ciclosFinalizados.map((ciclo) => (
-                  <SelectItem key={ciclo.id} value={ciclo.id}>
-                    {ciclo.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="space-y-3">
+              {ciclosFinalizados.map((ciclo) => (
+                <div
+                  key={ciclo.id}
+                  className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    id={`ciclo-${ciclo.id}`}
+                    checked={ciclosSelecionados.includes(ciclo.id)}
+                    onChange={() => handleToggleCiclo(ciclo.id)}
+                    className="h-4 w-4 rounded border-primary"
+                  />
+                  <label
+                    htmlFor={`ciclo-${ciclo.id}`}
+                    className="flex-1 cursor-pointer flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium">{ciclo.nome}</span>
+                      <Badge variant="warning">{ciclo.status}</Badge>
+                    </div>
+                    <span className="text-sm text-muted-foreground">{ciclo.periodo}</span>
+                  </label>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
-        {/* Resumo do Ciclo */}
-        {ciclo && (
+        {/* Resumo da Seleção */}
+        {ciclosSelecionados.length > 0 && (
           <Card className="mb-6 shadow-md">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-primary">Resumo do Ciclo</CardTitle>
-                <Badge variant="warning">{ciclo.status}</Badge>
+                <CardTitle className="text-primary">Resumo da Seleção</CardTitle>
+                <Badge variant={todosFinalizados ? "warning" : "default"}>
+                  {todosFinalizados ? "Todos Finalizados" : "Parcial"}
+                </Badge>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Período</p>
-                  <p className="font-semibold">{ciclo.periodo}</p>
+                  <p className="font-semibold">
+                    {ciclosSelecionados.length > 1 
+                      ? "Múltiplos ciclos selecionados" 
+                      : ciclosSelecionadosData[0]?.periodo}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total de Fornecedores</p>
-                  <p className="font-semibold">{ciclo.totalFornecedores}</p>
+                  <p className="font-semibold">{totalFornecedores}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total de Consumidores</p>
-                  <p className="font-semibold">{ciclo.totalConsumidores}</p>
+                  <p className="font-semibold">{totalConsumidores}</p>
                 </div>
               </div>
 

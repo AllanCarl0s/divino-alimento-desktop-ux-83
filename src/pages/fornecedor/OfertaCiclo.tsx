@@ -24,6 +24,7 @@ export default function OfertaCiclo() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [periodoAberto, setPeriodoAberto] = useState(true);
+  const [ofertaEnviada, setOfertaEnviada] = useState(false);
   const [busca, setBusca] = useState('');
   const [produtoSelecionado, setProdutoSelecionado] = useState('');
   const [quantidade, setQuantidade] = useState('');
@@ -105,12 +106,12 @@ export default function OfertaCiclo() {
       return;
     }
 
+    setOfertaEnviada(true);
+    
     toast({
       title: "Oferta enviada!",
       description: "Sua oferta foi registrada com sucesso.",
     });
-    
-    navigate('/fornecedor/cronograma');
   };
 
   return (
@@ -152,23 +153,40 @@ export default function OfertaCiclo() {
             </div>
             <span className="text-sm font-medium">Período aberto</span>
           </div>
-          <div className="w-16 h-1 bg-primary"></div>
+          <div className={`w-16 h-1 ${ofertaEnviada ? 'bg-primary' : 'bg-primary'}`}></div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+            <div className={`w-8 h-8 rounded-full ${ofertaEnviada ? 'bg-primary' : 'bg-primary'} text-primary-foreground flex items-center justify-center font-semibold`}>
               2
             </div>
             <span className="text-sm font-medium">Seleção de produtos</span>
           </div>
-          <div className="w-16 h-1 bg-muted"></div>
+          <div className={`w-16 h-1 ${ofertaEnviada ? 'bg-primary' : 'bg-muted'}`}></div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center font-semibold">
+            <div className={`w-8 h-8 rounded-full ${ofertaEnviada ? 'bg-primary' : 'bg-muted'} ${ofertaEnviada ? 'text-primary-foreground' : 'text-muted-foreground'} flex items-center justify-center font-semibold`}>
               3
             </div>
-            <span className="text-sm font-medium">Oferta enviada</span>
+            <span className={`text-sm font-medium ${ofertaEnviada ? 'text-foreground' : 'text-muted-foreground'}`}>Oferta enviada</span>
           </div>
         </div>
 
-        {periodoAberto ? (
+        {ofertaEnviada ? (
+          <Card>
+            <CardContent className="py-12 text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-primary">Oferta Enviada com Sucesso!</h3>
+              <p className="text-muted-foreground">
+                Sua oferta foi registrada e está sendo processada.
+              </p>
+              <Button onClick={() => navigate('/fornecedor/cronograma')} className="mt-4">
+                Voltar ao Cronograma
+              </Button>
+            </CardContent>
+          </Card>
+        ) : periodoAberto ? (
           <>
             {/* Formulário de adição */}
             <Card>

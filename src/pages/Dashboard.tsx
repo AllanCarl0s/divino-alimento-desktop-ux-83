@@ -23,6 +23,13 @@ const Dashboard = () => {
 
   const acoes = [
     {
+      titulo: 'Minha Cesta',
+      descricao: 'Ver itens da sua cesta no ciclo atual',
+      icone: ShoppingCart,
+      rota: '/pedidoConsumidores/1',
+      habilitado: true
+    },
+    {
       titulo: 'Pedido Consumidores',
       descricao: 'Comprar produtos da feira direta',
       icone: ShoppingCart,

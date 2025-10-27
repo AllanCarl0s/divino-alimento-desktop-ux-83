@@ -92,28 +92,37 @@ const AdminMercados = () => {
   const [editData, setEditData] = useState<MarketType | null>(null);
   const [newMarket, setNewMarket] = useState({ 
     name: '', 
-    deliveryPoints: [''], 
+    deliveryPoints: [] as string[], 
     types: [] as string[],
     administratorId: null as number | null,
     administrativeFee: null as number | null,
     status: 'ativo' as 'ativo' | 'inativo'
   });
+  const [currentDeliveryPoint, setCurrentDeliveryPoint] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [marketToDelete, setMarketToDelete] = useState<number | null>(null);
 
   const addDeliveryPoint = () => {
+    if (!currentDeliveryPoint.trim()) {
+      toast({
+        title: "Erro",
+        description: "Digite um nome para o ponto de entrega",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setNewMarket(prev => ({
       ...prev,
-      deliveryPoints: [...prev.deliveryPoints, '']
+      deliveryPoints: [...prev.deliveryPoints, currentDeliveryPoint.trim()]
     }));
-  };
-
-  const updateDeliveryPoint = (index: number, value: string) => {
-    setNewMarket(prev => ({
-      ...prev,
-      deliveryPoints: prev.deliveryPoints.map((point, i) => i === index ? value : point)
-    }));
+    setCurrentDeliveryPoint('');
+    
+    toast({
+      title: "Ponto adicionado",
+      description: "O ponto de entrega foi adicionado à lista",
+    });
   };
 
   const removeDeliveryPoint = (index: number) => {
@@ -252,7 +261,8 @@ const AdminMercados = () => {
     };
 
     setMarkets([...markets, market]);
-    setNewMarket({ name: '', deliveryPoints: [''], types: [], administratorId: null, administrativeFee: null, status: 'ativo' });
+    setNewMarket({ name: '', deliveryPoints: [], types: [], administratorId: null, administrativeFee: null, status: 'ativo' });
+    setCurrentDeliveryPoint('');
     setIsDialogOpen(false);
     setSelectedMarket(market);
     
@@ -898,14 +908,21 @@ const AdminMercados = () => {
                 <div className="space-y-3">
                   <div className="flex gap-2">
                     <Input
-                      value={newMarket.deliveryPoints[0] || ''}
-                      onChange={(e) => updateDeliveryPoint(0, e.target.value)}
+                      value={currentDeliveryPoint}
+                      onChange={(e) => setCurrentDeliveryPoint(e.target.value)}
                       placeholder="Ex: Centro, Zona Norte"
                       className="h-11"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addDeliveryPoint();
+                        }
+                      }}
                     />
                   </div>
                   
                   <Button
+                    type="button"
                     variant="outline"
                     onClick={addDeliveryPoint}
                     className="w-full h-11 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
@@ -914,26 +931,25 @@ const AdminMercados = () => {
                     Adicionar Ponto
                   </Button>
 
-                  {/* Display added delivery points as green chips */}
-                  {newMarket.deliveryPoints.length > 1 && (
+                  {/* Display added delivery points */}
+                  {newMarket.deliveryPoints.length > 0 && (
                     <div className="space-y-2 mt-4">
                       <Label className="text-sm font-medium">Pontos adicionados:</Label>
                       <div className="flex flex-wrap gap-2">
-                        {newMarket.deliveryPoints.slice(1).map((point, index) => (
-                          point.trim() && (
-                            <Badge 
-                              key={index + 1} 
-                              className="bg-success text-white px-3 py-1 flex items-center gap-2"
+                        {newMarket.deliveryPoints.map((point, index) => (
+                          <Badge 
+                            key={index} 
+                            className="bg-success text-white px-3 py-1 flex items-center gap-2"
+                          >
+                            <span>{point}</span>
+                            <button
+                              type="button"
+                              onClick={() => removeDeliveryPoint(index)}
+                              className="hover:bg-white/20 rounded-full p-0.5"
                             >
-                              <span>{point}</span>
-                              <button
-                                onClick={() => removeDeliveryPoint(index + 1)}
-                                className="hover:bg-white/20 rounded-full p-0.5"
-                              >
-                                <Plus className="w-3 h-3 rotate-45" />
-                              </button>
-                            </Badge>
-                          )
+                              <Plus className="w-3 h-3 rotate-45" />
+                            </button>
+                          </Badge>
                         ))}
                       </div>
                     </div>
