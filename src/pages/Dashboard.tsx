@@ -79,66 +79,92 @@ const Dashboard = () => {
         </div>
 
         {/* Resumo do Ciclo Atual */}
-        <Card className="border-2 border-primary/20">
-          <CardHeader>
-            <CardTitle className="text-lg text-primary">Resumo do Ciclo Atual</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="overflow-hidden shadow-md border border-border">
+          {/* Header Verde */}
+          <div className="bg-[#126B3F] px-6 py-4 rounded-t-xl">
+            <div className="flex items-center gap-2">
+              <ShoppingBasket className="w-5 h-5 text-white" />
+              <h2 className="text-lg font-semibold text-white">Resumo do Ciclo Atual</h2>
+            </div>
+          </div>
+
+          {/* Corpo Branco */}
+          <CardContent className="p-6 space-y-4">
+            {/* Linha 1: Ciclo e Status */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
               <div>
                 <p className="text-sm text-muted-foreground">Ciclo</p>
-                <p className="font-semibold">1º Ciclo de Novembro 2025</p>
+                <p className="font-semibold text-lg">1º Ciclo de Novembro 2025</p>
+              </div>
+              <Badge className="bg-success text-white w-fit">Ativo</Badge>
+            </div>
+
+            {/* Linha 2: Local e Data/Hora */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div>
+                <p className="text-sm text-muted-foreground">Local de Entrega</p>
+                <p className="font-semibold">Mercado Central</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Data e Hora de Entrega</p>
                 <p className="font-semibold">15/11/2025 às 14:00</p>
               </div>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Local de Entrega</p>
-              <p className="font-semibold">Mercado Central</p>
-            </div>
+
+            <div className="h-px bg-border my-4" />
+
+            {/* Linha 3: Produtos da Cesta */}
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground font-medium">Produtos da Cesta</p>
-              <div className="space-y-1 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🥕</span>
+                <p className="text-sm font-medium text-muted-foreground">Produtos da Cesta</p>
+              </div>
+              <div className="space-y-1 text-sm pl-7">
                 <p>• Tomate (3 kg)</p>
                 <p>• Alface (5 unidades)</p>
                 <p>• Cenoura (2 kg)</p>
                 <Button 
                   variant="link" 
-                  className="p-0 h-auto text-primary"
+                  className="p-0 h-auto text-primary font-medium"
                   onClick={() => navigate('/minhaCesta/1')}
                 >
-                  Ver todos
+                  Ver todos →
                 </Button>
               </div>
             </div>
+
+            {/* Linha 4: Compras em Varejo */}
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground font-medium">Compras em Varejo</p>
-              <div className="space-y-1 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🛒</span>
+                <p className="text-sm font-medium text-muted-foreground">Compras em Varejo</p>
+              </div>
+              <div className="space-y-1 text-sm pl-7">
                 <p>• Rúcula (4 maços)</p>
                 <Button 
                   variant="link" 
-                  className="p-0 h-auto text-primary"
+                  className="p-0 h-auto text-primary font-medium"
                   onClick={() => navigate('/pedidoConsumidores/1')}
                 >
-                  Ver todos
+                  Ver todos →
                 </Button>
               </div>
             </div>
-            <div className="border-t pt-4">
-              <div className="flex justify-between items-center mb-4">
-                <p className="text-sm text-muted-foreground">Valor Total Devido</p>
-                <p className="text-xl font-bold text-success">{formatBRL(48.50)}</p>
-              </div>
-              <Button 
-                className="w-full" 
-                onClick={() => navigate('/minhaCesta/1')}
-              >
-                Visualizar Detalhes da Cesta
-              </Button>
-            </div>
           </CardContent>
+
+          {/* Rodapé Verde-Claro */}
+          <div className="bg-[#E8F5E9] px-6 py-4 border-t border-border">
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-sm font-medium text-muted-foreground">Valor Total Devido</p>
+              <p className="text-2xl font-bold text-[#126B3F]">{formatBRL(48.50)}</p>
+            </div>
+            <Button 
+              className="w-full bg-[#126B3F] hover:bg-[#0d5230] text-white rounded-lg h-11" 
+              onClick={() => navigate('/minhaCesta/1')}
+            >
+              Visualizar Detalhes da Cesta
+            </Button>
+          </div>
         </Card>
 
         {/* Gestão desse Ciclo */}

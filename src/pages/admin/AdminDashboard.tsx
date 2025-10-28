@@ -187,7 +187,7 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {/* Card - Relatório Fornecedores */}
             <Card 
-              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               onClick={() => navigate('/admin/relatorio-fornecedores')}
             >
               <CardContent className="p-6">
@@ -209,7 +209,7 @@ const AdminDashboard = () => {
 
             {/* Card - Relatório Consumidores */}
             <Card 
-              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               onClick={() => navigate('/admin/relatorio-consumidores')}
             >
               <CardContent className="p-6">
@@ -241,7 +241,7 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {/* Card - Lista de Pagamentos */}
             <Card 
-              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               onClick={() => navigate('/admin/pagamentos-gerar')}
             >
               <CardContent className="p-6">
@@ -263,7 +263,7 @@ const AdminDashboard = () => {
 
             {/* Card - Editar Lista de Pagamentos */}
             <Card 
-              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               onClick={() => navigate('/admin/pagamentos-gerir')}
             >
               <CardContent className="p-6">

@@ -18,7 +18,7 @@ export const CoBrandAkarui = ({ className }: CoBrandAkaruiProps) => {
           <img 
             src={logoDivino}
             alt="Divino Alimento"
-            className="h-32 lg:h-40 object-contain hover:opacity-80 transition-opacity"
+            className="w-full max-w-[220px] object-contain hover:opacity-80 transition-opacity"
           />
         </a>
       </div>
