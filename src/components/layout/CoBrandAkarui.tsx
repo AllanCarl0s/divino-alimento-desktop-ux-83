@@ -7,18 +7,18 @@ interface CoBrandAkaruiProps {
 
 export const CoBrandAkarui = ({ className }: CoBrandAkaruiProps) => {
   return (
-    <div className={`text-center mb-8 ${className}`}>
-      <div className="flex justify-center mb-4">
+    <div className={`text-center ${className}`} style={{ marginTop: '40px', marginBottom: '24px' }}>
+      <div className="flex justify-center">
         <a 
           href="https://github.com/AssociacaoAkarui/DivinoAlimento"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block"
+          className="inline-block hover:opacity-80 transition-opacity"
         >
           <img 
             src={logoDivino}
             alt="Divino Alimento"
-            className="w-full max-w-[220px] object-contain hover:opacity-80 transition-opacity"
+            className="w-[220px] h-auto object-contain"
           />
         </a>
       </div>
