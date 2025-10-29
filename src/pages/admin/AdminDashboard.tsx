@@ -38,7 +38,7 @@ const AdminDashboard = () => {
       title: 'Cadastro de Alimentos',
       description: 'Gerencie seu portfólio de alimentos',
       icon: Package,
-      route: '/admin/produtos'
+      route: '/admin/alimentos'
     },
     {
       title: 'Cadastro de Mercados',

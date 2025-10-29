@@ -30,7 +30,7 @@ import {
 const adminMenuItems = [
   { title: 'Dashboard', url: '/admin/dashboard', icon: Home },
   { title: 'Mercados', url: '/admin/mercados', icon: Store },
-  { title: 'Produtos', url: '/admin/produtos', icon: Package },
+  { title: 'Alimentos', url: '/admin/alimentos', icon: Package },
   { title: 'Estoque', url: '/admin/estoque', icon: Warehouse },
   { title: 'Página de Venda', url: '/admin/venda', icon: ShoppingCart },
   { title: 'Cestas', url: '/admin/cestas', icon: ShoppingBasket },

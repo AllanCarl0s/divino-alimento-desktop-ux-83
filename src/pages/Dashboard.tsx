@@ -78,7 +78,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        {/* Resumo do Ciclo Atual - Novo Layout */}
+        {/* Resumo do Ciclo Atual - Clean Layout */}
         <div className="mb-8 bg-white rounded-[14px] shadow-[0px_2px_10px_rgba(0,0,0,0.05)] overflow-hidden">
           {/* Linha superior verde fina */}
           <div className="h-1 bg-[#126B3F]" />
@@ -95,87 +95,101 @@ const Dashboard = () => {
             {/* Coluna Esquerda */}
             <div className="space-y-4">
               {/* Bloco 1: Identificação do Ciclo */}
-              <div className="flex items-center gap-3 flex-wrap">
-                <h4 className="text-[#222] text-base font-medium" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  1º Ciclo de Novembro 2025
-                </h4>
-                <span className="bg-[#EAF7EF] text-[#126B3F] text-xs font-medium px-2.5 py-1 rounded-[10px]">
-                  Ativo
+              <div className="bg-[#EAF7EF] rounded-[10px] px-4 py-2 inline-block">
+                <span className="text-[#126B3F] text-sm font-medium" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  1º Ciclo de Novembro 2025 — Ativo
                 </span>
               </div>
 
-              {/* Bloco 2: Local de Entrega */}
-              <div>
-                <p className="text-[#555] text-sm font-medium mb-1" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Local de Entrega
-                </p>
-                <p className="text-[#000] text-[15px] font-semibold" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Mercado Central
-                </p>
+              {/* Bloco 2: Local e Data de Entrega */}
+              <div className="space-y-3">
+                <div>
+                  <p className="text-[#555] text-sm font-semibold mb-1" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Local de Entrega
+                  </p>
+                  <p className="text-[#333] text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Mercado Central
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[#555] text-sm font-semibold mb-1" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Data e Hora da Entrega
+                  </p>
+                  <p className="text-[#333] text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    15/11/2025 às 14:00
+                  </p>
+                </div>
               </div>
 
-              {/* Bloco 3: Produtos da Cesta */}
-              <div>
-                <p className="text-[#444] text-sm font-medium mb-2">
-                  Produtos da Cesta
-                </p>
-                <ul className="space-y-1 text-[#333] text-sm">
-                  <li>Tomate (3 kg)</li>
-                  <li>Alface (5 unidades)</li>
-                  <li>Cenoura (2 kg)</li>
-                </ul>
-                <button 
-                  onClick={() => navigate('/minhaCesta/1')}
-                  className="text-[#126B3F] text-[13px] font-medium mt-2 hover:underline"
-                >
-                  Ver todos
-                </button>
-              </div>
+              {/* Bloco 3: Produtos da Cesta e Compras em Varejo */}
+              <div className="bg-[#F5FAF6] rounded-[10px] p-4 space-y-4 mt-5">
+                <div>
+                  <p className="text-[#222] text-base font-bold mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Produtos da Cesta
+                  </p>
+                  <ul className="space-y-2 text-[#333] text-sm">
+                    <li>- Tomate (3 kg) — Fornecedor: Sítio Bela Vista</li>
+                    <li>- Alface (5 unidades) — Fornecedor: Orgânicos da Serra</li>
+                    <li>- Cenoura (2 kg) — Fornecedor: Fazenda São José</li>
+                  </ul>
+                  <button 
+                    onClick={() => navigate('/minhaCesta/1')}
+                    className="text-[#126B3F] text-sm font-semibold mt-3 hover:underline"
+                  >
+                    Ver todos
+                  </button>
+                </div>
 
-              {/* Bloco 4: Compras em Varejo */}
-              <div>
-                <p className="text-[#444] text-sm font-medium mb-2">
-                  Compras em Varejo
-                </p>
-                <ul className="space-y-1 text-[#333] text-sm">
-                  <li>Rúcula (4 maços)</li>
-                </ul>
-                <button 
-                  onClick={() => navigate('/pedidoConsumidores/1')}
-                  className="text-[#126B3F] text-[13px] font-medium mt-2 hover:underline"
-                >
-                  Ver todos
-                </button>
+                <div>
+                  <p className="text-[#222] text-base font-bold mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Compras em Varejo
+                  </p>
+                  <ul className="space-y-2 text-[#333] text-sm">
+                    <li>- Banana Nanica (1,5 kg) — Fornecedor: Sítio Boa Esperança</li>
+                    <li>- Mel Orgânico (300 g) — Fornecedor: Apiário Flor do Campo</li>
+                  </ul>
+                  <button 
+                    onClick={() => navigate('/pedidoConsumidores/1')}
+                    className="text-[#126B3F] text-sm font-semibold mt-3 hover:underline"
+                  >
+                    Ver todos
+                  </button>
+                </div>
+
+                <div className="pt-3 border-t border-[#126B3F]/20">
+                  <p className="text-[#126B3F] text-xl font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    {formatBRL(48.50 + 32.50)}
+                  </p>
+                  <p className="text-[#555] text-xs font-medium">Valor Total Devido</p>
+                </div>
               </div>
             </div>
 
-            {/* Coluna Direita - Entrega e Pagamento */}
-            <div className="bg-[#F5FAF6] rounded-[10px] p-4 border-l-4 border-[#126B3F] h-fit">
-              {/* Data e Hora */}
-              <div className="mb-4">
-                <p className="text-[#555] text-xs font-medium mb-1" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Data e Hora da Entrega
-                </p>
-                <p className="text-[#333] text-sm font-medium" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  15/11/2025 às 14:00
-                </p>
-              </div>
-
-              {/* Valor Total */}
-              <div className="mb-4">
-                <p className="text-[#126B3F] text-[22px] font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {/* Coluna Direita - Resumo de Valores */}
+            <div className="bg-[#F5FAF6] rounded-[10px] p-4 border-l-4 border-[#126B3F] h-fit space-y-4">
+              {/* Valor Cesta */}
+              <div>
+                <p className="text-[#555] text-xs font-medium mb-1">Valor Total Cesta</p>
+                <p className="text-[#126B3F] text-2xl font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   {formatBRL(48.50)}
                 </p>
-                <p className="text-[#555] text-xs font-medium">Valor Total Devido</p>
               </div>
 
-              {/* Botão de Ação */}
-              <Button 
-                className="w-full bg-[#126B3F] hover:bg-[#0e5430] text-white rounded-lg h-[42px] font-medium"
-                onClick={() => navigate('/minhaCesta/1')}
-              >
-                Visualizar Detalhes da Cesta
-              </Button>
+              {/* Valor Varejo */}
+              <div className="pb-4 border-b border-[#126B3F]/20">
+                <p className="text-[#555] text-xs font-medium mb-1">Valor Total Varejo</p>
+                <p className="text-[#126B3F] text-2xl font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  {formatBRL(32.50)}
+                </p>
+              </div>
+
+              {/* Total Geral */}
+              <div>
+                <p className="text-[#555] text-sm font-semibold mb-1">Valor Total do Ciclo</p>
+                <p className="text-[#126B3F] text-3xl font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  {formatBRL(48.50 + 32.50)}
+                </p>
+              </div>
             </div>
           </div>
         </div>

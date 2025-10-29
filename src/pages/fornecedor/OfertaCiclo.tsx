@@ -30,6 +30,10 @@ export default function OfertaCiclo() {
   const [quantidade, setQuantidade] = useState('');
   const [valor, setValor] = useState('');
   const [produtosOfertados, setProdutosOfertados] = useState<ProdutoOfertado[]>([]);
+  
+  // Certification states
+  const [tipoProduto, setTipoProduto] = useState<string[]>([]);
+  const [origemProdutiva, setOrigemProdutiva] = useState<string[]>([]);
 
   // Mock data - ciclo info
   const ciclo = {
@@ -106,11 +110,12 @@ export default function OfertaCiclo() {
       return;
     }
 
+    // Automatically advance to step 3
     setOfertaEnviada(true);
     
     toast({
-      title: "Oferta enviada!",
-      description: "Sua oferta foi registrada com sucesso.",
+      title: "Oferta salva!",
+      description: "Seus produtos foram adicionados à oferta.",
     });
   };
 
@@ -171,19 +176,59 @@ export default function OfertaCiclo() {
 
         {ofertaEnviada ? (
           <Card>
-            <CardContent className="py-12 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+            <CardHeader>
+              <CardTitle>Produtos ofertados por você</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome do alimento</TableHead>
+                    <TableHead>Quantidade</TableHead>
+                    <TableHead>Valor unitário</TableHead>
+                    <TableHead>Valor total</TableHead>
+                    <TableHead>Certificações</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {produtosOfertados.map((produto) => (
+                    <TableRow key={produto.id}>
+                      <TableCell>{produto.nome}</TableCell>
+                      <TableCell>{produto.quantidade} {produto.unidade}</TableCell>
+                      <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
+                      <TableCell>R$ {(produto.valor * produto.quantidade).toFixed(2).replace('.', ',')}</TableCell>
+                      <TableCell>
+                        <div className="text-xs space-y-1">
+                          {tipoProduto.length > 0 && (
+                            <div className="text-muted-foreground">{tipoProduto.join(', ')}</div>
+                          )}
+                          {origemProdutiva.length > 0 && (
+                            <div className="text-muted-foreground">{origemProdutiva.join(', ')}</div>
+                          )}
+                          {tipoProduto.length === 0 && origemProdutiva.length === 0 && (
+                            <span className="text-muted-foreground">-</span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRemoverProduto(produto.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <div className="flex justify-end">
+                <Button onClick={() => navigate('/fornecedor/loja')}>
+                  Voltar
+                </Button>
               </div>
-              <h3 className="text-xl font-semibold text-primary">Oferta Enviada com Sucesso!</h3>
-              <p className="text-muted-foreground">
-                Sua oferta foi registrada e está sendo processada.
-              </p>
-              <Button onClick={() => navigate('/fornecedor/cronograma')} className="mt-4">
-                Voltar ao Cronograma
-              </Button>
             </CardContent>
           </Card>
         ) : periodoAberto ? (
@@ -241,6 +286,69 @@ export default function OfertaCiclo() {
                       value={valor}
                       onChange={(e) => setValor(formatBRLInput(e.target.value))}
                     />
+                  </div>
+                </div>
+
+                {/* Certificações */}
+                <div className="space-y-4 pt-4 border-t">
+                  <div>
+                    <Label className="text-base font-semibold mb-3 block">Tipo de Produto</Label>
+                    <div className="flex flex-wrap gap-3">
+                      {['Produto Orgânico', 'Produto em Transição Agroecológica', 'Produto Convencional'].map((tipo) => (
+                        <label
+                          key={tipo}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 cursor-pointer transition-all ${
+                            tipoProduto.includes(tipo)
+                              ? 'border-primary bg-primary/10 text-primary font-medium'
+                              : 'border-border bg-background hover:border-primary/50'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={tipoProduto.includes(tipo)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTipoProduto([...tipoProduto, tipo]);
+                              } else {
+                                setTipoProduto(tipoProduto.filter(t => t !== tipo));
+                              }
+                            }}
+                            className="sr-only"
+                          />
+                          <span className="text-sm">{tipo}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-base font-semibold mb-3 block">Origem Produtiva</Label>
+                    <div className="flex flex-wrap gap-3">
+                      {['Agricultura Familiar', 'Agricultura Não Familiar'].map((origem) => (
+                        <label
+                          key={origem}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 cursor-pointer transition-all ${
+                            origemProdutiva.includes(origem)
+                              ? 'border-primary bg-primary/10 text-primary font-medium'
+                              : 'border-border bg-background hover:border-primary/50'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={origemProdutiva.includes(origem)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setOrigemProdutiva([...origemProdutiva, origem]);
+                              } else {
+                                setOrigemProdutiva(origemProdutiva.filter(o => o !== origem));
+                              }
+                            }}
+                            className="sr-only"
+                          />
+                          <span className="text-sm">{origem}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
 

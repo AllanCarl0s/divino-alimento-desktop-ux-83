@@ -43,7 +43,7 @@ const AdminProdutos = () => {
     hasActiveFilters,
     isOpen,
     setIsOpen 
-  } = useFilters('/admin/produtos');
+  } = useFilters('/admin/alimentos');
 
   const [produtos, setProdutos] = useState<Produto[]>([
     { id: '1', nome: 'Tomate Orgânico', categoria: 'Hortaliças', status: 'Ativo' },
@@ -78,23 +78,26 @@ const AdminProdutos = () => {
       );
     }
 
+    // Sort alphabetically by name
+    result.sort((a, b) => a.nome.localeCompare(b.nome));
+
     return result;
   }, [produtos, filters, debouncedSearch]);
 
   const handleEdit = (id: string) => {
-    navigate(`/admin/produto/${id}`);
+    navigate(`/admin/alimento/${id}`);
   };
 
   const handleDelete = (id: string) => {
     setProdutos(prev => prev.filter(p => p.id !== id));
     toast({
-      title: "Produto excluído",
-      description: "O produto foi removido com sucesso.",
+      title: "Alimento excluído",
+      description: "O alimento foi removido com sucesso.",
     });
   };
 
   const handleAddProduto = () => {
-    navigate('/admin/produto');
+    navigate('/admin/alimento');
   };
 
   const handleStatusChange = async (id: string, newStatus: 'Ativo' | 'Inativo') => {
@@ -107,7 +110,7 @@ const AdminProdutos = () => {
     
     toast({
       title: "Status atualizado",
-      description: `Status do produto alterado para ${newStatus}.`,
+      description: `Status do alimento alterado para ${newStatus}.`,
     });
   };
 
@@ -128,10 +131,10 @@ const AdminProdutos = () => {
         <div className="md:flex md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Produtos
+              Alimentos
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
-              Gerencie produtos base cadastrados no sistema
+              Gerencie alimentos base cadastrados no sistema
             </p>
           </div>
         </div>
@@ -151,14 +154,14 @@ const AdminProdutos = () => {
           </div>
           <Button onClick={handleAddProduto} className="whitespace-nowrap">
             <Plus className="w-4 h-4 mr-2" />
-            Adicionar Produto
+            Adicionar Alimento
           </Button>
         </div>
 
         <Card>
           <CardHeader>
             <CardTitle className="text-lg md:text-xl">
-              Lista de Produtos
+              Lista de Alimentos
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
@@ -167,7 +170,7 @@ const AdminProdutos = () => {
                 <p className="text-muted-foreground">
                   {hasActiveFilters() 
                     ? 'Sem resultados para os filtros selecionados.' 
-                    : 'Nenhum produto cadastrado.'}
+                    : 'Nenhum alimento cadastrado.'}
                 </p>
                 {hasActiveFilters() && (
                   <Button variant="outline" onClick={clearFilters}>
@@ -180,7 +183,7 @@ const AdminProdutos = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Nome do Produto</TableHead>
+                      <TableHead>Nome do Alimento</TableHead>
                       <TableHead>Categoria</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right">Ações</TableHead>
@@ -222,9 +225,9 @@ const AdminProdutos = () => {
                               <AlertDialogContent>
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Deseja realmente excluir este produto? Esta ação não pode ser desfeita.
-                                  </AlertDialogDescription>
+                                   <AlertDialogDescription>
+                                     Deseja realmente excluir este alimento? Esta ação não pode ser desfeita.
+                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Cancelar</AlertDialogCancel>

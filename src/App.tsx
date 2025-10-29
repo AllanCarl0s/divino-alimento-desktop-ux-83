@@ -166,8 +166,11 @@ const App = () => (
           <Route path="/admin/categorias/novo" element={<AdminCategoriaNovo />} />
           <Route path="/admin/categorias/:id" element={<AdminCategoriaDados />} />
           <Route path="/admin/produtos" element={<AdminProdutos />} />
+          <Route path="/admin/alimentos" element={<AdminProdutos />} />
           <Route path="/admin/produto" element={<AdminProdutoNovo />} />
+          <Route path="/admin/alimento" element={<AdminProdutoNovo />} />
           <Route path="/admin/produto/:id" element={<AdminProdutoEditar />} />
+          <Route path="/admin/alimento/:id" element={<AdminProdutoEditar />} />
           <Route path="/admin/produtos-comercializaveis" element={<AdminProdutosComercialivaveis />} />
           <Route path="/admin/produto-comercializavel" element={<AdminProdutoComercializavelNovo />} />
           <Route path="/admin/produto-comercializavel/:id" element={<AdminProdutoComercializavelEditar />} />

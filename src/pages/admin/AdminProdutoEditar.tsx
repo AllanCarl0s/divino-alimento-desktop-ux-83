@@ -49,23 +49,23 @@ const AdminProdutoEditar = () => {
     }
 
     toast({
-      title: "Produto atualizado",
+      title: "Alimento atualizado",
       description: "As alterações foram salvas com sucesso.",
     });
     
-    navigate('/admin/produtos');
+    navigate('/admin/alimentos');
   };
 
   const handleDelete = () => {
     toast({
-      title: "Produto excluído",
-      description: "O produto foi removido com sucesso.",
+      title: "Alimento excluído",
+      description: "O alimento foi removido com sucesso.",
     });
-    navigate('/admin/produtos');
+    navigate('/admin/alimentos');
   };
 
   const handleCancel = () => {
-    navigate('/admin/produtos');
+    navigate('/admin/alimentos');
   };
 
   return (
@@ -86,10 +86,10 @@ const AdminProdutoEditar = () => {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Editar Produto Base
+              Editar Alimento Base
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
-              Atualize as informações do produto
+              Atualize as informações do alimento
             </p>
           </div>
           <Badge variant={formData.status === 'Ativo' ? 'success' : 'warning'}>
@@ -101,13 +101,13 @@ const AdminProdutoEditar = () => {
         <form onSubmit={handleSubmit}>
           <Card>
             <CardHeader>
-              <CardTitle>Informações do Produto</CardTitle>
+              <CardTitle>Informações do Alimento</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Nome do Produto */}
               <div className="space-y-2">
                 <Label htmlFor="nome">
-                  Nome do Produto <span className="text-destructive">*</span>
+                  Nome do Alimento <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="nome"
@@ -143,66 +143,14 @@ const AdminProdutoEditar = () => {
 
               {/* Descrição */}
               <div className="space-y-2">
-                <Label htmlFor="descricao">Descrição do Produto</Label>
+                <Label htmlFor="descricao">Descrição do Alimento</Label>
                 <Textarea
                   id="descricao"
                   value={formData.descricao}
                   onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-                  placeholder="Descreva o produto..."
+                  placeholder="Descreva o alimento..."
                   rows={3}
                 />
-              </div>
-
-              {/* Certificações */}
-              <div className="space-y-3">
-                <Label>Certificações</Label>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="organico"
-                      checked={formData.certificacoes.organico}
-                      onCheckedChange={(checked) => 
-                        setFormData({ 
-                          ...formData, 
-                          certificacoes: { ...formData.certificacoes, organico: checked as boolean } 
-                        })
-                      }
-                    />
-                    <Label htmlFor="organico" className="font-normal cursor-pointer">
-                      Orgânico
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="agriculturaFamiliar"
-                      checked={formData.certificacoes.agriculturaFamiliar}
-                      onCheckedChange={(checked) => 
-                        setFormData({ 
-                          ...formData, 
-                          certificacoes: { ...formData.certificacoes, agriculturaFamiliar: checked as boolean } 
-                        })
-                      }
-                    />
-                    <Label htmlFor="agriculturaFamiliar" className="font-normal cursor-pointer">
-                      Agricultura Familiar
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="certificadoMunicipal"
-                      checked={formData.certificacoes.certificadoMunicipal}
-                      onCheckedChange={(checked) => 
-                        setFormData({ 
-                          ...formData, 
-                          certificacoes: { ...formData.certificacoes, certificadoMunicipal: checked as boolean } 
-                        })
-                      }
-                    />
-                    <Label htmlFor="certificadoMunicipal" className="font-normal cursor-pointer">
-                      Certificado Municipal
-                    </Label>
-                  </div>
-                </div>
               </div>
             </CardContent>
           </Card>
@@ -232,9 +180,9 @@ const AdminProdutoEditar = () => {
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Deseja realmente excluir este produto? Esta ação não pode ser desfeita.
-                    </AlertDialogDescription>
+                                   <AlertDialogDescription>
+                                     Deseja realmente excluir este alimento? Esta ação não pode ser desfeita.
+                                   </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
