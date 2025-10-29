@@ -78,8 +78,13 @@ const AdminProdutos = () => {
       );
     }
 
-    // Sort alphabetically by name
-    result.sort((a, b) => a.nome.localeCompare(b.nome));
+    // Sort: Ativos first (alphabetically), then Inativos (alphabetically)
+    result.sort((a, b) => {
+      if (a.status === b.status) {
+        return a.nome.localeCompare(b.nome);
+      }
+      return a.status === 'Ativo' ? -1 : 1;
+    });
 
     return result;
   }, [produtos, filters, debouncedSearch]);
