@@ -14,7 +14,7 @@ import { FiltersBar } from '@/components/admin/FiltersBar';
 import { FiltersPanel } from '@/components/admin/FiltersPanel';
 import { useFilters } from '@/hooks/useFilters';
 import { toast } from '@/hooks/use-toast';
-import { Plus, Pencil, Trash2, Tags, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users, RefreshCw } from 'lucide-react';
+import { Plus, Settings, Trash2, Tags, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users, RefreshCw } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
 
@@ -285,10 +285,10 @@ export default function AdminCicloIndex() {
                                     onClick={() => navigate(`/admin/ciclo/${ciclo.id}`)} 
                                     className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <Pencil className="h-5 w-5 text-primary" />
+                                    <Settings className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Editar Ciclo</p></TooltipContent>
+                                <TooltipContent><p>Construir Ciclo</p></TooltipContent>
                               </Tooltip>
                               <Tooltip>
                                 <TooltipTrigger asChild>

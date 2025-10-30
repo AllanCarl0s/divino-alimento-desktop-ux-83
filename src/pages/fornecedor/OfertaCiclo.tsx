@@ -16,6 +16,9 @@ interface ProdutoOfertado {
   produtoId: string;
   nome: string;
   unidade: string;
+  peso?: number;
+  volume?: number;
+  precoBase: number;
   valor: number;
   quantidade: number;
 }
@@ -46,10 +49,10 @@ export default function OfertaCiclo() {
 
   // Mock produtos disponíveis
   const produtosDisponiveis = [
-    { id: '1', nome: 'Tomate Orgânico', unidade: 'kg' },
-    { id: '2', nome: 'Alface Crespa', unidade: 'kg' },
-    { id: '3', nome: 'Ovos Caipiras', unidade: 'dúzia' },
-    { id: '4', nome: 'Mel Orgânico', unidade: 'litro' }
+    { id: '1', nome: 'Tomate Orgânico', unidade: 'kg', peso: 0.15, precoBase: 4.50 },
+    { id: '2', nome: 'Alface Crespa', unidade: 'kg', peso: 0.20, precoBase: 3.80 },
+    { id: '3', nome: 'Ovos Caipiras', unidade: 'dúzia', quantidade: 12, precoBase: 18.00 },
+    { id: '4', nome: 'Mel Orgânico', unidade: 'litro', volume: 1.0, precoBase: 45.00 }
   ];
 
   useEffect(() => {
@@ -77,6 +80,9 @@ export default function OfertaCiclo() {
       produtoId: produto.id,
       nome: produto.nome,
       unidade: produto.unidade,
+      peso: produto.peso,
+      volume: produto.volume,
+      precoBase: produto.precoBase,
       valor: parseBRLToNumber(valor),
       quantidade: parseFloat(quantidade)
     };
@@ -183,10 +189,13 @@ export default function OfertaCiclo() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Nome do alimento</TableHead>
+                    <TableHead>Alimento</TableHead>
+                    <TableHead>Unidade</TableHead>
+                    <TableHead>Peso/Volume</TableHead>
+                    <TableHead>Preço Base</TableHead>
+                    <TableHead>Valor Unitário</TableHead>
                     <TableHead>Quantidade</TableHead>
-                    <TableHead>Valor unitário</TableHead>
-                    <TableHead>Valor total</TableHead>
+                    <TableHead>Total</TableHead>
                     <TableHead>Certificações</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
@@ -195,8 +204,15 @@ export default function OfertaCiclo() {
                   {produtosOfertados.map((produto) => (
                     <TableRow key={produto.id}>
                       <TableCell>{produto.nome}</TableCell>
-                      <TableCell>{produto.quantidade} {produto.unidade}</TableCell>
+                      <TableCell>{produto.unidade}</TableCell>
+                      <TableCell>
+                        {produto.peso ? `${produto.peso.toFixed(2)} kg` : 
+                         produto.volume ? `${produto.volume.toFixed(2)} L` : 
+                         '-'}
+                      </TableCell>
+                      <TableCell>R$ {produto.precoBase.toFixed(2).replace('.', ',')}</TableCell>
                       <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
+                      <TableCell>{produto.quantidade}</TableCell>
                       <TableCell>R$ {(produto.valor * produto.quantidade).toFixed(2).replace('.', ',')}</TableCell>
                       <TableCell>
                         <div className="text-xs space-y-1">
