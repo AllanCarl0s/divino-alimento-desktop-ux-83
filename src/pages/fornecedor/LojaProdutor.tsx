@@ -96,7 +96,7 @@ const LojaProdutor = () => {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-primary">
-            Painel fornecedor ({nomeFornecedor})
+            Painel fornecedor @{nomeFornecedor}
           </h1>
         </div>
 
