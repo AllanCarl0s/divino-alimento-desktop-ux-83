@@ -23,13 +23,15 @@ import {
   Wallet
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem('adminAuth');
-    navigate('/');
+    logout();
+    navigate('/login');
   };
 
 
