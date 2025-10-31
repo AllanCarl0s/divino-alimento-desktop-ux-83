@@ -45,7 +45,7 @@ const getDefaultRoute = (role: UserRole): string => {
     case 'admin':
       return '/admin/dashboard';
     case 'admin_mercado':
-      return '/admin-mercado/dashboard';
+      return '/adminmercado/dashboard';
   }
 };
 
