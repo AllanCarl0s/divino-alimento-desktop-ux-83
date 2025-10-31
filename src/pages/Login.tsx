@@ -9,6 +9,7 @@ import CoBrandAkarui from '@/components/layout/CoBrandAkarui';
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,20 +18,31 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Por padrão, login como consumidor
+      await login(email, password, 'consumidor');
+      
       toast({
         title: "Login realizado com sucesso!",
         description: "Redirecionando para o dashboard...",
       });
+      
       navigate('/dashboard');
-    }, 1500);
+    } catch (error) {
+      toast({
+        title: "Erro no login",
+        description: "Verifique suas credenciais e tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {

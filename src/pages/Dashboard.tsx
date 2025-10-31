@@ -5,6 +5,7 @@ import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { ShoppingCart, FileText, Wallet, UserCircle, ChevronRight, ArrowLeft, ShoppingBasket, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useConsumer } from '@/contexts/ConsumerContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useCycle } from '@/hooks/useCycle';
 import { Button } from '@/components/ui/button';
 import { formatBRL } from '@/utils/currency';
@@ -13,6 +14,12 @@ import { formatBRL } from '@/utils/currency';
 const Dashboard = () => {
   const navigate = useNavigate();
   const { currentCycle } = useCycle();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const acoes = [
     {
@@ -59,7 +66,7 @@ const Dashboard = () => {
         <Button 
           variant="ghost" 
           size="sm"
-          onClick={() => navigate('/')}
+          onClick={handleLogout}
           className="focus-ring text-primary-foreground hover:bg-primary-hover"
         >
           <LogOut className="w-4 h-4 mr-1" />

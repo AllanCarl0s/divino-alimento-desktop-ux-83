@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "@/components/routing/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -103,113 +104,114 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registro" element={<Register />} />
-          <Route path="/verificar-email" element={<VerifyEmail />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/cesta" element={<Cesta />} />
-          <Route path="/minhaCesta/:id" element={<MinhaCesta />} />
-          <Route path="/resumo" element={<Resumo />} />
-          <Route path="/relatorio" element={<Relatorio />} />
-          <Route path="/pagamentos" element={<Pagamentos />} />
-          <Route path="/configuracoes" element={<Configuracoes />} />
-          <Route path="/pedidoConsumidores/:id" element={<PedidoConsumidores />} />
+          {/* Public Routes */}
+          <Route path="/" element={<ProtectedRoute requireAuth={false}><Index /></ProtectedRoute>} />
+          <Route path="/login" element={<ProtectedRoute requireAuth={false}><Login /></ProtectedRoute>} />
+          <Route path="/registro" element={<ProtectedRoute requireAuth={false}><Register /></ProtectedRoute>} />
+          <Route path="/verificar-email" element={<ProtectedRoute requireAuth={false}><VerifyEmail /></ProtectedRoute>} />
           
           {/* Consumidor Routes */}
-          <Route path="/consumidor/relatorio/:id" element={<ConsumidorRelatorio />} />
-          <Route path="/consumidor/pagamentos" element={<ConsumidorPagamentos />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/cesta" element={<ProtectedRoute><Cesta /></ProtectedRoute>} />
+          <Route path="/minhaCesta/:id" element={<ProtectedRoute><MinhaCesta /></ProtectedRoute>} />
+          <Route path="/resumo" element={<ProtectedRoute><Resumo /></ProtectedRoute>} />
+          <Route path="/relatorio" element={<ProtectedRoute><Relatorio /></ProtectedRoute>} />
+          <Route path="/pagamentos" element={<ProtectedRoute><Pagamentos /></ProtectedRoute>} />
+          <Route path="/configuracoes" element={<ProtectedRoute><Configuracoes /></ProtectedRoute>} />
+          <Route path="/pedidoConsumidores/:id" element={<ProtectedRoute><PedidoConsumidores /></ProtectedRoute>} />
+          <Route path="/consumidor/relatorio/:id" element={<ProtectedRoute><ConsumidorRelatorio /></ProtectedRoute>} />
+          <Route path="/consumidor/pagamentos" element={<ProtectedRoute><ConsumidorPagamentos /></ProtectedRoute>} />
           
           {/* Fornecedor Routes */}
-          <Route path="/fornecedor/login" element={<FornecedorLogin />} />
-          <Route path="/fornecedor/onboarding" element={<FornecedorOnboarding />} />
-          <Route path="/fornecedor/loja" element={<LojaProdutor />} />
-          <Route path="/fornecedor/pre-cadastro" element={<PreCadastroProdutos />} />
-          <Route path="/fornecedor/pre-cadastro-produtos" element={<PreCadastroProdutos />} />
-          <Route path="/fornecedor/pedidos" element={<PedidosAberto />} />
-          <Route path="/fornecedor/pedidos-aberto" element={<PedidosAberto />} />
-          <Route path="/fornecedor/gestao" element={<PainelGestao />} />
-          <Route path="/fornecedor/painel-gestao" element={<PainelGestao />} />
-          <Route path="/fornecedor/cronograma" element={<Cronograma />} />
-          <Route path="/fornecedor/produtos-vencidos" element={<ProdutosVencidos />} />
-          <Route path="/fornecedor/configuracoes" element={<FornecedorConfiguracoes />} />
-          <Route path="/fornecedor/relatorio-entregas" element={<FornecedorRelatorioEntregas />} />
-          <Route path="/fornecedor/entregas/:cicloId" element={<FornecedorEntregas />} />
-          <Route path="/fornecedor/pagamentos" element={<FornecedorPagamentos />} />
-          <Route path="/fornecedor/ofertas" element={<LojaProdutor />} />
+          <Route path="/fornecedor/login" element={<ProtectedRoute requireAuth={false}><FornecedorLogin /></ProtectedRoute>} />
+          <Route path="/fornecedor/onboarding" element={<ProtectedRoute><FornecedorOnboarding /></ProtectedRoute>} />
+          <Route path="/fornecedor/loja" element={<ProtectedRoute><LojaProdutor /></ProtectedRoute>} />
+          <Route path="/fornecedor/pre-cadastro" element={<ProtectedRoute><PreCadastroProdutos /></ProtectedRoute>} />
+          <Route path="/fornecedor/pre-cadastro-produtos" element={<ProtectedRoute><PreCadastroProdutos /></ProtectedRoute>} />
+          <Route path="/fornecedor/pedidos" element={<ProtectedRoute><PedidosAberto /></ProtectedRoute>} />
+          <Route path="/fornecedor/pedidos-aberto" element={<ProtectedRoute><PedidosAberto /></ProtectedRoute>} />
+          <Route path="/fornecedor/gestao" element={<ProtectedRoute><PainelGestao /></ProtectedRoute>} />
+          <Route path="/fornecedor/painel-gestao" element={<ProtectedRoute><PainelGestao /></ProtectedRoute>} />
+          <Route path="/fornecedor/cronograma" element={<ProtectedRoute><Cronograma /></ProtectedRoute>} />
+          <Route path="/fornecedor/produtos-vencidos" element={<ProtectedRoute><ProdutosVencidos /></ProtectedRoute>} />
+          <Route path="/fornecedor/configuracoes" element={<ProtectedRoute><FornecedorConfiguracoes /></ProtectedRoute>} />
+          <Route path="/fornecedor/relatorio-entregas" element={<ProtectedRoute><FornecedorRelatorioEntregas /></ProtectedRoute>} />
+          <Route path="/fornecedor/entregas/:cicloId" element={<ProtectedRoute><FornecedorEntregas /></ProtectedRoute>} />
+          <Route path="/fornecedor/pagamentos" element={<ProtectedRoute><FornecedorPagamentos /></ProtectedRoute>} />
+          <Route path="/fornecedor/ofertas" element={<ProtectedRoute><LojaProdutor /></ProtectedRoute>} />
           
           {/* Admin Routes */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/login" element={<ProtectedRoute requireAuth={false}><AdminLogin /></ProtectedRoute>} />
+          <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
           
           {/* Admin Mercado Routes */}
-          <Route path="/adminmercado/dashboard" element={<AdminMercadoDashboard />} />
-          <Route path="/adminmercado/mercados" element={<AdminMercadoMercados />} />
-          <Route path="/adminmercado/precos" element={<AdminMercadoPrecos />} />
-          <Route path="/adminmercado/precos/:id" element={<AdminMercadoPrecosDetalhes />} />
-          <Route path="/adminmercado/ciclo-index" element={<AdminMercadoCicloIndex />} />
-          <Route path="/adminmercado/ciclo" element={<AdminMercadoCiclo />} />
-          <Route path="/adminmercado/ciclo/:id" element={<AdminMercadoCiclo />} />
-          <Route path="/adminmercado/composicao-lote/:cicloId" element={<AdminMercadoComposicaoLote />} />
-          <Route path="/adminmercado/migrar-ofertas/:cicloId" element={<AdminMercadoMigrarOfertas />} />
-          <Route path="/adminmercado/relatorio-fornecedores/:cicloId" element={<AdminMercadoRelatorioFornecedores />} />
-          <Route path="/adminmercado/relatorio-consumidores/:cicloId" element={<AdminMercadoRelatorioConsumidores />} />
-          <Route path="/adminmercado/relatorios/fornecedores-ciclo" element={<AdminMercadoRelatorioFornecedoresCiclo />} />
-          <Route path="/adminmercado/relatorios/consumidores-ciclo" element={<AdminMercadoRelatorioConsumidoresCiclo />} />
-          <Route path="/adminmercado/pagamentos/gerar" element={<AdminMercadoPagamentosGerar />} />
-          <Route path="/adminmercado/pagamentos/gerir" element={<AdminMercadoPagamentosGerir />} />
+          <Route path="/adminmercado/dashboard" element={<ProtectedRoute><AdminMercadoDashboard /></ProtectedRoute>} />
+          <Route path="/adminmercado/mercados" element={<ProtectedRoute><AdminMercadoMercados /></ProtectedRoute>} />
+          <Route path="/adminmercado/precos" element={<ProtectedRoute><AdminMercadoPrecos /></ProtectedRoute>} />
+          <Route path="/adminmercado/precos/:id" element={<ProtectedRoute><AdminMercadoPrecosDetalhes /></ProtectedRoute>} />
+          <Route path="/adminmercado/ciclo-index" element={<ProtectedRoute><AdminMercadoCicloIndex /></ProtectedRoute>} />
+          <Route path="/adminmercado/ciclo" element={<ProtectedRoute><AdminMercadoCiclo /></ProtectedRoute>} />
+          <Route path="/adminmercado/ciclo/:id" element={<ProtectedRoute><AdminMercadoCiclo /></ProtectedRoute>} />
+          <Route path="/adminmercado/composicao-lote/:cicloId" element={<ProtectedRoute><AdminMercadoComposicaoLote /></ProtectedRoute>} />
+          <Route path="/adminmercado/migrar-ofertas/:cicloId" element={<ProtectedRoute><AdminMercadoMigrarOfertas /></ProtectedRoute>} />
+          <Route path="/adminmercado/relatorio-fornecedores/:cicloId" element={<ProtectedRoute><AdminMercadoRelatorioFornecedores /></ProtectedRoute>} />
+          <Route path="/adminmercado/relatorio-consumidores/:cicloId" element={<ProtectedRoute><AdminMercadoRelatorioConsumidores /></ProtectedRoute>} />
+          <Route path="/adminmercado/relatorios/fornecedores-ciclo" element={<ProtectedRoute><AdminMercadoRelatorioFornecedoresCiclo /></ProtectedRoute>} />
+          <Route path="/adminmercado/relatorios/consumidores-ciclo" element={<ProtectedRoute><AdminMercadoRelatorioConsumidoresCiclo /></ProtectedRoute>} />
+          <Route path="/adminmercado/pagamentos/gerar" element={<ProtectedRoute><AdminMercadoPagamentosGerar /></ProtectedRoute>} />
+          <Route path="/adminmercado/pagamentos/gerir" element={<ProtectedRoute><AdminMercadoPagamentosGerir /></ProtectedRoute>} />
           
-          <Route path="/admin/mercados" element={<AdminMercados />} />
-          <Route path="/admin/precos" element={<AdminPrecosLista />} />
-          <Route path="/admin/precos/:id" element={<AdminPrecos />} />
-          <Route path="/admin/categorias" element={<AdminCategorias />} />
-          <Route path="/admin/categorias/novo" element={<AdminCategoriaNovo />} />
-          <Route path="/admin/categorias/:id" element={<AdminCategoriaDados />} />
-          <Route path="/admin/produtos" element={<AdminProdutos />} />
-          <Route path="/admin/alimentos" element={<AdminProdutos />} />
-          <Route path="/admin/produto" element={<AdminProdutoNovo />} />
-          <Route path="/admin/alimento" element={<AdminProdutoNovo />} />
-          <Route path="/admin/produto/:id" element={<AdminProdutoEditar />} />
-          <Route path="/admin/alimento/:id" element={<AdminProdutoEditar />} />
-          <Route path="/admin/produtos-comercializaveis" element={<AdminProdutosComercialivaveis />} />
-          <Route path="/admin/produto-comercializavel" element={<AdminProdutoComercializavelNovo />} />
-          <Route path="/admin/produto-comercializavel/:id" element={<AdminProdutoComercializavelEditar />} />
-          <Route path="/admin/config" element={<AdminConfig />} />
-          <Route path="/admin/cestas" element={<AdminCestas />} />
-          <Route path="/admin/cestas/composicao/:id" element={<AdminComposicao />} />
-          <Route path="/admin/cestas/resumo/:id" element={<AdminResumo />} />
-          <Route path="/admin/ciclos/gestao/:id" element={<AdminGestao />} />
-          <Route path="/admin/pnae" element={<AdminPnae />} />
-          <Route path="/admin/pnae/composicao/:id" element={<AdminPnaeComposicao />} />
-          <Route path="/admin/pnae/resumo/:id" element={<AdminResumo />} />
-          <Route path="/admin/kitandinha/novo-ciclo" element={<AdminKitandinhaNovoCiclo />} />
-          <Route path="/admin/kitandinha/composicao/:id" element={<AdminKitandinhaComposicao />} />
-          <Route path="/admin/kitandinha/resumo/:id" element={<AdminKitandinhaResumo />} />
-          <Route path="/admin/kitandinha/gestao/:id" element={<AdminKitandinhaGestao />} />
-          <Route path="/admin/ciclo-index" element={<AdminCicloIndex />} />
-          <Route path="/admin/ciclo" element={<AdminCiclo />} />
-          <Route path="/admin/ciclo/:id" element={<AdminCiclo />} />
-          <Route path="/oferta/:id" element={<AdminOferta />} />
-          <Route path="/admin/composicao-cesta/:id" element={<AdminComposicaoCesta />} />
-          <Route path="/admin/composicao-lote/:id" element={<AdminComposicaoLote />} />
-          <Route path="/admin/composicao-venda-direta/:id" element={<AdminComposicaoVendaDiretaCompor />} />
-          <Route path="/admin/composicao-venda-direta-liberar/:id" element={<AdminComposicaoVendaDiretaLiberar />} />
-              <Route path="/admin/entregas-fornecedores/:id" element={<AdminEntregasFornecedores />} />
-              <Route path="/admin/pedidos-consumidores/:id" element={<AdminPedidosConsumidores />} />
-          <Route path="/admin/relatorio-fornecedores" element={<AdminRelatorioFornecedores />} />
-          <Route path="/admin/relatorio-fornecedores/resultado" element={<AdminRelatorioFornecedoresResultado />} />
-          <Route path="/admin/relatorio-consumidores" element={<AdminRelatorioConsumidores />} />
-          <Route path="/admin/relatorio-consumidores/resultado" element={<AdminRelatorioConsumidoresResultado />} />
-          <Route path="/admin/migrar-ofertas/:destinoId" element={<AdminMigrarOfertas />} />
-          <Route path="/admin/pagamentos-gerar" element={<AdminPagamentosGerar />} />
-          <Route path="/admin/pagamentos-gerir" element={<AdminPagamentosGerir />} />
-          <Route path="/usuarios" element={<Usuarios />} />
-          <Route path="/usuario-index" element={<UsuarioIndex />} />
-          <Route path="/usuario" element={<Usuario />} />
-          <Route path="/usuario/:id" element={<UsuarioDados />} />
+          <Route path="/admin/mercados" element={<ProtectedRoute><AdminMercados /></ProtectedRoute>} />
+          <Route path="/admin/precos" element={<ProtectedRoute><AdminPrecosLista /></ProtectedRoute>} />
+          <Route path="/admin/precos/:id" element={<ProtectedRoute><AdminPrecos /></ProtectedRoute>} />
+          <Route path="/admin/categorias" element={<ProtectedRoute><AdminCategorias /></ProtectedRoute>} />
+          <Route path="/admin/categorias/novo" element={<ProtectedRoute><AdminCategoriaNovo /></ProtectedRoute>} />
+          <Route path="/admin/categorias/:id" element={<ProtectedRoute><AdminCategoriaDados /></ProtectedRoute>} />
+          <Route path="/admin/produtos" element={<ProtectedRoute><AdminProdutos /></ProtectedRoute>} />
+          <Route path="/admin/alimentos" element={<ProtectedRoute><AdminProdutos /></ProtectedRoute>} />
+          <Route path="/admin/produto" element={<ProtectedRoute><AdminProdutoNovo /></ProtectedRoute>} />
+          <Route path="/admin/alimento" element={<ProtectedRoute><AdminProdutoNovo /></ProtectedRoute>} />
+          <Route path="/admin/produto/:id" element={<ProtectedRoute><AdminProdutoEditar /></ProtectedRoute>} />
+          <Route path="/admin/alimento/:id" element={<ProtectedRoute><AdminProdutoEditar /></ProtectedRoute>} />
+          <Route path="/admin/produtos-comercializaveis" element={<ProtectedRoute><AdminProdutosComercialivaveis /></ProtectedRoute>} />
+          <Route path="/admin/produto-comercializavel" element={<ProtectedRoute><AdminProdutoComercializavelNovo /></ProtectedRoute>} />
+          <Route path="/admin/produto-comercializavel/:id" element={<ProtectedRoute><AdminProdutoComercializavelEditar /></ProtectedRoute>} />
+          <Route path="/admin/config" element={<ProtectedRoute><AdminConfig /></ProtectedRoute>} />
+          <Route path="/admin/cestas" element={<ProtectedRoute><AdminCestas /></ProtectedRoute>} />
+          <Route path="/admin/cestas/composicao/:id" element={<ProtectedRoute><AdminComposicao /></ProtectedRoute>} />
+          <Route path="/admin/cestas/resumo/:id" element={<ProtectedRoute><AdminResumo /></ProtectedRoute>} />
+          <Route path="/admin/ciclos/gestao/:id" element={<ProtectedRoute><AdminGestao /></ProtectedRoute>} />
+          <Route path="/admin/pnae" element={<ProtectedRoute><AdminPnae /></ProtectedRoute>} />
+          <Route path="/admin/pnae/composicao/:id" element={<ProtectedRoute><AdminPnaeComposicao /></ProtectedRoute>} />
+          <Route path="/admin/pnae/resumo/:id" element={<ProtectedRoute><AdminResumo /></ProtectedRoute>} />
+          <Route path="/admin/kitandinha/novo-ciclo" element={<ProtectedRoute><AdminKitandinhaNovoCiclo /></ProtectedRoute>} />
+          <Route path="/admin/kitandinha/composicao/:id" element={<ProtectedRoute><AdminKitandinhaComposicao /></ProtectedRoute>} />
+          <Route path="/admin/kitandinha/resumo/:id" element={<ProtectedRoute><AdminKitandinhaResumo /></ProtectedRoute>} />
+          <Route path="/admin/kitandinha/gestao/:id" element={<ProtectedRoute><AdminKitandinhaGestao /></ProtectedRoute>} />
+          <Route path="/admin/ciclo-index" element={<ProtectedRoute><AdminCicloIndex /></ProtectedRoute>} />
+          <Route path="/admin/ciclo" element={<ProtectedRoute><AdminCiclo /></ProtectedRoute>} />
+          <Route path="/admin/ciclo/:id" element={<ProtectedRoute><AdminCiclo /></ProtectedRoute>} />
+          <Route path="/oferta/:id" element={<ProtectedRoute><AdminOferta /></ProtectedRoute>} />
+          <Route path="/admin/composicao-cesta/:id" element={<ProtectedRoute><AdminComposicaoCesta /></ProtectedRoute>} />
+          <Route path="/admin/composicao-lote/:id" element={<ProtectedRoute><AdminComposicaoLote /></ProtectedRoute>} />
+          <Route path="/admin/composicao-venda-direta/:id" element={<ProtectedRoute><AdminComposicaoVendaDiretaCompor /></ProtectedRoute>} />
+          <Route path="/admin/composicao-venda-direta-liberar/:id" element={<ProtectedRoute><AdminComposicaoVendaDiretaLiberar /></ProtectedRoute>} />
+          <Route path="/admin/entregas-fornecedores/:id" element={<ProtectedRoute><AdminEntregasFornecedores /></ProtectedRoute>} />
+          <Route path="/admin/pedidos-consumidores/:id" element={<ProtectedRoute><AdminPedidosConsumidores /></ProtectedRoute>} />
+          <Route path="/admin/relatorio-fornecedores" element={<ProtectedRoute><AdminRelatorioFornecedores /></ProtectedRoute>} />
+          <Route path="/admin/relatorio-fornecedores/resultado" element={<ProtectedRoute><AdminRelatorioFornecedoresResultado /></ProtectedRoute>} />
+          <Route path="/admin/relatorio-consumidores" element={<ProtectedRoute><AdminRelatorioConsumidores /></ProtectedRoute>} />
+          <Route path="/admin/relatorio-consumidores/resultado" element={<ProtectedRoute><AdminRelatorioConsumidoresResultado /></ProtectedRoute>} />
+          <Route path="/admin/migrar-ofertas/:destinoId" element={<ProtectedRoute><AdminMigrarOfertas /></ProtectedRoute>} />
+          <Route path="/admin/pagamentos-gerar" element={<ProtectedRoute><AdminPagamentosGerar /></ProtectedRoute>} />
+          <Route path="/admin/pagamentos-gerir" element={<ProtectedRoute><AdminPagamentosGerir /></ProtectedRoute>} />
+          <Route path="/usuarios" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
+          <Route path="/usuario-index" element={<ProtectedRoute><UsuarioIndex /></ProtectedRoute>} />
+          <Route path="/usuario" element={<ProtectedRoute><Usuario /></ProtectedRoute>} />
+          <Route path="/usuario/:id" element={<ProtectedRoute><UsuarioDados /></ProtectedRoute>} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
