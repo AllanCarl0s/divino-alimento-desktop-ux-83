@@ -16,13 +16,15 @@ import {
   UserCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem('adminMercadoAuth');
-    navigate('/');
+    logout();
+    navigate('/login');
   };
 
   const shortcuts = [
