@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCycle } from '@/hooks/useCycle';
 import { Button } from '@/components/ui/button';
 import { formatBRL } from '@/utils/currency';
+import { ProfileSwitcher } from '@/components/layout/ProfileSwitcher';
 
 
 const Dashboard = () => {
@@ -63,15 +64,18 @@ const Dashboard = () => {
   return (
     <ResponsiveLayout
       headerContent={
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={handleLogout}
-          className="focus-ring text-primary-foreground hover:bg-primary-hover"
-        >
-          <LogOut className="w-4 h-4 mr-1" />
-          <span className="hidden md:inline">Sair</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <ProfileSwitcher />
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={handleLogout}
+            className="focus-ring text-primary-foreground hover:bg-primary-hover"
+          >
+            <LogOut className="w-4 h-4 mr-1" />
+            <span className="hidden md:inline">Sair</span>
+          </Button>
+        </div>
       }
     >
       <div className="space-y-6">

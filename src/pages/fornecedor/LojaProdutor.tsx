@@ -12,9 +12,12 @@ import {
   Calendar,
   Package,
   DollarSign,
-  AlertCircle
+  AlertCircle,
+  LogOut
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { ProfileSwitcher } from '@/components/layout/ProfileSwitcher';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Mock data - in real app would come from API/context
 const mockFornecedorData = {
@@ -43,7 +46,13 @@ const mockFornecedorData = {
 
 const LojaProdutor = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const { nomeFornecedor, ciclos } = mockFornecedorData;
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const acoesLoja = [
     {
@@ -90,6 +99,20 @@ const LojaProdutor = () => {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
+      }
+      headerContent={
+        <div className="flex items-center gap-2">
+          <ProfileSwitcher />
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={handleLogout}
+            className="focus-ring text-primary-foreground hover:bg-primary-hover"
+          >
+            <LogOut className="w-4 h-4 mr-1" />
+            <span className="hidden md:inline">Sair</span>
+          </Button>
+        </div>
       }
     >
       <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8">

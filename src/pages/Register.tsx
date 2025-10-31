@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,20 @@ import { ArrowLeft, User, Mail, Phone, Lock, AlertCircle, CheckCircle2, Store, S
 import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useConsumer } from '@/contexts/ConsumerContext';
+import { useAuth, UserRole } from '@/contexts/AuthContext';
+
+const getDefaultRoute = (role: UserRole): string => {
+  switch (role) {
+    case 'consumidor':
+      return '/dashboard';
+    case 'fornecedor':
+      return '/fornecedor/loja';
+    case 'admin':
+      return '/admin/dashboard';
+    case 'admin_mercado':
+      return '/admin-mercado/dashboard';
+  }
+};
 
 // Mock data for markets with types
 const mockMarkets = [
@@ -53,6 +67,15 @@ const Register = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { setConsumerType } = useConsumer();
+  const { register: registerUser, activeRole, isAuthenticated } = useAuth();
+
+  // Redirecionar após registro bem-sucedido
+  useEffect(() => {
+    if (isAuthenticated && activeRole) {
+      const defaultRoute = getDefaultRoute(activeRole);
+      navigate(defaultRoute);
+    }
+  }, [isAuthenticated, activeRole, navigate]);
 
   const form = useForm<FormData>({
     defaultValues: {
@@ -114,32 +137,41 @@ const Register = () => {
 
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      const selectedProfiles = Object.entries(data.profiles)
-        .filter(([_, selected]) => selected)
-        .map(([profile, _]) => profile);
-      
-      localStorage.setItem('da.profiles', JSON.stringify(selectedProfiles));
+    try {
+      // Mapear perfis selecionados para UserRole[]
+      const selectedRoles: UserRole[] = [];
+      if (data.profiles.consumidor) selectedRoles.push('consumidor');
+      if (data.profiles.fornecedor) selectedRoles.push('fornecedor');
+      if (data.profiles.adminGeral) selectedRoles.push('admin');
+      if (data.profiles.adminMercado) selectedRoles.push('admin_mercado');
       
       // Save consumer market and type if selected
       if (data.profiles.consumidor && data.selectedMarket) {
         const selectedMarket = mockMarkets.find(m => m.id === data.selectedMarket);
-        console.log('Selected market:', selectedMarket);
         const type = selectedMarket?.type || 'cesta';
-        console.log('Consumer type being saved:', type);
         localStorage.setItem('da.marketId', data.selectedMarket);
         localStorage.setItem('da.consumerType', type);
         setConsumerType(type);
       }
       
-      setIsLoading(false);
+      // Registrar usuário com roles
+      await registerUser(data.email, data.password, data.name, selectedRoles);
+      
       toast({
         title: "Conta criada com sucesso!",
-        description: "Verifique seu e-mail para ativar sua conta.",
+        description: "Redirecionando para seu painel...",
       });
-      navigate('/verificar-email', { state: { email: data.email, profiles: selectedProfiles } });
-    }, 1500);
+      
+      // O redirecionamento será feito pelo useEffect
+    } catch (error) {
+      toast({
+        title: "Erro ao criar conta",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const formatPhone = (value: string) => {

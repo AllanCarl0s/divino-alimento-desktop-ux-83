@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +11,21 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
+const getDefaultRoute = (role: string): string => {
+  switch (role) {
+    case 'consumidor':
+      return '/dashboard';
+    case 'fornecedor':
+      return '/fornecedor/loja';
+    case 'admin':
+      return '/admin/dashboard';
+    case 'admin_mercado':
+      return '/admin-mercado/dashboard';
+    default:
+      return '/dashboard';
+  }
+};
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,22 +33,29 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { login } = useAuth();
+  const { login, activeRole, isAuthenticated } = useAuth();
+
+  // Redirecionar após login bem-sucedido
+  useEffect(() => {
+    if (isAuthenticated && activeRole) {
+      const defaultRoute = getDefaultRoute(activeRole);
+      navigate(defaultRoute);
+    }
+  }, [isAuthenticated, activeRole, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      // Por padrão, login como consumidor
-      await login(email, password, 'consumidor');
+      await login(email, password);
       
       toast({
         title: "Login realizado com sucesso!",
-        description: "Redirecionando para o dashboard...",
+        description: "Redirecionando...",
       });
       
-      navigate('/dashboard');
+      // O redirecionamento será feito pelo useEffect no ProtectedRoute
     } catch (error) {
       toast({
         title: "Erro no login",

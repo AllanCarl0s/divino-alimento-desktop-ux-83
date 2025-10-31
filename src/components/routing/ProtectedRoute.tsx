@@ -9,12 +9,12 @@ interface ProtectedRouteProps {
   requireAuth?: boolean;
 }
 
+// Rotas públicas que não requerem autenticação
+const PUBLIC_ROUTES = ['/', '/login', '/registro', '/fornecedor/login'];
+
 // Definição de rotas permitidas por perfil
 const ROUTE_PERMISSIONS: Record<string, string[]> = {
   consumidor: [
-    '/',
-    '/login',
-    '/registro',
     '/dashboard',
     '/minhaCesta/1',
     '/pedidoConsumidores/1',
@@ -23,8 +23,6 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
     '/usuario/1',
   ],
   fornecedor: [
-    '/',
-    '/fornecedor/login',
     '/fornecedor/loja',
     '/oferta/*',
     '/fornecedor/entregas/*',
@@ -32,17 +30,18 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
     '/usuario/1',
   ],
   admin: [
-    '/',
-    '/admin',
+    '/admin/*',
   ],
   admin_mercado: [
-    '/',
-    '/admin-mercado',
+    '/admin-mercado/*',
   ],
 };
 
 // Função para verificar se a rota é permitida para o role
-const isRouteAllowed = (pathname: string, role: UserRole): boolean => {
+const isRouteAllowed = (pathname: string, role: UserRole | null): boolean => {
+  // Rotas públicas sempre permitidas
+  if (PUBLIC_ROUTES.includes(pathname)) return true;
+  
   if (!role) return false;
   
   const allowedRoutes = ROUTE_PERMISSIONS[role] || [];
@@ -70,25 +69,21 @@ const getDefaultRoute = (role: UserRole): string => {
       return '/admin/dashboard';
     case 'admin_mercado':
       return '/admin-mercado/dashboard';
-    default:
-      return '/';
   }
 };
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children, 
   allowedRoles,
   requireAuth = true 
 }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, activeRole } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Rotas públicas que não precisam de autenticação
-    const publicRoutes = ['/', '/login', '/registro', '/fornecedor/login'];
-    const isPublicRoute = publicRoutes.includes(location.pathname);
+    const isPublicRoute = PUBLIC_ROUTES.includes(location.pathname);
 
     // Se a rota requer autenticação e o usuário não está autenticado
     if (requireAuth && !isAuthenticated && !isPublicRoute) {
@@ -97,14 +92,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
 
     // Se o usuário está autenticado
-    if (isAuthenticated && user?.role) {
-      // Verifica se a rota é permitida para o role do usuário
-      if (!isRouteAllowed(location.pathname, user.role)) {
-        const defaultRoute = getDefaultRoute(user.role);
+    if (isAuthenticated && activeRole) {
+      // Verifica se a rota é permitida para o activeRole do usuário
+      if (!isRouteAllowed(location.pathname, activeRole)) {
+        const defaultRoute = getDefaultRoute(activeRole);
         
         toast({
           title: "Acesso não autorizado",
-          description: "Você não tem permissão para acessar esta página. Redirecionado para seu painel principal.",
+          description: "Você não tem permissão para acessar esta página. Redirecionado para seu painel.",
           variant: "destructive",
         });
 
@@ -113,13 +108,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       }
 
       // Se há roles específicos permitidos, verifica
-      if (allowedRoles && !allowedRoles.includes(user.role)) {
-        const defaultRoute = getDefaultRoute(user.role);
+      if (allowedRoles && !allowedRoles.includes(activeRole)) {
+        const defaultRoute = getDefaultRoute(activeRole);
         navigate(defaultRoute, { replace: true });
         return;
       }
     }
-  }, [isAuthenticated, user, location.pathname, navigate, toast, allowedRoles, requireAuth]);
+  }, [isAuthenticated, user, activeRole, location.pathname, navigate, toast, allowedRoles, requireAuth]);
 
   return <>{children}</>;
 };
