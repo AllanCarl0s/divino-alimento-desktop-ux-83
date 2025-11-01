@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -83,6 +84,7 @@ const mockProdutosComercializaveis: ProdutoComercializavel[] = [
 
 export default function AdminOferta() {
   const navigate = useNavigate();
+  const { activeRole } = useAuth();
   const { id: cicloId } = useParams();
   
   const [ofertas, setOfertas] = useState<OfertaProduto[]>([]);
@@ -309,7 +311,7 @@ export default function AdminOferta() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate('/admin/ciclo-index')}
+          onClick={() => navigate(activeRole === 'fornecedor' ? '/fornecedor/loja' : '/admin/ciclo-index')}
           className="text-white hover:bg-white/20"
         >
           <ArrowLeft className="h-5 w-5" />
