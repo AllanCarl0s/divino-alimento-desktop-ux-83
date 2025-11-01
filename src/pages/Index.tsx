@@ -65,21 +65,21 @@ const Index = () => {
         </button>
 
         {/* Rodapé com logos */}
-        <footer className="flex flex-col items-center gap-6 mb-12 lg:mb-16 mt-auto">
-          <div className="w-[160px] h-[3px] bg-[#2E7D32] opacity-40" />
-          <p className="text-[#4B5563] text-sm sm:text-base lg:text-lg font-medium">desenvolvido por:</p>
-          <div className="flex items-center gap-8 sm:gap-12 lg:gap-[48px]">
+        <footer className="flex flex-col items-center gap-8 mb-16 lg:mb-20 mt-auto">
+          <div className="w-[200px] h-[4px] bg-[#2E7D32] opacity-40" />
+          <p className="text-[#4B5563] text-lg sm:text-xl lg:text-2xl font-semibold">desenvolvido por:</p>
+          <div className="flex items-center gap-12 sm:gap-16 lg:gap-20">
             <img 
               src={logoAkarui}
               alt="Akarui"
-              className="h-12 sm:h-16 lg:h-[80px] object-contain"
-              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+              className="h-20 sm:h-28 lg:h-[120px] object-contain"
+              style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
             />
             <img 
               src={logoTekopora}
               alt="Tekoporã"
-              className="h-12 sm:h-16 lg:h-[80px] object-contain"
-              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+              className="h-20 sm:h-28 lg:h-[120px] object-contain"
+              style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
             />
           </div>
         </footer>
