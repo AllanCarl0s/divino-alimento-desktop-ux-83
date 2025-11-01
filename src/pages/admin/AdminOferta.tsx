@@ -311,7 +311,15 @@ export default function AdminOferta() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate(activeRole === 'fornecedor' ? '/fornecedor/loja' : '/admin/ciclo-index')}
+          onClick={() => {
+            if (activeRole === 'fornecedor') {
+              navigate('/fornecedor/loja');
+            } else if (activeRole === 'admin_mercado') {
+              navigate('/adminmercado/ciclo-index');
+            } else {
+              navigate('/admin/ciclo-index');
+            }
+          }}
           className="text-white hover:bg-white/20"
         >
           <ArrowLeft className="h-5 w-5" />
