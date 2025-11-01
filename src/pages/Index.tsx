@@ -35,13 +35,13 @@ const Index = () => {
       {/* Container principal centralizado */}
       <main className="flex-1 flex flex-col items-center px-4 lg:px-8 max-w-[1200px] mx-auto w-full">
         {/* Bloco institucional com ícone folha + texto */}
-        <section className="flex flex-col items-center justify-center gap-2 mt-16 lg:mt-20 mb-8 lg:mb-10 max-w-[640px]">
+        <section className="flex items-start gap-3 mt-16 lg:mt-20 mb-8 lg:mb-10 max-w-[640px] px-4">
           <img 
             src={leafIcon} 
             alt="Folha verde" 
-            className="w-14 h-14 flex-shrink-0"
+            className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 mt-1"
           />
-          <p className="text-[#374151] text-base lg:text-lg text-center leading-relaxed font-medium">
+          <p className="text-[#374151] text-base lg:text-lg text-left leading-relaxed font-medium">
             Divino Alimento é uma plataforma que facilita o fluxo de informação de vendas alimentos produzido por diversos agricultores para diversos compradores
           </p>
         </section>
