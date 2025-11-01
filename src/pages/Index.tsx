@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Leaf } from 'lucide-react';
 import logoDivino from '@/assets/LOGO_DIVINO_ALIMENTOS.png';
 import logoAkarui from '@/assets/logo-akarui.png';
 import logoTekopora from '@/assets/logo-tekopora.png';
 import heroAlimentos from '@/assets/hero-alimentos.png';
+import leafIcon from '@/assets/leaf-icon.png';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -36,7 +36,11 @@ const Index = () => {
       <main className="flex-1 flex flex-col items-center px-4 lg:px-8 max-w-[1200px] mx-auto w-full">
         {/* Bloco institucional com ícone folha + texto */}
         <section className="flex flex-col items-center justify-center gap-2 mt-16 lg:mt-20 mb-8 lg:mb-10 max-w-[640px]">
-          <Leaf className="w-14 h-14 text-[#2E7D32] flex-shrink-0" />
+          <img 
+            src={leafIcon} 
+            alt="Folha verde" 
+            className="w-14 h-14 flex-shrink-0"
+          />
           <p className="text-[#374151] text-base lg:text-lg text-center leading-relaxed font-medium">
             Divino Alimento é uma plataforma que facilita o fluxo de informação de vendas alimentos produzido por diversos agricultores para diversos compradores
           </p>
