@@ -102,24 +102,22 @@ export const UserMenuLarge: React.FC = () => {
 
   return (
     <div ref={menuRef} className="relative">
-      {/* Avatar Container - positioned to overlap header and content */}
-      <div className="flex flex-col items-center translate-y-8 md:translate-y-10">
+      <div className="flex flex-col items-center">
+        {/* Avatar - inside orange header */}
+        <Avatar className="h-16 w-16 md:h-20 md:w-20 border-4 border-white shadow-lg">
+          <AvatarImage src={user.photoURL} alt={displayName} />
+          <AvatarFallback className="bg-primary text-primary-foreground text-xl">
+            <User className="h-8 w-8 md:h-10 md:w-10" />
+          </AvatarFallback>
+        </Avatar>
+
+        {/* User Name and Dropdown - in white area below */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full transition-transform hover:scale-105"
+          className="mt-3 md:mt-4 flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
           aria-expanded={isOpen}
           aria-haspopup="true"
         >
-          <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-white shadow-lg">
-            <AvatarImage src={user.photoURL} alt={displayName} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
-              <User className="h-10 w-10" />
-            </AvatarFallback>
-          </Avatar>
-        </button>
-
-        {/* User Name */}
-        <div className="mt-2 md:mt-3 flex items-center gap-1">
           <span className="font-semibold text-base md:text-lg text-foreground">
             {displayName}
           </span>
@@ -129,7 +127,7 @@ export const UserMenuLarge: React.FC = () => {
               isOpen && "rotate-180"
             )} 
           />
-        </div>
+        </button>
       </div>
 
       {/* Dropdown Menu */}
