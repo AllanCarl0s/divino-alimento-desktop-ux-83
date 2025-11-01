@@ -92,36 +92,32 @@ export const UserMenuLarge: React.FC = () => {
   }, [isOpen]);
 
   return (
-    <div ref={menuRef} className="relative">
-      {/* Avatar Container - positioned to overlap header and content */}
-      <div className="flex flex-col items-center translate-y-8 md:translate-y-10">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full transition-transform hover:scale-105"
-          aria-expanded={isOpen}
-          aria-haspopup="true"
-        >
-          <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-white shadow-lg">
-            <AvatarImage src={user.photoURL} alt={displayName} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
-              <User className="h-10 w-10" />
-            </AvatarFallback>
-          </Avatar>
-        </button>
+    <div ref={menuRef} className="relative flex items-center gap-3">
+      {/* Avatar */}
+      <Avatar className="h-14 w-14 md:h-16 md:w-16 border-3 border-white shadow-md">
+        <AvatarImage src={user.photoURL} alt={displayName} />
+        <AvatarFallback className="bg-primary text-primary-foreground">
+          <User className="h-7 w-7 md:h-8 md:w-8" />
+        </AvatarFallback>
+      </Avatar>
 
-        {/* User Name */}
-        <div className="mt-2 md:mt-3 flex items-center gap-1">
-          <span className="font-semibold text-base md:text-lg text-foreground">
-            {displayName}
-          </span>
-          <ChevronDown 
-            className={cn(
-              "h-4 w-4 text-muted-foreground transition-transform",
-              isOpen && "rotate-180"
-            )} 
-          />
-        </div>
-      </div>
+      {/* Name and Dropdown Trigger */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+      >
+        <span className="font-semibold text-base md:text-lg text-white">
+          {displayName}
+        </span>
+        <ChevronDown 
+          className={cn(
+            "h-5 w-5 text-white transition-transform",
+            isOpen && "rotate-180"
+          )} 
+        />
+      </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
