@@ -93,8 +93,8 @@ export const UserMenuLarge: React.FC = () => {
 
   return (
     <div ref={menuRef} className="relative">
-      {/* Avatar Container - positioned to overlap header */}
-      <div className="flex flex-col items-center">
+      {/* Avatar Container - positioned to overlap header and content */}
+      <div className="flex flex-col items-center translate-y-8 md:translate-y-10">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full transition-transform hover:scale-105"
