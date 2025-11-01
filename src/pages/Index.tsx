@@ -4,7 +4,7 @@ import { Leaf } from 'lucide-react';
 import logoDivino from '@/assets/LOGO_DIVINO_ALIMENTOS.png';
 import logoAkarui from '@/assets/logo-akarui.png';
 import logoTekopora from '@/assets/logo-tekopora.png';
-import heroBasket from '@/assets/hero-basket.jpg';
+import heroAlimentos from '@/assets/hero-alimentos.png';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const Index = () => {
         {/* Imagem hero com alimentos frescos */}
         <section className="w-full max-w-[900px] mb-8 lg:mb-10">
           <img 
-            src={heroBasket}
+            src={heroAlimentos}
             alt="Cesta de alimentos frescos orgânicos"
             className="w-full h-[200px] sm:h-[240px] lg:h-[300px] object-cover object-center rounded-xl shadow-md"
           />
