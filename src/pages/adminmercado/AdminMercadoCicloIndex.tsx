@@ -12,7 +12,7 @@ import { FiltersBar } from '@/components/admin/FiltersBar';
 import { FiltersPanel } from '@/components/admin/FiltersPanel';
 import { useFilters } from '@/hooks/useFilters';
 import { toast } from '@/hooks/use-toast';
-import { Plus, Pencil, Trash2, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users, RefreshCw } from 'lucide-react';
+import { Plus, Pencil, Trash2, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users, RefreshCw, Tags } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
 
@@ -312,6 +312,21 @@ export default function AdminMercadoCicloIndex() {
                                 <TooltipContent>
                                   <p>{ciclo.status === 'ativo' ? 'Migrar ofertas de outro ciclo' : 'Ciclo inativo'}</p>
                                 </TooltipContent>
+                              </Tooltip>
+
+                              {/* 3. Inserir/Editar Ofertas */}
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    size="icon" 
+                                    onClick={() => navigate(`/oferta/${ciclo.id}`)} 
+                                    className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
+                                  >
+                                    <Tags className="h-5 w-5 text-primary" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent><p>Inserir/editar ofertas</p></TooltipContent>
                               </Tooltip>
 
                               {/* Botões específicos por tipo de mercado */}
