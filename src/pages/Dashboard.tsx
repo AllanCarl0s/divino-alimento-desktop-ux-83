@@ -8,7 +8,7 @@ import { useConsumer } from '@/contexts/ConsumerContext';
 import { useCycle } from '@/hooks/useCycle';
 import { Button } from '@/components/ui/button';
 import { formatBRL } from '@/utils/currency';
-import { UserMenu } from '@/components/layout/UserMenu';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 
 const Dashboard = () => {
@@ -57,7 +57,7 @@ const Dashboard = () => {
   return (
     <ResponsiveLayout
       headerContent={
-        <UserMenu />
+        <UserMenuLarge />
       }
     >
       <div className="space-y-6">

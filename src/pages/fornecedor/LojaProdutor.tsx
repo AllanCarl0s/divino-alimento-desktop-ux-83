@@ -15,7 +15,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { UserMenu } from '@/components/layout/UserMenu';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 // Mock data - in real app would come from API/context
 const mockFornecedorData = {
@@ -93,7 +93,7 @@ const LojaProdutor = () => {
         </Button>
       }
       headerContent={
-        <UserMenu />
+        <UserMenuLarge />
       }
     >
       <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8">

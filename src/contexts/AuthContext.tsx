@@ -9,6 +9,7 @@ interface User {
   name: string;
   roles: UserRole[];
   defaultRole: UserRole;
+  photoURL?: string;
 }
 
 interface AuthContextType {

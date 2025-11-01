@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { UserMenu } from '@/components/layout/UserMenu';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ const AdminMercadoDashboard = () => {
 
   return (
     <ResponsiveLayout 
-      headerContent={<UserMenu />}
+      headerContent={<UserMenuLarge />}
     >
       {/* Desktop Layout */}
       <div className="space-y-6 md:space-y-8">
