@@ -39,7 +39,7 @@ const Index = () => {
           <img 
             src={leafIcon} 
             alt="Folha verde" 
-            className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 -mt-2"
+            className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 -mt-4"
           />
           <p className="text-[#374151] text-base lg:text-lg text-center leading-relaxed font-medium">
             Divino Alimento é uma plataforma que facilita o fluxo de informação de vendas alimentos produzido por diversos agricultores para diversos compradores
