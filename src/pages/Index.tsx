@@ -12,6 +12,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
+      {/* Faixa branca superior */}
+      <div className="h-8 lg:h-10 bg-white" />
+      
       {/* Header laranja com logo sobreposto */}
       <header className="relative h-14 lg:h-16 bg-[#F29B2C] flex items-center justify-center">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-7 lg:mt-8">
