@@ -35,7 +35,7 @@ const Index = () => {
       {/* Container principal centralizado */}
       <main className="flex-1 flex flex-col items-center px-4 lg:px-8 max-w-[1200px] mx-auto w-full">
         {/* Bloco institucional com ícone folha + texto */}
-        <section className="flex items-center justify-center gap-3 mt-16 lg:mt-20 mb-8 lg:mb-10 max-w-[640px] px-4 mx-auto">
+        <section className="flex items-center justify-center gap-3 mt-16 lg:mt-20 mb-8 lg:mb-10 max-w-[720px] px-4 mx-auto">
           <img 
             src={leafIcon} 
             alt="Folha verde" 
