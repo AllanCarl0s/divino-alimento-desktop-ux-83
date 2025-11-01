@@ -67,16 +67,16 @@ const Index = () => {
         <footer className="flex flex-col items-center gap-4 mb-8 lg:mb-12 mt-auto">
           <div className="w-20 h-px bg-[#2E7D32] opacity-30" />
           <p className="text-[#6B7280] text-xs font-medium">desenvolvido por:</p>
-          <div className="flex items-center gap-8 lg:gap-8">
+          <div className="flex items-center gap-8 lg:gap-12">
             <img 
               src={logoAkarui}
               alt="Akarui"
-              className="h-7 lg:h-9 object-contain"
+              className="h-16 lg:h-20 object-contain"
             />
             <img 
               src={logoTekopora}
               alt="Tekoporã"
-              className="h-7 lg:h-9 object-contain"
+              className="h-16 lg:h-20 object-contain"
             />
           </div>
         </footer>
