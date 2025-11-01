@@ -13,11 +13,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Faixa branca superior */}
-      <div className="h-8 lg:h-12 bg-white" />
+      <div className="h-12 lg:h-16 bg-white" />
       
       {/* Header laranja com logo sobreposto */}
-      <header className="relative h-16 lg:h-20 bg-[#F29B2C] flex items-center justify-center">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-8 lg:mt-10">
+      <header className="relative h-20 lg:h-28 bg-[#F29B2C] flex items-center justify-center">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14">
           <button 
             onClick={() => navigate('/')}
             className="hover:opacity-90 transition-opacity"
@@ -26,7 +26,7 @@ const Index = () => {
             <img 
               src={logoDivino}
               alt="Divino Alimento"
-              className="w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] lg:w-[160px] lg:h-[160px] object-contain"
+              className="w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] lg:w-[200px] lg:h-[200px] object-contain"
             />
           </button>
         </div>
@@ -66,19 +66,19 @@ const Index = () => {
 
         {/* Rodapé com logos */}
         <footer className="flex flex-col items-center gap-6 mb-12 lg:mb-16 mt-auto">
-          <div className="w-[120px] h-[2px] bg-[#2E7D32] opacity-40" />
-          <p className="text-[#4B5563] text-xs sm:text-[13px] lg:text-sm font-medium">desenvolvido por:</p>
-          <div className="flex items-center gap-7 sm:gap-10 lg:gap-[40px]">
+          <div className="w-[160px] h-[3px] bg-[#2E7D32] opacity-40" />
+          <p className="text-[#4B5563] text-sm sm:text-base lg:text-lg font-medium">desenvolvido por:</p>
+          <div className="flex items-center gap-8 sm:gap-12 lg:gap-[48px]">
             <img 
               src={logoAkarui}
               alt="Akarui"
-              className="h-9 sm:h-12 lg:h-[60px] object-contain"
+              className="h-12 sm:h-16 lg:h-[80px] object-contain"
               style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
             />
             <img 
               src={logoTekopora}
               alt="Tekoporã"
-              className="h-9 sm:h-12 lg:h-[60px] object-contain"
+              className="h-12 sm:h-16 lg:h-[80px] object-contain"
               style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
             />
           </div>
