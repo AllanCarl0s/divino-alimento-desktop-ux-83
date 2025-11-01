@@ -32,6 +32,8 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
   admin: [
     '/admin/*',
     '/oferta/*',
+    '/usuario-index',
+    '/usuario/1',
   ],
   admin_mercado: [
     '/adminmercado/*',
