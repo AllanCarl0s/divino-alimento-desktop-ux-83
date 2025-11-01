@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { 
-  LogOut, 
   Store, 
   DollarSign, 
   RefreshCcw, 
@@ -17,15 +16,10 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { UserMenu } from '@/components/layout/UserMenu';
 
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const shortcuts = [
     {
@@ -60,17 +54,7 @@ const AdminMercadoDashboard = () => {
 
   return (
     <ResponsiveLayout 
-      headerContent={
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={handleLogout}
-          className="focus-ring text-primary-foreground hover:bg-primary-hover"
-        >
-          <LogOut className="w-4 h-4 mr-1" />
-          <span className="hidden md:inline">Sair</span>
-        </Button>
-      }
+      headerContent={<UserMenu />}
     >
       {/* Desktop Layout */}
       <div className="space-y-6 md:space-y-8">

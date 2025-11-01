@@ -2,25 +2,18 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
-import { ShoppingCart, FileText, Wallet, UserCircle, ChevronRight, ArrowLeft, ShoppingBasket, LogOut } from 'lucide-react';
+import { ShoppingCart, FileText, Wallet, UserCircle, ChevronRight, ArrowLeft, ShoppingBasket } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useConsumer } from '@/contexts/ConsumerContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { useCycle } from '@/hooks/useCycle';
 import { Button } from '@/components/ui/button';
 import { formatBRL } from '@/utils/currency';
-import { ProfileSwitcher } from '@/components/layout/ProfileSwitcher';
+import { UserMenu } from '@/components/layout/UserMenu';
 
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { currentCycle } = useCycle();
-  const { logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const acoes = [
     {
@@ -64,18 +57,7 @@ const Dashboard = () => {
   return (
     <ResponsiveLayout
       headerContent={
-        <div className="flex items-center gap-2">
-          <ProfileSwitcher />
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={handleLogout}
-            className="focus-ring text-primary-foreground hover:bg-primary-hover"
-          >
-            <LogOut className="w-4 h-4 mr-1" />
-            <span className="hidden md:inline">Sair</span>
-          </Button>
-        </div>
+        <UserMenu />
       }
     >
       <div className="space-y-6">
