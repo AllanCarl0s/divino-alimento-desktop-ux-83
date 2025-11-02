@@ -49,6 +49,7 @@ import AdminPagamentosGerir from "./pages/admin/AdminPagamentosGerir";
 import Usuarios from "./pages/Usuarios";
 import UsuarioIndex from "./pages/UsuarioIndex";
 import UsuarioDados from "./pages/UsuarioDados";
+import UsuarioNovo from "./pages/UsuarioNovo";
 import AdminMercadoDashboard from './pages/adminmercado/AdminMercadoDashboard';
 import AdminMercadoMercados from './pages/adminmercado/AdminMercadoMercados';
 import AdminMercadoPrecos from './pages/adminmercado/AdminMercadoPrecos';
@@ -138,6 +139,7 @@ const App = () => (
           <Route path="/admin/migrar-ofertas/:destinoId" element={<ProtectedRoute><AdminMigrarOfertas /></ProtectedRoute>} />
           <Route path="/admin/pagamentos-gerar" element={<ProtectedRoute><AdminPagamentosGerar /></ProtectedRoute>} />
           <Route path="/admin/pagamentos-gerir" element={<ProtectedRoute><AdminPagamentosGerir /></ProtectedRoute>} />
+          <Route path="/usuario" element={<ProtectedRoute><UsuarioNovo /></ProtectedRoute>} />
           <Route path="/usuarios" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
           <Route path="/usuario-index" element={<ProtectedRoute><UsuarioIndex /></ProtectedRoute>} />
           <Route path="/usuario/:id" element={<ProtectedRoute><UsuarioDados /></ProtectedRoute>} />
