@@ -133,7 +133,7 @@ const MinhaCesta = () => {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gradient-primary">Minha Cesta</h1>
+          <h1 className="text-3xl font-bold text-gradient-primary">Consumidor - Minha Cesta</h1>
           <p className="text-muted-foreground mt-2">
             Itens da sua cesta no ciclo atual
           </p>
