@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -126,11 +126,36 @@ export default function OfertaCiclo() {
   };
 
   return (
-    <AuthenticatedLayout
-      pageTitle="Fornecedor - Ofertar Alimentos"
-      pageSubtitle={`${ciclo.nome} - Período: ${ciclo.inicioOfertas} – ${ciclo.fimOfertas}`}
+    <ResponsiveLayout
+      leftHeaderContent={
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/admin/ciclo-index')}
+          className="text-white hover:bg-white/20"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+      }
     >
-      <div className="space-y-6 p-4 md:p-6">
+      <div className="space-y-6">
+        {/* Cabeçalho com informações do ciclo */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-2xl">{ciclo.nome}</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Período: {ciclo.inicioOfertas} – {ciclo.fimOfertas}
+                </p>
+              </div>
+              <Badge variant={periodoAberto ? "success" : "destructive"}>
+                {periodoAberto ? "Período de oferta aberto" : "Período encerrado"}
+              </Badge>
+            </div>
+          </CardHeader>
+        </Card>
+
         {/* Barra de progresso */}
         <div className="flex items-center justify-center gap-4 py-4">
           <div className="flex items-center gap-2">
@@ -412,6 +437,6 @@ export default function OfertaCiclo() {
           </Card>
         )}
       </div>
-    </AuthenticatedLayout>
+    </ResponsiveLayout>
   );
 }

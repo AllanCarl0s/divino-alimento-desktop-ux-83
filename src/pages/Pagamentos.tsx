@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
+import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { ArrowLeft, CreditCard, Receipt, AlertTriangle, CheckCircle2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -108,11 +108,27 @@ const Pagamentos = () => {
     .reduce((sum, p) => sum + p.amount, 0);
 
   return (
-    <AuthenticatedLayout
-      pageTitle="Consumidor - Pagamentos"
-      pageSubtitle="Gerencie suas assinaturas e compras"
+    <ResponsiveLayout 
+      leftHeaderContent={
+        <Button 
+          variant="ghost" 
+          size="icon-sm"
+          onClick={() => navigate('/dashboard')}
+          className="text-primary-foreground hover:bg-primary-hover"
+        >
+          <ArrowLeft className="w-4 h-4" />
+        </Button>
+      }
     >
       <div className="container mx-auto max-w-4xl px-4 space-y-6">
+        <div className="text-center">
+          <h1 className="font-poppins text-2xl font-bold text-gradient-primary mb-2 flex items-center justify-center">
+            <CreditCard className="w-6 h-6 mr-2" />
+            Pagamentos
+          </h1>
+          <p className="text-muted-foreground">Gerencie suas assinaturas e compras</p>
+        </div>
+
         {/* Pending Payments Alert */}
         {pendingTotal > 0 && (
           <Card className="bg-destructive/10 border-destructive/20">
@@ -256,7 +272,7 @@ const Pagamentos = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </AuthenticatedLayout>
+    </ResponsiveLayout>
   );
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
+import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { 
   ArrowLeft,
   ShoppingBag,
@@ -15,6 +15,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 // Mock data - in real app would come from API/context
 const mockFornecedorData = {
@@ -80,11 +81,29 @@ const LojaProdutor = () => {
   ];
 
   return (
-    <AuthenticatedLayout
-      pageTitle="Fornecedor - Loja Produtor"
-      pageSubtitle="Gerencie seus produtos e entregas"
+    <ResponsiveLayout 
+      leftHeaderContent={
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/dashboard')}
+          className="text-white hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+      }
+      headerContent={
+        <UserMenuLarge />
+      }
     >
       <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-primary">
+            Painel fornecedor @
+          </h1>
+        </div>
+
         {/* Loja */}
         <div>
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -143,7 +162,7 @@ const LojaProdutor = () => {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </ResponsiveLayout>
   );
 };
 

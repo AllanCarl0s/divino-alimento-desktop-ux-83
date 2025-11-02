@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { 
   Store, 
   DollarSign, 
@@ -15,6 +15,8 @@ import {
   UserCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
@@ -51,12 +53,11 @@ const AdminMercadoDashboard = () => {
   ];
 
   return (
-    <AuthenticatedLayout
-      pageTitle="Administrador de Mercado - Painel"
-      pageSubtitle="Gerencie ciclos, mercados, ofertas e relatórios do seu mercado"
+    <ResponsiveLayout 
+      headerContent={<UserMenuLarge />}
     >
       {/* Desktop Layout */}
-      <div className="space-y-6 md:space-y-8 p-4 md:p-6">
+      <div className="space-y-6 md:space-y-8">
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between">
           <div>
@@ -237,7 +238,7 @@ const AdminMercadoDashboard = () => {
           </CardContent>
         </Card>
       </div>
-    </AuthenticatedLayout>
+    </ResponsiveLayout>
   );
 };
 

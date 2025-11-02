@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
+import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { 
   Store, 
   Package, 
@@ -22,6 +22,8 @@ import {
   Wallet
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -76,12 +78,11 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <AuthenticatedLayout
-      pageTitle="Administrador - Painel Administrativo"
-      pageSubtitle="Gerencie o ecossistema Divino Alimento"
+    <ResponsiveLayout 
+      headerContent={<UserMenuLarge />}
     >
       {/* Desktop Layout */}
-      <div className="space-y-6 md:space-y-8 p-4 md:p-6">
+      <div className="space-y-6 md:space-y-8">
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between">
           <div>
@@ -319,7 +320,7 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
       </div>
-    </AuthenticatedLayout>
+    </ResponsiveLayout>
   );
 };
 

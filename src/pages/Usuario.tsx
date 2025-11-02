@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
+import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -120,11 +120,28 @@ const Usuario = () => {
   };
 
   return (
-    <AuthenticatedLayout
-      pageTitle={isEdit ? 'Dados Pessoais' : 'Novo Usuário'}
-      pageSubtitle={isEdit ? 'Atualize suas informações' : 'Preencha os dados do novo usuário'}
+    <ResponsiveLayout
+      leftHeaderContent={
+        <Button 
+          variant="ghost" 
+          size="icon-sm"
+          onClick={handleCancel}
+          className="text-primary-foreground hover:bg-primary-hover"
+        >
+          <ArrowLeft className="w-4 h-4" />
+        </Button>
+      }
     >
-      <div className="max-w-2xl mx-auto space-y-6 p-4 md:p-6">
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
+            {isEdit ? 'Editar Usuário' : 'Novo Usuário'}
+          </h1>
+          <p className="text-sm md:text-base text-muted-foreground">
+            {isEdit ? 'Atualize as informações do usuário' : 'Preencha os dados do novo usuário'}
+          </p>
+        </div>
+
         <Card>
           <CardHeader>
             <CardTitle>Dados do Usuário</CardTitle>
@@ -301,7 +318,7 @@ const Usuario = () => {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </ResponsiveLayout>
   );
 };
 

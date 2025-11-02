@@ -1,13 +1,14 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { ShoppingCart, FileText, Wallet, UserCircle, ChevronRight, ArrowLeft, ShoppingBasket } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useConsumer } from '@/contexts/ConsumerContext';
 import { useCycle } from '@/hooks/useCycle';
 import { Button } from '@/components/ui/button';
 import { formatBRL } from '@/utils/currency';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 
 const Dashboard = () => {
@@ -54,11 +55,22 @@ const Dashboard = () => {
   ];
 
   return (
-    <AuthenticatedLayout
-      pageTitle="Consumidor - Dashboard"
-      pageSubtitle="Gerencie suas cestas e pedidos"
+    <ResponsiveLayout
+      headerContent={
+        <UserMenuLarge />
+      }
     >
-      <div className="space-y-6 p-4 md:p-6">
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">
+            Bem-vindo e bem-vinda à plataforma do Divino Alimento
+          </h1>
+          <p className="text-sm md:text-base text-muted-foreground mt-1">
+            Gerencie suas cestas e pedidos
+          </p>
+        </div>
+
         {/* Resumo do Ciclo Atual */}
         <div className="mb-8 bg-white rounded-[14px] shadow-[0px_2px_10px_rgba(0,0,0,0.05)] overflow-hidden">
           {/* Cabeçalho */}
@@ -208,7 +220,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </ResponsiveLayout>
   );
 };
 
