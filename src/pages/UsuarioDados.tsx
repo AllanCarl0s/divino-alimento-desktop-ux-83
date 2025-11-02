@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { ArrowLeft, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import InputMask from 'react-input-mask';
 import { 
   validarCelular, 
@@ -22,6 +23,7 @@ const UsuarioDados = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { activeRole } = useAuth();
 
   const [formData, setFormData] = useState({
     nomeCompleto: 'João da Silva',
@@ -103,7 +105,24 @@ const UsuarioDados = () => {
         title: "Sucesso",
         description: "Dados atualizados com sucesso",
       });
-      navigate('/admin/dashboard');
+      
+      // Redirecionar baseado no perfil ativo
+      switch (activeRole) {
+        case 'consumidor':
+          navigate('/dashboard');
+          break;
+        case 'fornecedor':
+          navigate('/fornecedor/loja');
+          break;
+        case 'admin_mercado':
+          navigate('/adminmercado/dashboard');
+          break;
+        case 'admin':
+          navigate('/admin/dashboard');
+          break;
+        default:
+          navigate('/dashboard');
+      }
     } else {
       toast({
         title: "Erro",
@@ -114,7 +133,23 @@ const UsuarioDados = () => {
   };
 
   const handleCancel = () => {
-    navigate('/admin/dashboard');
+    // Redirecionar baseado no perfil ativo
+    switch (activeRole) {
+      case 'consumidor':
+        navigate('/dashboard');
+        break;
+      case 'fornecedor':
+        navigate('/fornecedor/loja');
+        break;
+      case 'admin_mercado':
+        navigate('/adminmercado/dashboard');
+        break;
+      case 'admin':
+        navigate('/admin/dashboard');
+        break;
+      default:
+        navigate('/dashboard');
+    }
   };
 
   return (
