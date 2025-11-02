@@ -108,8 +108,8 @@ const Register = () => {
     const errors: string[] = [];
     
     if (!data.name.trim()) errors.push('Nome é obrigatório');
-    if (!data.phone.trim()) errors.push('Celular é obrigatório');
-    else if (!/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(data.phone)) errors.push('Celular inválido');
+    if (!data.phone.trim()) errors.push('Telefone é obrigatório');
+    else if (!/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(data.phone)) errors.push('Telefone inválido');
     if (!data.email.trim()) errors.push('E-mail é obrigatório');
     else if (!/\S+@\S+\.\S+/.test(data.email)) errors.push('E-mail inválido');
     if (!data.confirmEmail.trim()) errors.push('Confirmação de e-mail é obrigatória');
@@ -254,7 +254,7 @@ const Register = () => {
                         name="phone"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Celular</FormLabel>
+                            <FormLabel>Telefone</FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <Phone className="absolute left-3 top-3 w-4 h-4 lg:w-5 lg:h-5 text-muted-foreground" />

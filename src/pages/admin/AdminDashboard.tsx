@@ -1,138 +1,324 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import { LayoutDashboard, Users, Package, ShoppingCart, TrendingUp, Calendar, FileText, Settings } from 'lucide-react';
+import { 
+  Store, 
+  Package, 
+  Warehouse, 
+  ShoppingCart, 
+  FileText, 
+  Settings,
+  Users,
+  TrendingUp,
+  Calendar,
+  DollarSign,
+  FolderTree,
+  RefreshCcw,
+  Truck,
+  ShoppingBag,
+  ReceiptText,
+  Wallet
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
-  const menuItems = [
+
+  const gestaoAlimentos = [
     {
-      title: 'Gestão de Mercados',
-      icon: LayoutDashboard,
-      description: 'Gerenciar mercados locais',
-      path: '/admin/mercados',
-      color: 'text-blue-600'
+      title: 'Cadastro de Alimentos',
+      description: 'Gerencie seu portfólio de alimentos',
+      icon: Package,
+      route: '/admin/alimentos'
     },
+    {
+      title: 'Cadastro de Mercados',
+      description: 'Gerenciar mercados e pontos de venda',
+      icon: Store,
+      route: '/admin/mercados'
+    },
+    {
+      title: 'Gestão Preço por Mercado',
+      description: 'Definir preços específicos por mercado',
+      icon: DollarSign,
+      route: '/admin/precos'
+    },
+    {
+      title: 'Gestão de Preço e Peso dos Alimentos',
+      description: 'Gerenciar variações comerciais por unidade, peso e preço',
+      icon: ShoppingCart,
+      route: '/admin/produtos-comercializaveis'
+    },
+    {
+      title: 'Categorias de Produtos',
+      description: 'Gerenciar categorias dos produtos comercializados',
+      icon: FolderTree,
+      route: '/admin/categorias'
+    }
+  ];
+
+  const administracaoGeral = [
     {
       title: 'Usuários',
+      description: 'Gerenciar perfis e acessos',
       icon: Users,
-      description: 'Gerenciar usuários do sistema',
-      path: '/usuarios',
-      color: 'text-green-600'
+      route: '/usuario-index'
     },
     {
-      title: 'Produtos',
-      icon: Package,
-      description: 'Cadastrar e gerenciar produtos',
-      path: '/admin/alimentos',
-      color: 'text-orange-600'
-    },
-    {
-      title: 'Categorias',
-      icon: ShoppingCart,
-      description: 'Gerenciar categorias de produtos',
-      path: '/admin/categorias',
-      color: 'text-purple-600'
-    },
-    {
-      title: 'Ciclos',
-      icon: Calendar,
-      description: 'Gerenciar ciclos de venda',
-      path: '/admin/ciclo-index',
-      color: 'text-cyan-600'
-    },
-    {
-      title: 'Preços',
-      icon: TrendingUp,
-      description: 'Gerenciar preços dos produtos',
-      path: '/admin/precos',
-      color: 'text-pink-600'
-    },
-    {
-      title: 'Relatórios',
-      icon: FileText,
-      description: 'Visualizar relatórios',
-      path: '/admin/relatorio-consumidores',
-      color: 'text-indigo-600'
-    },
-    {
-      title: 'Pagamentos',
-      icon: Settings,
-      description: 'Gerenciar pagamentos',
-      path: '/admin/pagamentos-gerir',
-      color: 'text-red-600'
+      title: 'Dados Pessoais',
+      description: 'Atualize seus dados pessoais',
+      icon: Users,
+      route: '/usuario/1'
     }
   ];
 
   return (
-    <ResponsiveLayout showHeader={true}>
-      <div className="container mx-auto py-8 px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">
-            Painel Administrativo
-          </h1>
-          <p className="text-muted-foreground lg:text-lg">
-            Gerencie todo o sistema através do menu abaixo
-          </p>
+    <ResponsiveLayout 
+      headerContent={<UserMenuLarge />}
+    >
+      {/* Desktop Layout */}
+      <div className="space-y-6 md:space-y-8">
+        {/* Header */}
+        <div className="md:flex md:items-center md:justify-between">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
+              Painel Administrativo
+            </h1>
+            <p className="text-sm md:text-base text-muted-foreground">
+              Gerencie o ecossistema Divino Alimento
+            </p>
+          </div>
+          <div className="hidden md:block">
+            <Badge className="bg-gradient-to-r from-primary to-accent text-white">
+              Sistema Online
+            </Badge>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {menuItems.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <Card 
-                key={index}
-                className="hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                onClick={() => navigate(item.path)}
-              >
-                <CardHeader>
-                  <div className="flex items-center space-x-3">
-                    <div className={`p-3 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors`}>
-                      <Icon className={`w-6 h-6 ${item.color} group-hover:scale-110 transition-transform`} />
-                    </div>
-                    <CardTitle className="text-lg">{item.title}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    {item.description}
+        {/* Gestão de Ciclo */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <RefreshCcw className="w-5 h-5 mr-2 text-primary" />
+            Gestão de Ciclo
+          </h2>
+          
+          <Card 
+            className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+            onClick={() => navigate('/admin/ciclo-index')}
+          >
+            <CardHeader className="pb-3 md:pb-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                  <RefreshCcw className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-sm md:text-base font-poppins">
+                    Ciclos
+                  </CardTitle>
+                  <p className="text-xs md:text-sm text-muted-foreground">
+                    Gerencie períodos de oferta e operação por mercado
                   </p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        <div className="mt-12">
-          <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
-            <CardHeader>
-              <CardTitle className="text-xl">Bem-vindo ao Sistema Administrativo</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
-                Este é o painel de controle administrativo. Aqui você pode gerenciar todos os aspectos da plataforma, 
-                incluindo usuários, produtos, mercados, ciclos de venda e muito mais.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                <div className="text-center p-4 bg-background rounded-lg">
-                  <div className="text-3xl font-bold text-primary mb-1">--</div>
-                  <div className="text-sm text-muted-foreground">Usuários Ativos</div>
-                </div>
-                <div className="text-center p-4 bg-background rounded-lg">
-                  <div className="text-3xl font-bold text-accent mb-1">--</div>
-                  <div className="text-sm text-muted-foreground">Ciclos Ativos</div>
-                </div>
-                <div className="text-center p-4 bg-background rounded-lg">
-                  <div className="text-3xl font-bold text-secondary mb-1">--</div>
-                  <div className="text-sm text-muted-foreground">Produtos Cadastrados</div>
                 </div>
               </div>
-            </CardContent>
+            </CardHeader>
           </Card>
         </div>
+
+        {/* Gestão de Alimentos */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <Package className="w-5 h-5 mr-2 text-primary" />
+            Gestão de Alimentos
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            {gestaoAlimentos.map((item, index) => (
+              <Card 
+                key={index}
+                className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] md:hover:scale-105"
+                onClick={() => navigate(item.route)}
+              >
+                <CardHeader className="pb-3 md:pb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                      <item.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-sm md:text-base font-poppins truncate">
+                        {item.title}
+                      </CardTitle>
+                      <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Relatórios Section */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <FileText className="w-5 h-5 mr-2 text-primary" />
+            Relatórios
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            {/* Card - Relatório Fornecedores */}
+            <Card 
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+              onClick={() => navigate('/admin/relatorio-fornecedores')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-primary/10 rounded-full border-2 border-primary">
+                    <Truck className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
+                      Relatório Fornecedores
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Escolha os ciclos e gere o relatório com todas as movimentações dos fornecedores (entregas, valores e quantidades).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Card - Relatório Consumidores */}
+            <Card 
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+              onClick={() => navigate('/admin/relatorio-consumidores')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-primary/10 rounded-full border-2 border-primary">
+                    <ShoppingBag className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
+                      Relatório Consumidores
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Escolha os ciclos e gere o relatório com todas as movimentações dos consumidores (por produto ou por cliente).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Pagamentos Section */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <Wallet className="w-5 h-5 mr-2 text-primary" />
+            Pagamentos
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            {/* Card - Lista de Pagamentos */}
+            <Card 
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+              onClick={() => navigate('/admin/pagamentos-gerar')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-primary/10 rounded-full border-2 border-primary">
+                    <ReceiptText className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
+                      Lista de Pagamentos
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Registros de pagamentos de consumidores e fornecedores
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Card - Editar Lista de Pagamentos */}
+            <Card 
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+              onClick={() => navigate('/admin/pagamentos-gerir')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-primary/10 rounded-full border-2 border-primary">
+                    <Wallet className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
+                      Editar Lista de Pagamentos
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Acompanhe, edite e registre os pagamentos pendentes e realizados
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Administração Geral */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <Settings className="w-5 h-5 mr-2 text-primary" />
+            Administração Geral
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            {administracaoGeral.map((item, index) => (
+              <Card 
+                key={index}
+                className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] md:hover:scale-105"
+                onClick={() => navigate(item.route)}
+              >
+                <CardHeader className="pb-3 md:pb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                      <item.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-sm md:text-base font-poppins truncate">
+                        {item.title}
+                      </CardTitle>
+                      <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* System Status */}
+        <Card className="bg-gradient-to-br from-primary/5 to-accent/5">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <p className="font-medium text-sm md:text-base">Sistema Operacional</p>
+              </div>
+              <p className="text-xs md:text-sm text-muted-foreground">
+                Última sincronização: {new Date().toLocaleString('pt-BR')}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </ResponsiveLayout>
   );
