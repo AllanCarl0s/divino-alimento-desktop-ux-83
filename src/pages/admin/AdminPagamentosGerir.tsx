@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
+import { UserMenuLarge } from "@/components/layout/UserMenuLarge";
 
 interface Pagamento {
   id: string;
@@ -161,6 +162,7 @@ const AdminPagamentosGerir = () => {
 
   return (
     <ResponsiveLayout
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <Button
           variant="ghost"

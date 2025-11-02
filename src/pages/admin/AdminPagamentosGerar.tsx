@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
+import { UserMenuLarge } from "@/components/layout/UserMenuLarge";
 
 interface Ciclo {
   id: string;
@@ -182,6 +183,7 @@ const AdminPagamentosGerar = () => {
 
   return (
     <ResponsiveLayout
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <Button
           variant="ghost"

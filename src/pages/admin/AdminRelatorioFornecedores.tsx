@@ -6,6 +6,7 @@ import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { ArrowLeft, FileDown, Truck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 // Mock data - ciclos disponíveis
 const ciclosDisponiveis = [
@@ -53,6 +54,7 @@ const AdminRelatorioFornecedores = () => {
 
   return (
     <ResponsiveLayout
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <button
           onClick={() => navigate('/admin/dashboard')}
