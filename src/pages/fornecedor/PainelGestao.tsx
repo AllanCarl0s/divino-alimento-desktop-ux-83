@@ -244,7 +244,7 @@ const PainelGestao = () => {
         {/* Header with Export Button */}
         <div className="flex flex-col space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Painel de Gestão</h1>
+            <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Fornecedor - Painel de Gestão</h1>
             <p className="text-sm lg:text-base text-muted-foreground">Histórico de entregas e comprovantes</p>
           </div>
           <Button

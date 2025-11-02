@@ -133,7 +133,7 @@ export default function FornecedorEntregas() {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Relatório de Entregas
+            Fornecedor - Relatório de Entregas
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Visualize e exporte suas entregas no ciclo selecionado

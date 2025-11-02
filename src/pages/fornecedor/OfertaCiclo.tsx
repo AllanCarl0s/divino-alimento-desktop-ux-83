@@ -144,7 +144,7 @@ export default function OfertaCiclo() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-2xl">{ciclo.nome}</CardTitle>
+                <CardTitle className="text-2xl">Fornecedor - {ciclo.nome}</CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">
                   Período: {ciclo.inicioOfertas} – {ciclo.fimOfertas}
                 </p>

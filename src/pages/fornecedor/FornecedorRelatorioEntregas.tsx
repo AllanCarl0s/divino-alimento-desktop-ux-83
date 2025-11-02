@@ -67,7 +67,7 @@ const FornecedorRelatorioEntregas = () => {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gradient-primary">
-            Relatório de Entregas
+            Fornecedor - Relatório de Entregas
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Veja o que entregar por ciclo (produtos, quantidades, local e horário)

@@ -108,7 +108,7 @@ const FornecedorPagamentos = () => {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gradient-primary">
-            Meus Pagamentos
+            Fornecedor - Meus Pagamentos
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Acompanhe registros a receber e pagos

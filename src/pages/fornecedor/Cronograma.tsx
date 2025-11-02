@@ -56,7 +56,7 @@ const Cronograma = () => {
       <div className="space-y-4 lg:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Cronograma de Colheitas</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Fornecedor - Cronograma de Colheitas</h1>
           <p className="text-sm lg:text-base text-muted-foreground">
             Acompanhe o desenvolvimento dos seus produtos
           </p>

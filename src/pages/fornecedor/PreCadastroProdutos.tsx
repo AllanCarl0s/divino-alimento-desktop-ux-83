@@ -213,7 +213,7 @@ const PreCadastroProdutos = () => {
           <CardHeader className="pb-4">
             <CardTitle className="font-poppins text-xl lg:text-2xl text-gradient-primary flex items-center space-x-2">
               <Package className="w-5 h-5 lg:w-6 lg:h-6" />
-              <span>Pré-cadastro de Produto</span>
+              <span>Fornecedor - Pré-cadastro de Produto</span>
             </CardTitle>
             <p className="text-sm lg:text-base text-muted-foreground">
               Cadastre seus produtos para ofertar nos ciclos

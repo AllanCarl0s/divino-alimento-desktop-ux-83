@@ -225,7 +225,7 @@ const ProdutosVencidos = () => {
           <div>
             <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary flex items-center space-x-2">
               <AlertTriangle className="w-7 h-7 text-red-500" />
-              <span>Produtos com Validade Vencida</span>
+              <span>Fornecedor - Produtos com Validade Vencida</span>
             </h1>
             <p className="text-sm lg:text-base text-muted-foreground">
               Controle de produtos retirados por vencimento

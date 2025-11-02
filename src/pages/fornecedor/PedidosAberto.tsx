@@ -237,7 +237,7 @@ const PedidosAberto = () => {
         <div className="lg:flex lg:items-center lg:justify-between">
           <div>
             <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-              Pedidos em Aberto
+              Fornecedor - Pedidos em Aberto
             </h1>
             <div className="flex flex-wrap items-center gap-4 mt-2 text-sm">
               <div>

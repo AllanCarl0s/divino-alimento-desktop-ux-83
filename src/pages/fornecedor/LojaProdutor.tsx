@@ -100,7 +100,7 @@ const LojaProdutor = () => {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-primary">
-            Painel fornecedor @
+            Fornecedor - Painel fornecedor @
           </h1>
         </div>
 

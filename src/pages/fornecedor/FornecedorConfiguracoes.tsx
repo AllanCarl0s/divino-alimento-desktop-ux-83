@@ -53,7 +53,7 @@ const FornecedorConfiguracoes = () => {
       <div className="space-y-4 lg:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Configurações</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Fornecedor - Configurações</h1>
           <p className="text-sm lg:text-base text-muted-foreground">Gerencie suas preferências e dados</p>
         </div>
 
