@@ -129,6 +129,7 @@ const App = () => (
           <Route path="/oferta/:id" element={<ProtectedRoute><AdminOferta /></ProtectedRoute>} />
           <Route path="/admin/composicao-cesta/:id" element={<ProtectedRoute><AdminComposicaoCesta /></ProtectedRoute>} />
           <Route path="/admin/composicao-lote/:id" element={<ProtectedRoute><AdminComposicaoLote /></ProtectedRoute>} />
+          <Route path="/admin/composicao-venda-direta/:id" element={<ProtectedRoute><AdminComposicaoVendaDiretaLiberar /></ProtectedRoute>} />
           <Route path="/admin/composicao-venda-direta-liberar/:id" element={<ProtectedRoute><AdminComposicaoVendaDiretaLiberar /></ProtectedRoute>} />
           <Route path="/admin/entregas-fornecedores/:id" element={<ProtectedRoute><AdminEntregasFornecedores /></ProtectedRoute>} />
           <Route path="/admin/pedidos-consumidores/:id" element={<ProtectedRoute><AdminPedidosConsumidores /></ProtectedRoute>} />
