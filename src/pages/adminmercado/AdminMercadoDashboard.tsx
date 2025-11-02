@@ -12,7 +12,8 @@ import {
   ShoppingBag, 
   ReceiptText,
   Wallet,
-  UserCircle
+  Settings,
+  Package
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -21,34 +22,18 @@ import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
 
-  const shortcuts = [
+  const gestaoAlimentos = [
     {
       title: 'Cadastrar/Editar Mercados',
       description: 'Gerencie os dados do mercado que administra.',
       icon: Store,
-      route: '/adminmercado/mercados',
-      badge: null
+      route: '/adminmercado/mercados'
     },
     {
       title: 'Gerenciar Preços por Mercado',
       description: 'Defina preços específicos por produto e mercado.',
       icon: DollarSign,
-      route: '/adminmercado/precos',
-      badge: null
-    },
-    {
-      title: 'Criar/Editar Ciclo',
-      description: 'Configure e edite ciclos de vendas e ofertas.',
-      icon: RefreshCcw,
-      route: '/adminmercado/ciclo-index',
-      badge: null
-    },
-    {
-      title: 'Dados Pessoais',
-      description: 'Atualize seus dados pessoais',
-      icon: UserCircle,
-      route: '/usuario/1',
-      badge: null
+      route: '/adminmercado/precos'
     }
   ];
 
@@ -75,42 +60,65 @@ const AdminMercadoDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions - Desktop Grid, Mobile List */}
+        {/* Gestão de Ciclo */}
         <div>
           <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
             <RefreshCcw className="w-5 h-5 mr-2 text-primary" />
-            Ações Rápidas
+            Gestão de Ciclo
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {shortcuts.map((shortcut, index) => (
-              <div key={index} className="relative">
-                {shortcut.badge && (
-                  <Badge variant="outline" className="absolute -top-2 -right-2 z-10 text-xs bg-background border-destructive text-destructive">
-                    {shortcut.badge}
-                  </Badge>
-                )}
-                <Card 
-                  className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] md:hover:scale-105"
-                  onClick={() => navigate(shortcut.route)}
-                >
-                  <CardHeader className="pb-3 md:pb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
-                        <shortcut.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <CardTitle className="text-sm md:text-base font-poppins truncate">
-                          {shortcut.title}
-                        </CardTitle>
-                        <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
-                          {shortcut.description}
-                        </p>
-                      </div>
-                    </div>
-                  </CardHeader>
-                </Card>
+          <Card 
+            className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+            onClick={() => navigate('/adminmercado/ciclo-index')}
+          >
+            <CardHeader className="pb-3 md:pb-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                  <RefreshCcw className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-sm md:text-base font-poppins">
+                    Criar/Editar Ciclo
+                  </CardTitle>
+                  <p className="text-xs md:text-sm text-muted-foreground">
+                    Configure e edite ciclos de vendas e ofertas.
+                  </p>
+                </div>
               </div>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Gestão de Alimentos */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <Package className="w-5 h-5 mr-2 text-primary" />
+            Gestão de Alimentos
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            {gestaoAlimentos.map((item, index) => (
+              <Card 
+                key={index}
+                className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] md:hover:scale-105"
+                onClick={() => navigate(item.route)}
+              >
+                <CardHeader className="pb-3 md:pb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                      <item.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-sm md:text-base font-poppins truncate">
+                        {item.title}
+                      </CardTitle>
+                      <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+              </Card>
             ))}
           </div>
         </div>
@@ -125,7 +133,7 @@ const AdminMercadoDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {/* Card - Relatório Fornecedores por Ciclo */}
             <Card 
-              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               onClick={() => navigate('/adminmercado/relatorios/fornecedores-ciclo')}
             >
               <CardContent className="p-6">
@@ -147,7 +155,7 @@ const AdminMercadoDashboard = () => {
 
             {/* Card - Relatório Consumidores por Ciclo */}
             <Card 
-              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               onClick={() => navigate('/adminmercado/relatorios/consumidores-ciclo')}
             >
               <CardContent className="p-6">
@@ -179,7 +187,7 @@ const AdminMercadoDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {/* Card - Gerar Lista de Pagamentos */}
             <Card 
-              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               onClick={() => navigate('/adminmercado/pagamentos/gerar')}
             >
               <CardContent className="p-6">
@@ -201,7 +209,7 @@ const AdminMercadoDashboard = () => {
 
             {/* Card - Gerir Lista de Pagamentos */}
             <Card 
-              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02] border-2 border-primary"
+              className="shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-[1.02]"
               onClick={() => navigate('/adminmercado/pagamentos/gerir')}
             >
               <CardContent className="p-6">
@@ -221,6 +229,35 @@ const AdminMercadoDashboard = () => {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Administração Geral */}
+        <div>
+          <h2 className="font-semibold mb-4 md:mb-6 flex items-center text-lg md:text-xl">
+            <Settings className="w-5 h-5 mr-2 text-primary" />
+            Administração Geral
+          </h2>
+          
+          <Card 
+            className="shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+            onClick={() => navigate('/usuario/1')}
+          >
+            <CardHeader className="pb-3 md:pb-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 md:p-3 bg-primary/10 rounded-lg">
+                  <Settings className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-sm md:text-base font-poppins">
+                    Dados Pessoais
+                  </CardTitle>
+                  <p className="text-xs md:text-sm text-muted-foreground">
+                    Atualize seus dados pessoais
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
         </div>
 
         {/* System Status */}
