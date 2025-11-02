@@ -8,6 +8,7 @@ import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { ArrowLeft, Wallet, DollarSign, CheckCircle, Clock, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatBRL } from '@/utils/currency';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 // Mock data
 const mockPagamentos = [
@@ -93,6 +94,7 @@ const FornecedorPagamentos = () => {
 
   return (
     <ResponsiveLayout 
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <Button
           variant="ghost"

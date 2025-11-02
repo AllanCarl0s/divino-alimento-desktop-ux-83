@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from '@/hooks/use-toast';
 import { Search, Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { formatBRLInput, parseBRLToNumber } from '@/utils/currency';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 interface ProdutoOfertado {
   id: string;
@@ -126,7 +127,8 @@ export default function OfertaCiclo() {
   };
 
   return (
-    <ResponsiveLayout
+    <ResponsiveLayout 
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <Button
           variant="ghost"

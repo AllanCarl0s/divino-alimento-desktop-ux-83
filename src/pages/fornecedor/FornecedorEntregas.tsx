@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ArrowLeft, Search, Download, FileText, Package } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { formatBRL } from '@/utils/currency';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 interface EntregaFornecedor {
   id: string;
@@ -91,6 +92,7 @@ export default function FornecedorEntregas() {
   if (entregas.length === 0) {
     return (
       <ResponsiveLayout 
+        headerContent={<UserMenuLarge />}
         leftHeaderContent={
           <Button 
             variant="ghost" 
@@ -118,6 +120,7 @@ export default function FornecedorEntregas() {
 
   return (
     <ResponsiveLayout 
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <Button 
           variant="ghost" 
