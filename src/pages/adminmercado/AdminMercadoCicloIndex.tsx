@@ -212,7 +212,7 @@ export default function AdminMercadoCicloIndex() {
     <ResponsiveLayout leftHeaderContent={<Button variant="ghost" size="icon" onClick={() => navigate('/adminmercado/dashboard')} className="text-white hover:bg-white/20"><ArrowLeft className="h-5 w-5" /></Button>}>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Gestão de Ciclos</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">Administrador de mercado - Gestão de Ciclos</h1>
           <p className="text-sm md:text-base text-muted-foreground">Acompanhe, edite e crie novos ciclos operacionais.</p>
         </div>
 

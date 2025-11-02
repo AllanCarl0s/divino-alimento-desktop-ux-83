@@ -270,7 +270,7 @@ const AdminMercadoMercados = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="text-left mb-4 lg:mb-0">
               <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-                Cadastro de Mercados
+                Administrador de mercado - Cadastro de Mercados
               </h1>
               <p className="text-sm lg:text-lg text-muted-foreground mt-2">
                 Gerencie mercados e pontos de entrega

@@ -88,7 +88,7 @@ export default function AdminMercadoPrecos() {
         {/* Header */}
         <div className="flex flex-col">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">Lista de Mercados – Gestão de Preços</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">Administrador de mercado - Lista de Mercados – Gestão de Preços</h1>
             <p className="text-muted-foreground">
               Selecione um mercado para definir preços específicos
             </p>

@@ -112,7 +112,7 @@ export default function AdminMercadoRelatorioFornecedores() {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Relatório de Entregas dos Fornecedores
+            Administrador de mercado - Relatório de Entregas dos Fornecedores
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Visualize e exporte as entregas realizadas para seu mercado neste ciclo

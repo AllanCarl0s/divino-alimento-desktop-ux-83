@@ -132,7 +132,7 @@ export default function AdminMercadoRelatorioConsumidores() {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Relatório de Pedidos dos Consumidores
+            Administrador de mercado - Relatório de Pedidos dos Consumidores
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Consulte e exporte os pedidos consolidados do seu mercado neste ciclo

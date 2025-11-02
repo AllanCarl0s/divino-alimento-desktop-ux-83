@@ -68,7 +68,7 @@ const AdminMercadoRelatorioFornecedoresCiclo = () => {
         <div>
           <h1 className="text-3xl font-bold text-gradient-primary flex items-center gap-2">
             <Truck className="w-8 h-8" />
-            Relatório de Pedidos dos Fornecedores
+            Administrador de mercado - Relatório de Pedidos dos Fornecedores
           </h1>
           <p className="text-muted-foreground mt-2">
             Selecione os ciclos do seu mercado para gerar o relatório consolidado.

@@ -219,7 +219,7 @@ export default function AdminMercadoMigrarOfertas() {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Migrar Ofertas de um Ciclo para Outro
+            Administrador de mercado - Migrar Ofertas de um Ciclo para Outro
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Copie as ofertas já configuradas em um ciclo anterior para este ciclo

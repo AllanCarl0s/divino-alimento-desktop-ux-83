@@ -284,7 +284,7 @@ export default function AdminMercadoComposicaoLote() {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Composição de Ofertas – {ciclo.mercado}
+            Administrador de mercado - Composição de Ofertas – {ciclo.mercado}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Configure os produtos, quantidades e valores que serão oferecidos neste ciclo
