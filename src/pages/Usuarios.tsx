@@ -12,6 +12,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Usuario {
   id: string;
@@ -22,6 +23,7 @@ interface Usuario {
 
 const Usuarios = () => {
   const navigate = useNavigate();
+  const { activeRole } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleLogout = () => {
@@ -77,7 +79,7 @@ const Usuarios = () => {
         <div className="md:flex md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Usuários
+              {activeRole === 'admin_mercado' ? 'Administrador de mercado - ' : ''}Usuários
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
               Gerenciar perfis e acessos do sistema

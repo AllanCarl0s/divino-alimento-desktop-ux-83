@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import InputMask from 'react-input-mask';
 import { 
   validarCelular, 
@@ -20,6 +21,7 @@ import {
 const UsuarioNovo = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { activeRole } = useAuth();
 
   const [formData, setFormData] = useState({
     nomeCompleto: '',
@@ -153,7 +155,7 @@ const UsuarioNovo = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-            Novo Usuário
+            {activeRole === 'admin_mercado' ? 'Administrador de mercado - ' : ''}Novo Usuário
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Cadastre um novo usuário no sistema

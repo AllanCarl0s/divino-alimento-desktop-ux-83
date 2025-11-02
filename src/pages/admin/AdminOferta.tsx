@@ -334,7 +334,7 @@ export default function AdminOferta() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                  {activeRole === 'fornecedor' ? 'Fornecedor - ' : ''}{mockCiclo.nome}
+                  {activeRole === 'fornecedor' ? 'Fornecedor - ' : activeRole === 'admin_mercado' ? 'Administrador de mercado - ' : ''}{mockCiclo.nome}
                 </h1>
                 <p className="text-sm text-muted-foreground mt-1">
                   Período: {format(mockCiclo.data_inicio_oferta, 'dd/MM/yyyy', { locale: ptBR })} - {format(mockCiclo.data_fim_oferta, 'dd/MM/yyyy', { locale: ptBR })}

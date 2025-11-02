@@ -21,6 +21,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { StatusToggle } from '@/components/ui/status-toggle';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Usuario {
   id: string;
@@ -33,6 +34,7 @@ interface Usuario {
 const UsuarioIndex = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { activeRole } = useAuth();
   const { 
     filters,
     debouncedSearch,
@@ -130,7 +132,7 @@ const UsuarioIndex = () => {
         <div className="md:flex md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Usuários
+              {activeRole === 'admin_mercado' ? 'Administrador de mercado - ' : ''}Usuários
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
               Gerenciar perfis e acessos do sistema
