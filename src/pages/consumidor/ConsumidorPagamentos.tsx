@@ -92,7 +92,7 @@ export default function ConsumidorPagamentos() {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Meus Pagamentos
+            Consumidor - Meus Pagamentos
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Acompanhe seus pagamentos (em aberto e quitados)
