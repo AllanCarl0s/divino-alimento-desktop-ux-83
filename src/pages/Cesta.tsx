@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { ShoppingBasket, Plus, Minus, ArrowLeft, CheckCircle2, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -145,33 +145,13 @@ const Cesta = () => {
   };
 
   return (
-    <ResponsiveLayout 
-      leftHeaderContent={
-        <Button 
-          variant="ghost" 
-          size="icon-sm"
-          onClick={() => navigate('/dashboard')}
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
-      }
+    <AuthenticatedLayout
+      pageTitle={`Consumidor - ${pageTitle}`}
+      pageSubtitle={periodText}
     >
       {/* Desktop Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 lg:p-0">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-6 lg:p-8">
         
-        {/* Header - 12 col */}
-        <div className="lg:col-span-12 text-center py-6">
-          <h1 className="font-poppins text-2xl lg:text-3xl font-bold text-gradient-primary mb-2 flex items-center justify-center">
-            {consumerType === 'cesta' ? (
-              <ShoppingBasket className="w-6 h-6 lg:w-8 lg:h-8 mr-2" />
-            ) : (
-              <ShoppingCart className="w-6 h-6 lg:w-8 lg:h-8 mr-2" />
-            )}
-            {pageTitle}
-          </h1>
-          <p className="text-muted-foreground lg:text-lg">{periodText}</p>
-        </div>
-
         {/* Cesta da Semana/Quinzena - Only show for cesta type */}
         {consumerType === 'cesta' && (
           <div className="lg:col-start-3 lg:col-span-8">
@@ -289,7 +269,7 @@ const Cesta = () => {
           </Button>
         </div>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 };
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -90,19 +90,11 @@ export default function FornecedorEntregas() {
   // Empty state when no entregas
   if (entregas.length === 0) {
     return (
-      <ResponsiveLayout 
-        leftHeaderContent={
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => navigate('/fornecedor/loja')} 
-            className="text-white hover:text-primary transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        }
+      <AuthenticatedLayout
+        pageTitle="Fornecedor - Relatório de Entregas"
+        pageSubtitle="Visualize e exporte suas entregas no ciclo selecionado"
       >
-        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 p-4 md:p-6">
           <Package className="h-16 w-16 text-muted-foreground" />
           <h2 className="text-2xl font-bold text-primary">Nenhuma entrega encontrada</h2>
           <p className="text-muted-foreground text-center max-w-md">
@@ -112,34 +104,16 @@ export default function FornecedorEntregas() {
             Escolher outro ciclo
           </Button>
         </div>
-      </ResponsiveLayout>
+      </AuthenticatedLayout>
     );
   }
 
   return (
-    <ResponsiveLayout 
-      leftHeaderContent={
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => navigate('/fornecedor/loja')} 
-          className="text-white hover:text-primary transition-colors"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-      }
+    <AuthenticatedLayout
+      pageTitle="Fornecedor - Relatório de Entregas"
+      pageSubtitle="Visualize e exporte suas entregas no ciclo selecionado"
     >
-      <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Relatório de Entregas
-          </h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Visualize e exporte suas entregas no ciclo selecionado
-          </p>
-        </div>
-
+      <div className="space-y-6 p-4 md:p-6">
         {/* Resumo Card */}
         <Card className="border-2 border-primary/20">
           <CardHeader>
@@ -247,6 +221,6 @@ export default function FornecedorEntregas() {
           </div>
         </Card>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,19 +41,11 @@ const Cronograma = () => {
   const navigate = useNavigate();
 
   return (
-    <ResponsiveLayout 
-      leftHeaderContent={
-        <Button 
-          variant="ghost" 
-          size="icon-sm"
-          onClick={() => navigate('/fornecedor/loja')}
-          className="focus-ring text-primary-foreground hover:bg-primary-hover"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
-      }
+    <AuthenticatedLayout
+      pageTitle="Fornecedor - Cronograma de Colheitas"
+      pageSubtitle="Acompanhe o desenvolvimento dos seus produtos"
     >
-      <div className="space-y-4 lg:space-y-6">
+      <div className="space-y-4 lg:space-y-6 p-4 md:p-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Cronograma de Colheitas</h1>
@@ -209,7 +201,7 @@ const Cronograma = () => {
           </Card>
         </div>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 };
 

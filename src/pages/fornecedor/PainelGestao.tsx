@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { ArrowLeft, Package, MapPin, Calendar, Upload, FileImage, CheckCircle2, AlertCircle, DollarSign, FileText, Bell, Filter, CalendarIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -228,25 +228,13 @@ const PainelGestao = () => {
   const uniqueProducts = [...new Set(deliveries.map(d => d.product))];
 
   return (
-    <ResponsiveLayout 
-      leftHeaderContent={
-        <Button 
-          variant="ghost" 
-          size="icon-sm"
-          onClick={() => navigate('/fornecedor/loja')}
-          className="focus-ring text-primary-foreground hover:bg-primary-hover"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
-      }
+    <AuthenticatedLayout
+      pageTitle="Fornecedor - Painel de Gestão"
+      pageSubtitle="Histórico de entregas e comprovantes"
     >
-      <div className="space-y-4 lg:space-y-6">
-        {/* Header with Export Button */}
-        <div className="flex flex-col space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">Painel de Gestão</h1>
-            <p className="text-sm lg:text-base text-muted-foreground">Histórico de entregas e comprovantes</p>
-          </div>
+      <div className="space-y-4 lg:space-y-6 p-4 md:p-6">
+        {/* Export Button */}
+        <div className="flex justify-end">
           <Button
             variant="outline"
             size="sm"
@@ -688,7 +676,7 @@ const PainelGestao = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 };
 
