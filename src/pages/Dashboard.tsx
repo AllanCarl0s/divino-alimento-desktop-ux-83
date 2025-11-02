@@ -1,13 +1,14 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { ShoppingCart, FileText, Wallet, UserCircle, ChevronRight, ArrowLeft, ShoppingBasket } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useConsumer } from '@/contexts/ConsumerContext';
 import { useCycle } from '@/hooks/useCycle';
 import { Button } from '@/components/ui/button';
 import { formatBRL } from '@/utils/currency';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 
 const Dashboard = () => {
@@ -54,11 +55,12 @@ const Dashboard = () => {
   ];
 
   return (
-    <AuthenticatedLayout
-      pageTitle="Dashboard"
-      pageSubtitle="Gerencie suas cestas e pedidos"
+    <ResponsiveLayout
+      headerContent={
+        <UserMenuLarge />
+      }
     >
-      <div className="container mx-auto px-4 py-6 space-y-6">
+      <div className="space-y-6">
         {/* Header */}
         <div className="text-center">
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
@@ -218,7 +220,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </ResponsiveLayout>
   );
 };
 
