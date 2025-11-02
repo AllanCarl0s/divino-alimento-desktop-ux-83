@@ -464,16 +464,16 @@ const UsuarioDados = () => {
               <Checkbox
                 id="perfilAdministrador"
                 checked={formData.perfilAdministrador}
-                disabled={activeRole !== 'admin'}
+                disabled
                 onCheckedChange={(checked) => 
                   handleInputChange('perfilAdministrador', checked as boolean)
                 }
               />
               <Label 
                 htmlFor="perfilAdministrador" 
-                className={activeRole !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+                className="cursor-not-allowed opacity-50"
               >
-                Administrador{activeRole !== 'admin' ? ' (não editável)' : ''}
+                Administrador (não editável)
               </Label>
             </div>
           </CardContent>
