@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
+import { UserMenuLarge } from "@/components/layout/UserMenuLarge";
 import { FiltersBar } from "@/components/admin/FiltersBar";
 import { FiltersPanel } from "@/components/admin/FiltersPanel";
 import { useFilters } from "@/hooks/useFilters";
@@ -70,6 +71,7 @@ export default function AdminPrecosLista() {
           <ArrowLeft className="w-4 h-4" />
         </Button>
       }
+      headerContent={<UserMenuLarge />}
     >
       <div className="space-y-6 pb-20">
         {/* Header */}

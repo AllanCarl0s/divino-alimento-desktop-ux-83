@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -205,7 +206,7 @@ export default function AdminCicloIndex() {
   };
 
   return (
-    <ResponsiveLayout leftHeaderContent={<Button variant="ghost" size="icon" onClick={() => navigate('/admin/dashboard')} className="text-white hover:bg-white/20"><ArrowLeft className="h-5 w-5" /></Button>}>
+    <ResponsiveLayout leftHeaderContent={<Button variant="ghost" size="icon" onClick={() => navigate('/admin/dashboard')} className="text-white hover:bg-white/20"><ArrowLeft className="h-5 w-5" /></Button>} headerContent={<UserMenuLarge />}>
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">Administrador - Gestão de Ciclos</h1>

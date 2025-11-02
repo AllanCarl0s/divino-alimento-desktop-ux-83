@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -120,6 +121,7 @@ export default function AdminPedidosConsumidores() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
       }
+      headerContent={<UserMenuLarge />}
     >
       <div className="space-y-6">
         {/* Header */}

@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { FiltersBar } from '@/components/admin/FiltersBar';
 import { FiltersPanel } from '@/components/admin/FiltersPanel';
 import { useFilters } from '@/hooks/useFilters';
@@ -262,6 +263,7 @@ const AdminMercadoMercados = () => {
           <ArrowLeft className="w-4 h-4" />
         </Button>
       }
+      headerContent={<UserMenuLarge />}
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 lg:p-0">
         

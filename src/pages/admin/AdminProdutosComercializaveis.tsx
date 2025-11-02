@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { FiltersBar } from '@/components/admin/FiltersBar';
 import { FiltersPanel } from '@/components/admin/FiltersPanel';
 import { useFilters } from '@/hooks/useFilters';
@@ -149,6 +150,7 @@ const AdminProdutosComercializaveis = () => {
           <ArrowLeft className="w-4 h-4" />
         </Button>
       }
+      headerContent={<UserMenuLarge />}
     >
       <div className="space-y-6 md:space-y-8">
         {/* Header */}

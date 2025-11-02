@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit2, Trash2, Check } from "lucide-react";
 import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
+import { UserMenuLarge } from "@/components/layout/UserMenuLarge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -165,6 +166,7 @@ const AdminMercadoPagamentosGerar = () => {
           <ArrowLeft className="h-5 w-5" />
         </Button>
       }
+      headerContent={<UserMenuLarge />}
     >
       <div className="container max-w-6xl mx-auto py-8 px-4">
         <div className="mb-6">

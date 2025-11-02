@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
+import { UserMenuLarge } from "@/components/layout/UserMenuLarge";
 import { toast } from "@/hooks/use-toast";
 import { produtosReferencia } from "@/data/produtos-referencia";
 import { mercadosLocais } from "@/data/mercados-locais";
@@ -169,6 +170,7 @@ export default function AdminPrecos() {
           <ArrowLeft className="w-4 h-4" />
         </Button>
       }
+      headerContent={<UserMenuLarge />}
     >
       <div className="space-y-6 pb-20">
         {/* Header */}
