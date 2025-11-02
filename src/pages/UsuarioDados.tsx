@@ -413,13 +413,16 @@ const UsuarioDados = () => {
               <Checkbox
                 id="perfilFornecedor"
                 checked={formData.perfilFornecedor}
-                disabled
+                disabled={activeRole !== 'admin'}
+                onCheckedChange={(checked) => 
+                  handleInputChange('perfilFornecedor', checked as boolean)
+                }
               />
               <Label 
                 htmlFor="perfilFornecedor" 
-                className="cursor-not-allowed opacity-50"
+                className={activeRole !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
               >
-                Fornecedor (não editável)
+                Fornecedor{activeRole !== 'admin' ? ' (não editável)' : ''}
               </Label>
             </div>
 
@@ -427,13 +430,16 @@ const UsuarioDados = () => {
               <Checkbox
                 id="perfilConsumidor"
                 checked={formData.perfilConsumidor}
-                disabled
+                disabled={activeRole !== 'admin'}
+                onCheckedChange={(checked) => 
+                  handleInputChange('perfilConsumidor', checked as boolean)
+                }
               />
               <Label 
                 htmlFor="perfilConsumidor" 
-                className="cursor-not-allowed opacity-50"
+                className={activeRole !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
               >
-                Consumidor (não editável)
+                Consumidor{activeRole !== 'admin' ? ' (não editável)' : ''}
               </Label>
             </div>
 
@@ -441,13 +447,16 @@ const UsuarioDados = () => {
               <Checkbox
                 id="perfilAdministradorMercado"
                 checked={formData.perfilAdministradorMercado || false}
-                disabled
+                disabled={activeRole !== 'admin'}
+                onCheckedChange={(checked) => 
+                  handleInputChange('perfilAdministradorMercado', checked as boolean)
+                }
               />
               <Label 
                 htmlFor="perfilAdministradorMercado" 
-                className="cursor-not-allowed opacity-50"
+                className={activeRole !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
               >
-                Administrador de Mercado (não editável)
+                Administrador de Mercado{activeRole !== 'admin' ? ' (não editável)' : ''}
               </Label>
             </div>
 
@@ -455,12 +464,16 @@ const UsuarioDados = () => {
               <Checkbox
                 id="perfilAdministrador"
                 checked={formData.perfilAdministrador}
+                disabled={activeRole !== 'admin'}
                 onCheckedChange={(checked) => 
                   handleInputChange('perfilAdministrador', checked as boolean)
                 }
               />
-              <Label htmlFor="perfilAdministrador" className="cursor-pointer">
-                Administrador
+              <Label 
+                htmlFor="perfilAdministrador" 
+                className={activeRole !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+              >
+                Administrador{activeRole !== 'admin' ? ' (não editável)' : ''}
               </Label>
             </div>
           </CardContent>
