@@ -138,6 +138,7 @@ const App = () => (
           <Route path="/admin/migrar-ofertas/:destinoId" element={<ProtectedRoute><AdminMigrarOfertas /></ProtectedRoute>} />
           <Route path="/admin/pagamentos-gerar" element={<ProtectedRoute><AdminPagamentosGerar /></ProtectedRoute>} />
           <Route path="/admin/pagamentos-gerir" element={<ProtectedRoute><AdminPagamentosGerir /></ProtectedRoute>} />
+          <Route path="/usuario" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
           <Route path="/usuarios" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
           <Route path="/usuario-index" element={<ProtectedRoute><UsuarioIndex /></ProtectedRoute>} />
           <Route path="/usuario/:id" element={<ProtectedRoute><UsuarioDados /></ProtectedRoute>} />
