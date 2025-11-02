@@ -155,7 +155,7 @@ const AdminProdutosComercializaveis = () => {
         <div className="md:flex md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Produtos Comercializáveis
+              Administrador - Produtos Comercializáveis
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
               Gerencie produtos comercializáveis com preços e unidades

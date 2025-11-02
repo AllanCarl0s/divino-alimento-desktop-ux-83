@@ -98,7 +98,7 @@ const AdminProdutosComercialivaveis = () => {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary mb-2">
-            Produtos Comercializáveis
+            Administrador - Produtos Comercializáveis
           </h1>
           <p className="text-muted-foreground">
             Gerencie variações comerciais por unidade, peso e preço

@@ -69,7 +69,7 @@ const AdminProdutoNovo = () => {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-            Novo Alimento Base
+            Administrador - Novo Alimento Base
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Cadastre um alimento para o catálogo padrão

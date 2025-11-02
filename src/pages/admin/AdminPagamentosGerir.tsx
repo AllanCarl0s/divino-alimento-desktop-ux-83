@@ -175,7 +175,7 @@ const AdminPagamentosGerir = () => {
       <div className="container max-w-6xl mx-auto py-8 px-4">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-primary mb-2">
-            Gerir Lista de Pagamentos
+            Administrador - Gerir Lista de Pagamentos
           </h1>
           <p className="text-muted-foreground">
             Acompanhe, edite e registre os pagamentos pendentes e realizados.

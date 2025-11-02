@@ -101,7 +101,7 @@ const AdminProdutoComercializavelEditar = () => {
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary mb-2">
-            Editar Produto Comercializável
+            Administrador - Editar Produto Comercializável
           </h1>
           <p className="text-muted-foreground">
             Atualize as informações da variação comercial

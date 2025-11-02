@@ -75,7 +75,7 @@ const AdminProdutoComercializavelNovo = () => {
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary mb-2">
-            Adicionar Produto Comercializável
+            Administrador - Adicionar Produto Comercializável
           </h1>
           <p className="text-muted-foreground">
             Cadastre uma nova variação comercial de produto

@@ -196,7 +196,7 @@ const AdminPagamentosGerar = () => {
       <div className="container max-w-6xl mx-auto py-8 px-4">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-primary mb-2">
-            Gerar Lista de Pagamentos
+            Administrador - Gerar Lista de Pagamentos
           </h1>
           <p className="text-muted-foreground">
             Gere automaticamente os registros de pagamentos de fornecedores e consumidores de ciclos finalizados.

@@ -104,7 +104,7 @@ export default function AdminEntregasFornecedores() {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Relatório de Entregas dos Fornecedores
+            Administrador - Relatório de Entregas dos Fornecedores
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Visualize e exporte as entregas realizadas no ciclo selecionado

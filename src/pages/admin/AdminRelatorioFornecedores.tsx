@@ -67,7 +67,7 @@ const AdminRelatorioFornecedores = () => {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gradient-primary">
-            Relatório de Pedidos dos Fornecedores
+            Administrador - Relatório de Pedidos dos Fornecedores
           </h1>
           <p className="text-muted-foreground mt-2">
             Selecione os ciclos para gerar o relatório consolidado.

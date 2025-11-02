@@ -175,7 +175,7 @@ export default function AdminPrecos() {
         <div className="flex flex-col">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Gestão de Preços – {mercado.nome}
+              Administrador - Gestão de Preços – {mercado.nome}
             </h1>
             <p className="text-muted-foreground">
               Defina preços específicos para este mercado com base nos produtos comercializáveis cadastrados

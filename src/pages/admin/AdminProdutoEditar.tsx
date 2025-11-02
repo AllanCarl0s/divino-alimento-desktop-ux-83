@@ -86,7 +86,7 @@ const AdminProdutoEditar = () => {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Editar Alimento Base
+              Administrador - Editar Alimento Base
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
               Atualize as informações do alimento

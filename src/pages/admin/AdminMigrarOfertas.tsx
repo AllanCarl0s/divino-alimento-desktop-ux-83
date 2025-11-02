@@ -248,7 +248,7 @@ const AdminMigrarOfertas = () => {
     >
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Migrar Ofertas entre Ciclos</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">Administrador - Migrar Ofertas entre Ciclos</h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Selecione o ciclo de destino e as origens de onde deseja migrar produtos
           </p>
