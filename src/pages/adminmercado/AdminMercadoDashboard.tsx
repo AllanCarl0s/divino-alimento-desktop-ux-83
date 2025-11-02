@@ -62,7 +62,7 @@ const AdminMercadoDashboard = () => {
         <div className="md:flex md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Administrador de mercado - Painel do Administrador de Mercado
+              Painel do Administrador de Mercado
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
               Gerencie ciclos, mercados, ofertas e relatórios do seu mercado.
