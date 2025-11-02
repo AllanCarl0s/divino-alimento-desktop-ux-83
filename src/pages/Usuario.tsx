@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -120,19 +120,11 @@ const Usuario = () => {
   };
 
   return (
-    <ResponsiveLayout
-      leftHeaderContent={
-        <Button 
-          variant="ghost" 
-          size="icon-sm"
-          onClick={handleCancel}
-          className="text-primary-foreground hover:bg-primary-hover"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
-      }
+    <AuthenticatedLayout
+      pageTitle={isEdit ? 'Editar Usuário' : 'Novo Usuário'}
+      pageSubtitle={isEdit ? 'Edite os dados do usuário' : 'Cadastre um novo usuário'}
     >
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="container max-w-2xl mx-auto px-4 py-6 space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
             {isEdit ? 'Editar Usuário' : 'Novo Usuário'}
@@ -318,7 +310,7 @@ const Usuario = () => {
           </div>
         </div>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 };
 

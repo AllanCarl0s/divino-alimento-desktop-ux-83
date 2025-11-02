@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -178,27 +178,11 @@ const PedidoConsumidores = () => {
   }, [selectedProducts, quantities]);
 
   return (
-    <ResponsiveLayout
-      leftHeaderContent={
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
-          aria-label="Voltar"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-      }
+    <AuthenticatedLayout
+      pageTitle="Comprar Produtos Venda Direta"
+      pageSubtitle="Selecione produtos da feira direta com os produtores"
     >
-      <div className="p-4 space-y-6">
-        {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-            Comprar Produtos Venda Direta
-          </h1>
-          <p className="text-muted-foreground">
-            Selecione produtos da feira direta com os produtores
-          </p>
-        </div>
+      <div className="container mx-auto px-4 py-6 space-y-6">
 
         {/* Ciclo Ativo */}
         <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
@@ -510,7 +494,7 @@ const PedidoConsumidores = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 };
 

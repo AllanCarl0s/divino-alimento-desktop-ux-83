@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -76,28 +76,11 @@ export default function ConsumidorPagamentos() {
   const total = aReceber + pagos;
 
   return (
-    <ResponsiveLayout 
-      leftHeaderContent={
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => navigate('/dashboard')} 
-          className="text-white hover:bg-white/20"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-      }
+    <AuthenticatedLayout
+      pageTitle="Meus Pagamentos"
+      pageSubtitle="Acompanhe seus pagamentos (em aberto e quitados)"
     >
-      <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Meus Pagamentos
-          </h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Acompanhe seus pagamentos (em aberto e quitados)
-          </p>
-        </div>
+      <div className="container mx-auto px-4 py-6 space-y-6">
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -225,6 +208,6 @@ export default function ConsumidorPagamentos() {
           </Button>
         </div>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 }

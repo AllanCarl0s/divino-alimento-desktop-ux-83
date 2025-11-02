@@ -1,18 +1,14 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { 
   Store, 
   Package, 
-  Warehouse, 
   ShoppingCart, 
   FileText, 
   Settings,
   Users,
-  TrendingUp,
-  Calendar,
   DollarSign,
   FolderTree,
   RefreshCcw,
@@ -22,8 +18,6 @@ import {
   Wallet
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -78,27 +72,11 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <ResponsiveLayout 
-      headerContent={<UserMenuLarge />}
+    <AuthenticatedLayout
+      pageTitle="Painel Administrativo"
+      pageSubtitle="Gerencie o ecossistema Divino Alimento"
     >
-      {/* Desktop Layout */}
-      <div className="space-y-6 md:space-y-8">
-        {/* Header */}
-        <div className="md:flex md:items-center md:justify-between">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Painel Administrativo
-            </h1>
-            <p className="text-sm md:text-base text-muted-foreground">
-              Gerencie o ecossistema Divino Alimento
-            </p>
-          </div>
-          <div className="hidden md:block">
-            <Badge className="bg-gradient-to-r from-primary to-accent text-white">
-              Sistema Online
-            </Badge>
-          </div>
-        </div>
+      <div className="container mx-auto px-4 py-6 space-y-6 md:space-y-8">
 
         {/* Gestão de Ciclo */}
         <div>
@@ -320,7 +298,7 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 };
 

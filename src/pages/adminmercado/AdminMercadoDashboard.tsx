@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { 
   Store, 
   DollarSign, 
@@ -15,8 +14,6 @@ import {
   UserCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
@@ -53,27 +50,11 @@ const AdminMercadoDashboard = () => {
   ];
 
   return (
-    <ResponsiveLayout 
-      headerContent={<UserMenuLarge />}
+    <AuthenticatedLayout
+      pageTitle="Painel do Administrador de Mercado"
+      pageSubtitle="Gerencie ciclos, mercados, ofertas e relatórios do seu mercado"
     >
-      {/* Desktop Layout */}
-      <div className="space-y-6 md:space-y-8">
-        {/* Header */}
-        <div className="md:flex md:items-center md:justify-between">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Painel do Administrador de Mercado
-            </h1>
-            <p className="text-sm md:text-base text-muted-foreground">
-              Gerencie ciclos, mercados, ofertas e relatórios do seu mercado.
-            </p>
-          </div>
-          <div className="hidden md:block">
-            <Badge className="bg-gradient-to-r from-primary to-accent text-white">
-              Sistema Online
-            </Badge>
-          </div>
-        </div>
+      <div className="container mx-auto px-4 py-6 space-y-6 md:space-y-8">
 
         {/* Quick Actions - Desktop Grid, Mobile List */}
         <div>
@@ -238,7 +219,7 @@ const AdminMercadoDashboard = () => {
           </CardContent>
         </Card>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
+import { AuthenticatedLayout } from '@/components/layout/AuthenticatedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -71,24 +71,11 @@ const MinhaCesta = () => {
 
   if (!temCesta) {
     return (
-      <ResponsiveLayout
-        leftHeaderContent={
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
-            aria-label="Voltar"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-        }
+      <AuthenticatedLayout
+        pageTitle="Minha Cesta"
+        pageSubtitle="Itens da sua cesta no ciclo atual"
       >
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gradient-primary">Minha Cesta</h1>
-            <p className="text-muted-foreground mt-2">
-              Itens da sua cesta no ciclo atual
-            </p>
-          </div>
+        <div className="container mx-auto px-4 py-6 space-y-6">
 
           <Card>
             <CardContent className="py-12">
@@ -114,23 +101,16 @@ const MinhaCesta = () => {
             </CardContent>
           </Card>
         </div>
-      </ResponsiveLayout>
+      </AuthenticatedLayout>
     );
   }
 
   return (
-    <ResponsiveLayout
-      leftHeaderContent={
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
-          aria-label="Voltar"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-      }
+    <AuthenticatedLayout
+      pageTitle="Minha Cesta"
+      pageSubtitle="Itens da sua cesta no ciclo atual"
     >
-      <div className="space-y-6">
+      <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gradient-primary">Minha Cesta</h1>
@@ -257,7 +237,7 @@ const MinhaCesta = () => {
           </CardContent>
         </Card>
       </div>
-    </ResponsiveLayout>
+    </AuthenticatedLayout>
   );
 };
 
