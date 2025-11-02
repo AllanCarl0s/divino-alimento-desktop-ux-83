@@ -20,6 +20,7 @@ import FornecedorPagamentos from "./pages/fornecedor/FornecedorPagamentos";
 import FornecedorEntregas from "./pages/fornecedor/FornecedorEntregas";
 
 // Admin pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminMercados from "./pages/admin/AdminMercados";
 import AdminPrecos from "./pages/admin/AdminPrecos";
 import AdminCategorias from "./pages/admin/AdminCategorias";
@@ -102,6 +103,7 @@ const App = () => (
           <Route path="/adminmercado/pagamentos/gerir" element={<ProtectedRoute><AdminMercadoPagamentosGerir /></ProtectedRoute>} />
           
           {/* Admin Routes */}
+          <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
           <Route path="/admin/mercados" element={<ProtectedRoute><AdminMercados /></ProtectedRoute>} />
           <Route path="/admin/precos" element={<ProtectedRoute><AdminPrecos /></ProtectedRoute>} />
           <Route path="/admin/precos/:id" element={<ProtectedRoute><AdminPrecos /></ProtectedRoute>} />
