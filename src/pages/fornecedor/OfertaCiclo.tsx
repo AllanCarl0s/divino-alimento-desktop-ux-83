@@ -133,7 +133,7 @@ export default function OfertaCiclo() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate('/admin/ciclo-index')}
+          onClick={() => navigate('/fornecedor/loja')}
           className="text-white hover:bg-white/20"
         >
           <ArrowLeft className="h-5 w-5" />
