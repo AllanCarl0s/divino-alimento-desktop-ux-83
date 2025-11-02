@@ -363,66 +363,6 @@ const UsuarioDados = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Perfil de Acesso</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="perfilFornecedor"
-                checked={formData.perfilFornecedor}
-                onCheckedChange={(checked) => 
-                  handleInputChange('perfilFornecedor', checked as boolean)
-                }
-              />
-              <Label htmlFor="perfilFornecedor" className="cursor-pointer">
-                Fornecedor
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="perfilConsumidor"
-                checked={formData.perfilConsumidor}
-                onCheckedChange={(checked) => 
-                  handleInputChange('perfilConsumidor', checked as boolean)
-                }
-              />
-              <Label htmlFor="perfilConsumidor" className="cursor-pointer">
-                Consumidor
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="perfilAdministradorMercado"
-                checked={formData.perfilAdministradorMercado || false}
-                onCheckedChange={(checked) => 
-                  handleInputChange('perfilAdministradorMercado', checked as boolean)
-                }
-              />
-              <Label htmlFor="perfilAdministradorMercado" className="cursor-pointer">
-                Administrador de Mercado
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="perfilAdministrador"
-                checked={formData.perfilAdministrador}
-                disabled
-              />
-              <Label 
-                htmlFor="perfilAdministrador" 
-                className="cursor-not-allowed opacity-50"
-              >
-                Administrador (não editável)
-              </Label>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
             <CardTitle>Status e Termos</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -461,6 +401,69 @@ const UsuarioDados = () => {
             {errors.aceitePolitica && (
               <p className="text-sm text-destructive">{errors.aceitePolitica}</p>
             )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Perfil de Acesso</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="perfilFornecedor"
+                checked={formData.perfilFornecedor}
+                disabled
+              />
+              <Label 
+                htmlFor="perfilFornecedor" 
+                className="cursor-not-allowed opacity-50"
+              >
+                Fornecedor (não editável)
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="perfilConsumidor"
+                checked={formData.perfilConsumidor}
+                disabled
+              />
+              <Label 
+                htmlFor="perfilConsumidor" 
+                className="cursor-not-allowed opacity-50"
+              >
+                Consumidor (não editável)
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="perfilAdministradorMercado"
+                checked={formData.perfilAdministradorMercado || false}
+                disabled
+              />
+              <Label 
+                htmlFor="perfilAdministradorMercado" 
+                className="cursor-not-allowed opacity-50"
+              >
+                Administrador de Mercado (não editável)
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="perfilAdministrador"
+                checked={formData.perfilAdministrador}
+                disabled
+              />
+              <Label 
+                htmlFor="perfilAdministrador" 
+                className="cursor-not-allowed opacity-50"
+              >
+                Administrador (não editável)
+              </Label>
+            </div>
           </CardContent>
         </Card>
 
