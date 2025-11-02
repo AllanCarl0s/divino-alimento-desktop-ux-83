@@ -6,6 +6,7 @@ import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { ArrowLeft, FileDown, Truck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 // Mock data - ciclos do administrador de mercado logado
 const ciclosDisponiveis = [
@@ -62,6 +63,7 @@ const AdminMercadoRelatorioFornecedoresCiclo = () => {
           <ArrowLeft className="w-5 h-5" />
         </button>
       }
+      headerContent={<UserMenuLarge />}
     >
       <div className="space-y-6">
         {/* Header */}

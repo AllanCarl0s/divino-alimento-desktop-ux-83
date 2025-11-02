@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { StatusToggle } from '@/components/ui/status-toggle';
 import { useAuth } from '@/contexts/AuthContext';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 interface Usuario {
   id: string;
@@ -127,6 +128,7 @@ const UsuarioIndex = () => {
           <ArrowLeft className="w-4 h-4" />
         </Button>
       }
+      headerContent={<UserMenuLarge />}
     >
       <div className="space-y-6 md:space-y-8">
         <div className="md:flex md:items-center md:justify-between">

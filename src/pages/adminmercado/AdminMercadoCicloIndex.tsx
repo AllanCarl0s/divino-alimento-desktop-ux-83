@@ -15,6 +15,7 @@ import { toast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users, RefreshCw, Tags } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 // Constante para o administrador logado
 const CURRENT_ADMIN_NAME = 'João Silva';
@@ -209,7 +210,10 @@ export default function AdminMercadoCicloIndex() {
   };
 
   return (
-    <ResponsiveLayout leftHeaderContent={<Button variant="ghost" size="icon" onClick={() => navigate('/adminmercado/dashboard')} className="text-white hover:bg-white/20"><ArrowLeft className="h-5 w-5" /></Button>}>
+    <ResponsiveLayout 
+      leftHeaderContent={<Button variant="ghost" size="icon" onClick={() => navigate('/adminmercado/dashboard')} className="text-white hover:bg-white/20"><ArrowLeft className="h-5 w-5" /></Button>}
+      headerContent={<UserMenuLarge />}
+    >
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">Administrador de mercado - Gestão de Ciclos</h1>
