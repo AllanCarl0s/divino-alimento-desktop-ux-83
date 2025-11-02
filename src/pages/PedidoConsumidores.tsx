@@ -193,7 +193,7 @@ const PedidoConsumidores = () => {
         {/* Header */}
         <div className="space-y-2">
           <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-            Comprar Produtos Venda Direta
+            Consumidor - Comprar Produtos Venda Direta
           </h1>
           <p className="text-muted-foreground">
             Selecione produtos da feira direta com os produtores
