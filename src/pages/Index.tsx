@@ -42,7 +42,7 @@ const Index = () => {
             className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 -mt-12"
           />
           <p className="text-[#374151] text-base lg:text-lg text-center leading-relaxed font-medium">
-            Divino Alimento é uma plataforma que facilita o fluxo de informação de vendas alimentos produzido por diversos agricultores para diversos compradores
+            Divino Alimento é uma plataforma que facilita o fluxo de informação de vendas de alimentos produzido por diversos agricultores e agricultoras para diversos consumidores
           </p>
         </section>
 
