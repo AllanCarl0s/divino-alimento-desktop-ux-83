@@ -134,7 +134,7 @@ export default function ConsumidorRelatorio() {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Relatório Financeiro do Consumidor
+            Consumidor - Relatório Financeiro do Consumidor
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Acompanhe seus pedidos, valores e status de pagamento por ciclo
