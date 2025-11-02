@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ArrowLeft, ShoppingBasket, MapPin, Clock, CalendarDays } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
 import { Button } from '@/components/ui/button';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 // Mock data - cesta do consumidor
 const mockCesta = {
@@ -72,6 +73,7 @@ const MinhaCesta = () => {
   if (!temCesta) {
     return (
       <ResponsiveLayout
+        headerContent={<UserMenuLarge />}
         leftHeaderContent={
           <button
             onClick={() => navigate('/dashboard')}
@@ -120,6 +122,7 @@ const MinhaCesta = () => {
 
   return (
     <ResponsiveLayout
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <button
           onClick={() => navigate('/dashboard')}

@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ArrowLeft, Search, Download, FileText } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { formatBRL } from '@/utils/currency';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 interface PedidoItem {
   id: string;
@@ -119,6 +120,7 @@ export default function ConsumidorRelatorio() {
 
   return (
     <ResponsiveLayout 
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <Button 
           variant="ghost" 

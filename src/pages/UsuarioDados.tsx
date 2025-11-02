@@ -18,6 +18,7 @@ import {
   validarAgencia, 
   validarConta 
 } from '@/utils/validation';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 const UsuarioDados = () => {
   const { id } = useParams();
@@ -154,6 +155,7 @@ const UsuarioDados = () => {
 
   return (
     <ResponsiveLayout
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <Button 
           variant="ghost" 

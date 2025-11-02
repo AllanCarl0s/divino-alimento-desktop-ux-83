@@ -12,6 +12,7 @@ import { ArrowLeft, Search, ShoppingCart, AlertCircle } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
 import { toast } from '@/hooks/use-toast';
 import { groupAndSortProducts, type Oferta } from '@/utils/product-grouping';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 // Mock data - produtos disponíveis para venda direta
 const mockProdutos: Oferta[] = [
@@ -179,6 +180,7 @@ const PedidoConsumidores = () => {
 
   return (
     <ResponsiveLayout
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <button
           onClick={() => navigate('/dashboard')}

@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Search, Eye } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
+import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 
 interface Pagamento {
   id: string;
@@ -77,6 +78,7 @@ export default function ConsumidorPagamentos() {
 
   return (
     <ResponsiveLayout 
+      headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <Button 
           variant="ghost" 
