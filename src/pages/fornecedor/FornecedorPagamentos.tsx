@@ -9,6 +9,7 @@ import { ArrowLeft, Wallet, DollarSign, CheckCircle, Clock, Search } from 'lucid
 import { useNavigate } from 'react-router-dom';
 import { formatBRL } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Mock data
 const mockPagamentos = [
@@ -56,6 +57,7 @@ const mockPagamentos = [
 
 const FornecedorPagamentos = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [busca, setBusca] = useState('');
   const [filtroStatus, setFiltroStatus] = useState('Todos');
   const [ordenacao, setOrdenacao] = useState('data');
@@ -210,37 +212,32 @@ const FornecedorPagamentos = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Data</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Descrição</th>
-                    <th className="text-right py-3 px-4 font-medium text-muted-foreground">Valor</th>
-                    <th className="text-center py-3 px-4 font-medium text-muted-foreground">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pagamentosFiltrados.length === 0 ? (
-                    <tr>
-                      <td colSpan={4} className="text-center py-8 text-muted-foreground">
-                        Nenhum pagamento encontrado
-                      </td>
-                    </tr>
-                  ) : (
-                    pagamentosFiltrados.map((pagamento) => (
-                      <tr key={pagamento.id} className="border-b hover:bg-muted/50 transition-colors">
-                        <td className="py-3 px-4 text-sm">{pagamento.data}</td>
-                        <td className="py-3 px-4">
-                          <div>
-                            <p className="font-medium">{pagamento.descricao}</p>
-                            <p className="text-xs text-muted-foreground">{pagamento.ciclo}</p>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4 text-right font-semibold">
-                          {formatBRL(pagamento.valor)}
-                        </td>
-                        <td className="py-3 px-4 text-center">
+            {isMobile ? (
+              <div>
+                {pagamentosFiltrados.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Nenhum pagamento encontrado
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {pagamentosFiltrados.map((pagamento) => (
+                      <div
+                        key={pagamento.id}
+                        className="bg-white border border-border rounded-xl p-4 space-y-2"
+                      >
+                        <div className="text-sm text-foreground">
+                          <span className="text-muted-foreground">Data:</span> {pagamento.data}
+                        </div>
+                        <div className="text-sm text-foreground">
+                          <span className="text-muted-foreground">Descrição:</span> {pagamento.descricao}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {pagamento.ciclo}
+                        </div>
+                        <div className="text-sm font-semibold text-primary">
+                          <span className="text-muted-foreground font-normal">Valor:</span> {formatBRL(pagamento.valor)}
+                        </div>
+                        <div className="flex justify-start pt-2">
                           <Badge 
                             variant={pagamento.status === 'Pago' ? 'default' : 'secondary'}
                             className={
@@ -256,13 +253,67 @@ const FornecedorPagamentos = () => {
                             )}
                             {pagamento.status}
                           </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Data</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Descrição</th>
+                      <th className="text-right py-3 px-4 font-medium text-muted-foreground">Valor</th>
+                      <th className="text-center py-3 px-4 font-medium text-muted-foreground">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pagamentosFiltrados.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="text-center py-8 text-muted-foreground">
+                          Nenhum pagamento encontrado
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    ) : (
+                      pagamentosFiltrados.map((pagamento) => (
+                        <tr key={pagamento.id} className="border-b hover:bg-muted/50 transition-colors">
+                          <td className="py-3 px-4 text-sm">{pagamento.data}</td>
+                          <td className="py-3 px-4">
+                            <div>
+                              <p className="font-medium">{pagamento.descricao}</p>
+                              <p className="text-xs text-muted-foreground">{pagamento.ciclo}</p>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4 text-right font-semibold">
+                            {formatBRL(pagamento.valor)}
+                          </td>
+                          <td className="py-3 px-4 text-center">
+                            <Badge 
+                              variant={pagamento.status === 'Pago' ? 'default' : 'secondary'}
+                              className={
+                                pagamento.status === 'Pago' 
+                                  ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                                  : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                              }
+                            >
+                              {pagamento.status === 'Pago' ? (
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                              ) : (
+                                <Clock className="w-3 h-3 mr-1" />
+                              )}
+                              {pagamento.status}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
 

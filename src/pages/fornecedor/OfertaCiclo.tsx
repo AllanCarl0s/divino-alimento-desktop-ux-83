@@ -11,6 +11,7 @@ import { toast } from '@/hooks/use-toast';
 import { Search, Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { formatBRLInput, parseBRLToNumber } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ProdutoOfertado {
   id: string;
@@ -27,6 +28,7 @@ interface ProdutoOfertado {
 export default function OfertaCiclo() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [periodoAberto, setPeriodoAberto] = useState(true);
   const [ofertaEnviada, setOfertaEnviada] = useState(false);
   const [busca, setBusca] = useState('');
@@ -188,60 +190,117 @@ export default function OfertaCiclo() {
               <CardTitle>Produtos ofertados por você</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Alimento</TableHead>
-                    <TableHead>Unidade</TableHead>
-                    <TableHead>Peso/Volume</TableHead>
-                    <TableHead>Preço Base</TableHead>
-                    <TableHead>Valor Unitário</TableHead>
-                    <TableHead>Quantidade</TableHead>
-                    <TableHead>Total</TableHead>
-                    <TableHead>Certificações</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              {isMobile ? (
+                <div className="space-y-3">
                   {produtosOfertados.map((produto) => (
-                    <TableRow key={produto.id}>
-                      <TableCell>{produto.nome}</TableCell>
-                      <TableCell>{produto.unidade}</TableCell>
-                      <TableCell>
+                    <div
+                      key={produto.id}
+                      className="bg-white border border-border rounded-xl p-4 space-y-2"
+                    >
+                      <div className="font-bold text-base text-primary">
+                        Produto: {produto.nome}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Unidade:</span> {produto.unidade}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Peso/Volume:</span>{' '}
                         {produto.peso ? `${produto.peso.toFixed(2)} kg` : 
                          produto.volume ? `${produto.volume.toFixed(2)} L` : 
                          '-'}
-                      </TableCell>
-                      <TableCell>R$ {produto.precoBase.toFixed(2).replace('.', ',')}</TableCell>
-                      <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
-                      <TableCell>{produto.quantidade}</TableCell>
-                      <TableCell>R$ {(produto.valor * produto.quantidade).toFixed(2).replace('.', ',')}</TableCell>
-                      <TableCell>
-                        <div className="text-xs space-y-1">
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Preço Base:</span> R$ {produto.precoBase.toFixed(2).replace('.', ',')}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Valor Unitário:</span> R$ {produto.valor.toFixed(2).replace('.', ',')}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Quantidade:</span> {produto.quantidade}
+                      </div>
+                      <div className="text-sm font-semibold text-primary">
+                        <span className="text-muted-foreground font-normal">Total:</span> R$ {(produto.valor * produto.quantidade).toFixed(2).replace('.', ',')}
+                      </div>
+                      {(tipoProduto.length > 0 || origemProdutiva.length > 0) && (
+                        <div className="text-xs space-y-1 pt-2 border-t">
                           {tipoProduto.length > 0 && (
                             <div className="text-muted-foreground">{tipoProduto.join(', ')}</div>
                           )}
                           {origemProdutiva.length > 0 && (
                             <div className="text-muted-foreground">{origemProdutiva.join(', ')}</div>
                           )}
-                          {tipoProduto.length === 0 && origemProdutiva.length === 0 && (
-                            <span className="text-muted-foreground">-</span>
-                          )}
                         </div>
-                      </TableCell>
-                      <TableCell className="text-right">
+                      )}
+                      <div className="flex justify-end pt-2">
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="sm"
                           onClick={() => handleRemoverProduto(produto.id)}
+                          className="text-destructive hover:text-destructive"
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Remover
                         </Button>
-                      </TableCell>
-                    </TableRow>
+                      </div>
+                    </div>
                   ))}
-                </TableBody>
-              </Table>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Alimento</TableHead>
+                      <TableHead>Unidade</TableHead>
+                      <TableHead>Peso/Volume</TableHead>
+                      <TableHead>Preço Base</TableHead>
+                      <TableHead>Valor Unitário</TableHead>
+                      <TableHead>Quantidade</TableHead>
+                      <TableHead>Total</TableHead>
+                      <TableHead>Certificações</TableHead>
+                      <TableHead className="text-right">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {produtosOfertados.map((produto) => (
+                      <TableRow key={produto.id}>
+                        <TableCell>{produto.nome}</TableCell>
+                        <TableCell>{produto.unidade}</TableCell>
+                        <TableCell>
+                          {produto.peso ? `${produto.peso.toFixed(2)} kg` : 
+                           produto.volume ? `${produto.volume.toFixed(2)} L` : 
+                           '-'}
+                        </TableCell>
+                        <TableCell>R$ {produto.precoBase.toFixed(2).replace('.', ',')}</TableCell>
+                        <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
+                        <TableCell>{produto.quantidade}</TableCell>
+                        <TableCell>R$ {(produto.valor * produto.quantidade).toFixed(2).replace('.', ',')}</TableCell>
+                        <TableCell>
+                          <div className="text-xs space-y-1">
+                            {tipoProduto.length > 0 && (
+                              <div className="text-muted-foreground">{tipoProduto.join(', ')}</div>
+                            )}
+                            {origemProdutiva.length > 0 && (
+                              <div className="text-muted-foreground">{origemProdutiva.join(', ')}</div>
+                            )}
+                            {tipoProduto.length === 0 && origemProdutiva.length === 0 && (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRemoverProduto(produto.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
               <div className="flex justify-end">
                 <Button onClick={() => navigate('/fornecedor/loja')}>
                   Voltar
@@ -384,38 +443,76 @@ export default function OfertaCiclo() {
                   <CardTitle>Produtos Ofertados</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Produto</TableHead>
-                        <TableHead>Unidade</TableHead>
-                        <TableHead>Valor Unitário</TableHead>
-                        <TableHead>Quantidade</TableHead>
-                        <TableHead>Total</TableHead>
-                        <TableHead className="text-right">Ações</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
+                  {isMobile ? (
+                    <div className="space-y-3">
                       {produtosOfertados.map((produto) => (
-                        <TableRow key={produto.id}>
-                          <TableCell>{produto.nome}</TableCell>
-                          <TableCell>{produto.unidade}</TableCell>
-                          <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
-                          <TableCell>{produto.quantidade}</TableCell>
-                          <TableCell>R$ {(produto.valor * produto.quantidade).toFixed(2).replace('.', ',')}</TableCell>
-                          <TableCell className="text-right">
+                        <div
+                          key={produto.id}
+                          className="bg-white border border-border rounded-xl p-4 space-y-2"
+                        >
+                          <div className="font-bold text-base text-primary">
+                            Produto: {produto.nome}
+                          </div>
+                          <div className="text-sm text-foreground">
+                            <span className="text-muted-foreground">Unidade:</span> {produto.unidade}
+                          </div>
+                          <div className="text-sm text-foreground">
+                            <span className="text-muted-foreground">Valor Unitário:</span> R$ {produto.valor.toFixed(2).replace('.', ',')}
+                          </div>
+                          <div className="text-sm text-foreground">
+                            <span className="text-muted-foreground">Quantidade:</span> {produto.quantidade}
+                          </div>
+                          <div className="text-sm font-semibold text-primary">
+                            <span className="text-muted-foreground font-normal">Total:</span> R$ {(produto.valor * produto.quantidade).toFixed(2).replace('.', ',')}
+                          </div>
+                          <div className="flex justify-end pt-2">
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="sm"
                               onClick={() => handleRemoverProduto(produto.id)}
+                              className="text-destructive hover:text-destructive"
                             >
-                              <Trash2 className="h-4 w-4 text-destructive" />
+                              <Trash2 className="h-4 w-4 mr-1" />
+                              Remover
                             </Button>
-                          </TableCell>
-                        </TableRow>
+                          </div>
+                        </div>
                       ))}
-                    </TableBody>
-                  </Table>
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Produto</TableHead>
+                          <TableHead>Unidade</TableHead>
+                          <TableHead>Valor Unitário</TableHead>
+                          <TableHead>Quantidade</TableHead>
+                          <TableHead>Total</TableHead>
+                          <TableHead className="text-right">Ações</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {produtosOfertados.map((produto) => (
+                          <TableRow key={produto.id}>
+                            <TableCell>{produto.nome}</TableCell>
+                            <TableCell>{produto.unidade}</TableCell>
+                            <TableCell>R$ {produto.valor.toFixed(2).replace('.', ',')}</TableCell>
+                            <TableCell>{produto.quantidade}</TableCell>
+                            <TableCell>R$ {(produto.valor * produto.quantidade).toFixed(2).replace('.', ',')}</TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleRemoverProduto(produto.id)}
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
 
                   <div className="flex justify-end gap-4 mt-6">
                     <Button variant="outline" onClick={() => navigate('/admin/ciclo-index')}>

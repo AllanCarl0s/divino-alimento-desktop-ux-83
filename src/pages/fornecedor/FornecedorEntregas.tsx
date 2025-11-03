@@ -9,6 +9,7 @@ import { ArrowLeft, Search, Download, FileText, Package } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { formatBRL } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface EntregaFornecedor {
   id: string;
@@ -25,6 +26,7 @@ interface EntregaFornecedor {
 export default function FornecedorEntregas() {
   const navigate = useNavigate();
   const { cicloId } = useParams();
+  const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Mock data - in production this would come from API filtered by fornecedor_id and ciclo_id
@@ -201,53 +203,99 @@ export default function FornecedorEntregas() {
 
         {/* Table */}
         <Card>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Produto</TableHead>
-                  <TableHead>Unidade</TableHead>
-                  <TableHead className="text-right">Valor Unitário</TableHead>
-                  <TableHead className="text-right">Quantidade Entregue</TableHead>
-                  <TableHead className="text-right">Valor Total</TableHead>
-                  <TableHead>Data/Hora de Entrega</TableHead>
-                  <TableHead>Local de Entrega</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredEntregas.length === 0 ? (
+          {isMobile ? (
+            <CardContent className="pt-6">
+              {filteredEntregas.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">
+                    {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhuma entrega registrada.'}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {filteredEntregas.map((entrega) => (
+                    <div
+                      key={entrega.id}
+                      className="bg-white border border-border rounded-xl p-4 space-y-2"
+                    >
+                      <div className="font-bold text-base text-primary">
+                        Produto: {entrega.produto}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Unidade:</span> {entrega.unidade_medida}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Valor Unitário:</span> {formatBRL(entrega.valor_unitario)}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Quantidade Entregue:</span> {entrega.quantidade_entregue}
+                      </div>
+                      <div className="text-sm font-semibold text-primary">
+                        <span className="text-muted-foreground font-normal">Valor Total:</span> {formatBRL(entrega.valor_total)}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Data/Hora de Entrega:</span> {entrega.data_hora_entrega}
+                      </div>
+                      <div className="text-sm text-foreground">
+                        <span className="text-muted-foreground">Local:</span> {entrega.local_nome}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        <span className="text-muted-foreground">Endereço:</span> {entrega.local_endereco}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      <p className="text-muted-foreground">
-                        {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhuma entrega registrada.'}
-                      </p>
-                    </TableCell>
+                    <TableHead>Produto</TableHead>
+                    <TableHead>Unidade</TableHead>
+                    <TableHead className="text-right">Valor Unitário</TableHead>
+                    <TableHead className="text-right">Quantidade Entregue</TableHead>
+                    <TableHead className="text-right">Valor Total</TableHead>
+                    <TableHead>Data/Hora de Entrega</TableHead>
+                    <TableHead>Local de Entrega</TableHead>
                   </TableRow>
-                ) : (
-                  filteredEntregas.map((entrega) => (
-                    <TableRow key={entrega.id}>
-                      <TableCell className="font-medium">{entrega.produto}</TableCell>
-                      <TableCell>{entrega.unidade_medida}</TableCell>
-                      <TableCell className="text-right">
-                        {formatBRL(entrega.valor_unitario)}
-                      </TableCell>
-                      <TableCell className="text-right">{entrega.quantidade_entregue}</TableCell>
-                      <TableCell className="text-right font-semibold text-success">
-                        {formatBRL(entrega.valor_total)}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">{entrega.data_hora_entrega}</TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <p className="font-medium">{entrega.local_nome}</p>
-                          <p className="text-sm text-muted-foreground">{entrega.local_endereco}</p>
-                        </div>
+                </TableHeader>
+                <TableBody>
+                  {filteredEntregas.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8">
+                        <p className="text-muted-foreground">
+                          {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhuma entrega registrada.'}
+                        </p>
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                  ) : (
+                    filteredEntregas.map((entrega) => (
+                      <TableRow key={entrega.id}>
+                        <TableCell className="font-medium">{entrega.produto}</TableCell>
+                        <TableCell>{entrega.unidade_medida}</TableCell>
+                        <TableCell className="text-right">
+                          {formatBRL(entrega.valor_unitario)}
+                        </TableCell>
+                        <TableCell className="text-right">{entrega.quantidade_entregue}</TableCell>
+                        <TableCell className="text-right font-semibold text-success">
+                          {formatBRL(entrega.valor_total)}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">{entrega.data_hora_entrega}</TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            <p className="font-medium">{entrega.local_nome}</p>
+                            <p className="text-sm text-muted-foreground">{entrega.local_endereco}</p>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </Card>
       </div>
     </ResponsiveLayout>
