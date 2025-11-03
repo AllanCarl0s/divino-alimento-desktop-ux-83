@@ -10,12 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowLeft, Pencil, Trash2, Search, Info, CheckCircle2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { formatBRL, formatBRLInput, parseBRLToNumber } from '@/utils/currency';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { ProdutoComercializavel, OfertaProduto, criarDescricaoProduto } from '@/types/produto-oferta';
+import { ProdutoComercializavel, OfertaProduto, criarDescricaoProduto, CertificacaoType, TipoAgriculturaType } from '@/types/produto-oferta';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 // Mock data - produtos comercializáveis
@@ -99,6 +100,8 @@ export default function AdminOferta() {
   const [quantidadeDisponivel, setQuantidadeDisponivel] = useState('');
   const [precoBaseSugerido, setPrecoBaseSugerido] = useState<number | null>(null);
   const [salvandoOferta, setSalvandoOferta] = useState(false);
+  const [certificacao, setCertificacao] = useState<CertificacaoType | ''>('');
+  const [tipoAgricultura, setTipoAgricultura] = useState<TipoAgriculturaType | ''>('');
 
   // Refs para foco automático
   const valorInputRef = useRef<HTMLInputElement>(null);
@@ -152,11 +155,11 @@ export default function AdminOferta() {
 
   // Validar se o formulário está completo
   const isFormValid = useMemo(() => {
-    if (!selectedProdutoId || !valorUnitario || !quantidadeDisponivel) return false;
+    if (!selectedProdutoId || !valorUnitario || !quantidadeDisponivel || !certificacao || !tipoAgricultura) return false;
     const valor = parseBRLToNumber(valorUnitario);
     const qtd = parseInt(quantidadeDisponivel);
     return valor >= 0.01 && qtd >= 1 && !isNaN(valor) && !isNaN(qtd);
-  }, [selectedProdutoId, valorUnitario, quantidadeDisponivel]);
+  }, [selectedProdutoId, valorUnitario, quantidadeDisponivel, certificacao, tipoAgricultura]);
 
   const handleLimparFormulario = () => {
     setEditingOferta(null);
@@ -164,13 +167,22 @@ export default function AdminOferta() {
     setValorUnitario('');
     setQuantidadeDisponivel('');
     setPrecoBaseSugerido(null);
+    setCertificacao('');
+    setTipoAgricultura('');
   };
 
   const handleAdicionarProduto = () => {
     if (!isFormValid) {
+      const errors: string[] = [];
+      if (!selectedProdutoId) errors.push('Produto');
+      if (!valorUnitario) errors.push('Valor Unitário');
+      if (!quantidadeDisponivel) errors.push('Quantidade');
+      if (!certificacao) errors.push('Certificação');
+      if (!tipoAgricultura) errors.push('Tipo de agricultura');
+      
       toast({
-        title: 'Campos inválidos',
-        description: 'Preencha todos os campos corretamente. Valor deve ser ≥ R$ 0,01 e Quantidade ≥ 1.',
+        title: 'Campos obrigatórios não preenchidos',
+        description: `Preencha: ${errors.join(', ')}. Valor deve ser ≥ R$ 0,01 e Quantidade ≥ 1.`,
         variant: 'destructive',
       });
       return;
@@ -196,6 +208,8 @@ export default function AdminOferta() {
               preco_base: produto.preco_base,
               valor_unitario: valor,
               quantidade_disponivel: quantidade,
+              certificacao: certificacao as CertificacaoType,
+              tipo_agricultura: tipoAgricultura as TipoAgriculturaType,
             }
           : o
       ));
@@ -214,6 +228,8 @@ export default function AdminOferta() {
         preco_base: produto.preco_base,
         valor_unitario: valor,
         quantidade_disponivel: quantidade,
+        certificacao: certificacao as CertificacaoType,
+        tipo_agricultura: tipoAgricultura as TipoAgriculturaType,
       };
       setOfertas([...ofertas, novaOferta]);
       toast({ title: 'Produto adicionado', description: 'O produto foi adicionado à oferta.' });
@@ -229,6 +245,8 @@ export default function AdminOferta() {
     setValorUnitario(precoFormatado);
     setQuantidadeDisponivel(oferta.quantidade_disponivel.toString());
     setPrecoBaseSugerido(oferta.preco_base);
+    setCertificacao(oferta.certificacao);
+    setTipoAgricultura(oferta.tipo_agricultura);
     // Scroll para o formulário
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -483,6 +501,65 @@ export default function AdminOferta() {
                 </p>
               </div>
 
+              {/* Certificações & Etiquetas */}
+              <div className="border-t pt-4 mt-2">
+                <h3 className="text-base font-semibold mb-4">Certificações & Etiquetas</h3>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Certificação */}
+                  <Card>
+                    <CardContent className="pt-6">
+                      <fieldset>
+                        <legend className="text-sm font-medium mb-3">Certificação do produto *</legend>
+                        <RadioGroup value={certificacao} onValueChange={(value) => setCertificacao(value as CertificacaoType)}>
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="organico" id="cert-organico" />
+                              <Label htmlFor="cert-organico" className="font-normal cursor-pointer">Produto orgânico</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="transicao" id="cert-transicao" />
+                              <Label htmlFor="cert-transicao" className="font-normal cursor-pointer">Produto em transição agroecológica</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="convencional" id="cert-convencional" />
+                              <Label htmlFor="cert-convencional" className="font-normal cursor-pointer">Produto convencional</Label>
+                            </div>
+                          </div>
+                        </RadioGroup>
+                        {!certificacao && selectedProdutoId && (
+                          <p className="text-xs text-destructive mt-2">Selecione uma certificação</p>
+                        )}
+                      </fieldset>
+                    </CardContent>
+                  </Card>
+
+                  {/* Tipo de Agricultura */}
+                  <Card>
+                    <CardContent className="pt-6">
+                      <fieldset>
+                        <legend className="text-sm font-medium mb-3">Tipo de agricultura *</legend>
+                        <RadioGroup value={tipoAgricultura} onValueChange={(value) => setTipoAgricultura(value as TipoAgriculturaType)}>
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="familiar" id="agri-familiar" />
+                              <Label htmlFor="agri-familiar" className="font-normal cursor-pointer">Agricultura familiar</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="nao_familiar" id="agri-nao-familiar" />
+                              <Label htmlFor="agri-nao-familiar" className="font-normal cursor-pointer">Agricultura não familiar</Label>
+                            </div>
+                          </div>
+                        </RadioGroup>
+                        {!tipoAgricultura && selectedProdutoId && (
+                          <p className="text-xs text-destructive mt-2">Selecione o tipo de agricultura</p>
+                        )}
+                      </fieldset>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
               {/* Botões de ação */}
               <div className="flex gap-2 justify-end pt-2">
                 {editingOferta && (
@@ -521,73 +598,191 @@ export default function AdminOferta() {
                 Nenhum produto adicionado. Use o formulário acima para adicionar produtos à oferta.
               </p>
             ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Produto</TableHead>
-                      <TableHead>Unidade</TableHead>
-                      <TableHead>Peso/Volume</TableHead>
-                      <TableHead>Preço Base</TableHead>
-                      <TableHead>Valor Unitário</TableHead>
-                      <TableHead>Quantidade</TableHead>
-                      <TableHead>Total</TableHead>
-                      <TableHead className="text-right">Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {ofertas.map((oferta) => {
-                      const total = oferta.valor_unitario * oferta.quantidade_disponivel;
-                      const precoAlterado = oferta.valor_unitario !== oferta.preco_base;
-                      
-                      return (
-                        <TableRow key={oferta.id}>
-                          <TableCell className="font-medium">{oferta.produto_base_nome}</TableCell>
-                          <TableCell>{oferta.unidade}</TableCell>
-                          <TableCell>
-                            {oferta.peso ? `${oferta.peso.toFixed(2)} kg` : 
-                             oferta.volume ? `${oferta.volume.toFixed(2)} L` : '-'}
-                          </TableCell>
-                          <TableCell>{formatBRL(oferta.preco_base)}</TableCell>
-                          <TableCell>
-                            {precoAlterado ? (
-                              <Badge variant="outline" className="bg-amber-50 dark:bg-amber-950 border-amber-300 dark:border-amber-700">
-                                {formatBRL(oferta.valor_unitario)}
+              <>
+                {/* Desktop View */}
+                <div className="hidden md:block overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Produto</TableHead>
+                        <TableHead>Unidade</TableHead>
+                        <TableHead>Peso/Volume</TableHead>
+                        <TableHead>Preço Base</TableHead>
+                        <TableHead>Valor Unitário</TableHead>
+                        <TableHead>Quantidade</TableHead>
+                        <TableHead>Certificação</TableHead>
+                        <TableHead>Tipo de agricultura</TableHead>
+                        <TableHead>Total</TableHead>
+                        <TableHead className="text-right">Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {ofertas.map((oferta) => {
+                        const total = oferta.valor_unitario * oferta.quantidade_disponivel;
+                        const precoAlterado = oferta.valor_unitario !== oferta.preco_base;
+                        
+                        return (
+                          <TableRow key={oferta.id}>
+                            <TableCell className="font-medium">{oferta.produto_base_nome}</TableCell>
+                            <TableCell>{oferta.unidade}</TableCell>
+                            <TableCell>
+                              {oferta.peso ? `${oferta.peso.toFixed(2)} kg` : 
+                               oferta.volume ? `${oferta.volume.toFixed(2)} L` : '-'}
+                            </TableCell>
+                            <TableCell>{formatBRL(oferta.preco_base)}</TableCell>
+                            <TableCell>
+                              {precoAlterado ? (
+                                <Badge variant="outline" className="bg-amber-50 dark:bg-amber-950 border-amber-300 dark:border-amber-700">
+                                  {formatBRL(oferta.valor_unitario)}
+                                </Badge>
+                              ) : (
+                                <span>{formatBRL(oferta.valor_unitario)}</span>
+                              )}
+                            </TableCell>
+                            <TableCell>{oferta.quantidade_disponivel}</TableCell>
+                            <TableCell>
+                              <Badge 
+                                variant={oferta.certificacao === 'organico' ? 'success' : oferta.certificacao === 'transicao' ? 'warning' : 'secondary'}
+                                className={
+                                  oferta.certificacao === 'organico' 
+                                    ? 'bg-green-600 text-white hover:bg-green-700' 
+                                    : oferta.certificacao === 'transicao' 
+                                    ? 'bg-lime-600 text-white hover:bg-lime-700' 
+                                    : 'bg-slate-500 text-white hover:bg-slate-600'
+                                }
+                              >
+                                {oferta.certificacao === 'organico' ? 'Orgânico' : oferta.certificacao === 'transicao' ? 'Transição' : 'Convencional'}
                               </Badge>
-                            ) : (
-                              <span>{formatBRL(oferta.valor_unitario)}</span>
-                            )}
-                          </TableCell>
-                          <TableCell>{oferta.quantidade_disponivel}</TableCell>
-                          <TableCell className="font-bold">
-                            {formatBRL(total)}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => handleEditarOferta(oferta)}
-                                className="h-8 w-8"
+                            </TableCell>
+                            <TableCell>
+                              <Badge 
+                                variant="secondary"
+                                className={
+                                  oferta.tipo_agricultura === 'familiar' 
+                                    ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-900 dark:text-emerald-100' 
+                                    : 'bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200'
+                                }
                               >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => handleConfirmDelete(oferta.id)}
-                                className="h-8 w-8 border-destructive text-destructive hover:bg-destructive/10"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
+                                {oferta.tipo_agricultura === 'familiar' ? 'Agri. familiar' : 'Agri. não familiar'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="font-bold">
+                              {formatBRL(total)}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => handleEditarOferta(oferta)}
+                                  className="h-8 w-8"
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => handleConfirmDelete(oferta.id)}
+                                  className="h-8 w-8 border-destructive text-destructive hover:bg-destructive/10"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Mobile View - Cards */}
+                <div className="md:hidden space-y-4">
+                  {ofertas.map((oferta) => {
+                    const total = oferta.valor_unitario * oferta.quantidade_disponivel;
+                    const precoAlterado = oferta.valor_unitario !== oferta.preco_base;
+                    
+                    return (
+                      <Card key={oferta.id} className="p-4">
+                        <div className="space-y-3">
+                          {/* Linha 1: Produto e Total */}
+                          <div className="flex justify-between items-start gap-2">
+                            <h3 className="font-semibold text-base">{oferta.produto_base_nome}</h3>
+                            <span className="font-bold text-primary whitespace-nowrap">
+                              {formatBRL(total)}
+                            </span>
+                          </div>
+
+                          {/* Linha 2: Medida, Valor Unit, Quantidade */}
+                          <div className="flex gap-4 text-sm text-muted-foreground flex-wrap">
+                            <span>{oferta.unidade}</span>
+                            <span>|</span>
+                            <span>
+                              {precoAlterado ? (
+                                <Badge variant="outline" className="bg-amber-50 dark:bg-amber-950 border-amber-300 dark:border-amber-700 text-xs">
+                                  {formatBRL(oferta.valor_unitario)}
+                                </Badge>
+                              ) : (
+                                formatBRL(oferta.valor_unitario)
+                              )}
+                            </span>
+                            <span>|</span>
+                            <span>Qtd: {oferta.quantidade_disponivel}</span>
+                          </div>
+
+                          {/* Linha 3: Badges de Certificação e Tipo */}
+                          <div className="flex gap-2 flex-wrap">
+                            <Badge 
+                              variant={oferta.certificacao === 'organico' ? 'success' : oferta.certificacao === 'transicao' ? 'warning' : 'secondary'}
+                              className={
+                                oferta.certificacao === 'organico' 
+                                  ? 'bg-green-600 text-white hover:bg-green-700' 
+                                  : oferta.certificacao === 'transicao' 
+                                  ? 'bg-lime-600 text-white hover:bg-lime-700' 
+                                  : 'bg-slate-500 text-white hover:bg-slate-600'
+                              }
+                            >
+                              {oferta.certificacao === 'organico' ? 'Orgânico' : oferta.certificacao === 'transicao' ? 'Transição' : 'Convencional'}
+                            </Badge>
+                            <Badge 
+                              variant="secondary"
+                              className={
+                                oferta.tipo_agricultura === 'familiar' 
+                                  ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-900 dark:text-emerald-100' 
+                                  : 'bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200'
+                              }
+                            >
+                              {oferta.tipo_agricultura === 'familiar' ? 'Agri. familiar' : 'Agri. não familiar'}
+                            </Badge>
+                          </div>
+
+                          {/* Botões de ação */}
+                          <div className="flex gap-2 pt-2 border-t">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEditarOferta(oferta)}
+                              className="flex-1"
+                            >
+                              <Pencil className="h-4 w-4 mr-1" />
+                              Editar
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleConfirmDelete(oferta.id)}
+                              className="flex-1 border-destructive text-destructive hover:bg-destructive/10"
+                            >
+                              <Trash2 className="h-4 w-4 mr-1" />
+                              Remover
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </>
             )}
           </CardContent>
         </Card>

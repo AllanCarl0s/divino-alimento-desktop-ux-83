@@ -18,6 +18,9 @@ export interface ProdutoComercializavel {
   agricultura_familiar?: boolean;
 }
 
+export type CertificacaoType = 'organico' | 'transicao' | 'convencional';
+export type TipoAgriculturaType = 'familiar' | 'nao_familiar';
+
 export interface OfertaProduto {
   id: string;
   ciclo_id: string;
@@ -31,6 +34,8 @@ export interface OfertaProduto {
   valor_unitario: number; // Preço que será usado na oferta (editável)
   quantidade_disponivel: number;
   quantidade_ofertada?: number;
+  certificacao: CertificacaoType;
+  tipo_agricultura: TipoAgriculturaType;
 }
 
 export interface ProdutoComercializavelVariacao extends ProdutoComercializavel {
