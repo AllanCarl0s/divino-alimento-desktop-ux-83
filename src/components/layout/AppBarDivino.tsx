@@ -82,7 +82,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
             <img 
               src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
               alt="Divino Alimento - Alimento de Todo Mundo"
-              className="h-auto max-w-[220px] md:max-w-[280px] lg:max-w-[340px] object-contain"
+              className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain"
               style={{ maxHeight: 'calc(100% - 16px)' }}
               decoding="async"
               onError={(e) => {
@@ -97,7 +97,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
               <img 
                 src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
                 alt="Divino Alimento - Alimento de Todo Mundo"
-                className="h-auto max-w-[220px] md:max-w-[280px] lg:max-w-[340px] object-contain cursor-pointer"
+                className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain cursor-pointer"
                 style={{ maxHeight: 'calc(100% - 16px)' }}
                 decoding="async"
                 onError={(e) => {
