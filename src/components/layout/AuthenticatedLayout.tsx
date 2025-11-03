@@ -1,5 +1,5 @@
 import React from 'react';
-import { AuthenticatedHeader } from './AuthenticatedHeader';
+import { HeaderGlobal } from './HeaderGlobal';
 import { PageTitle } from './PageTitle';
 import { BottomTabs } from './BottomTabs';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -24,12 +24,12 @@ export const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <AuthenticatedHeader />
+      <HeaderGlobal />
       <PageTitle title={pageTitle} subtitle={pageSubtitle} />
       
       <main 
         className={cn(
-          "flex-1",
+          "flex-1 pt-2",
           isMobile && showBottomTabs ? "pb-20" : "",
           className
         )}
