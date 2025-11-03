@@ -102,29 +102,29 @@ export const UserMenuLarge: React.FC = () => {
 
   return (
     <div ref={menuRef} className="relative">
-      <div className="flex flex-col items-end pr-4 md:pr-8 pt-8 md:pt-10">
-        {/* Avatar - inside orange header, positioned to the right */}
-        <Avatar className="h-10 w-10 md:h-12 md:w-12 border-2 border-white shadow-lg">
+      <div className="flex flex-col items-center pt-12 md:pt-14">
+        {/* Avatar - inside orange header */}
+        <Avatar className="h-16 w-16 md:h-20 md:w-20 border-4 border-white shadow-lg">
           <AvatarImage src={user.photoURL} alt={displayName} />
-          <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-            <User className="h-5 w-5 md:h-6 md:w-6" />
+          <AvatarFallback className="bg-primary text-primary-foreground text-xl">
+            <User className="h-8 w-8 md:h-10 md:w-10" />
           </AvatarFallback>
         </Avatar>
       </div>
 
-      {/* User Name and Dropdown - in white area below, aligned right */}
+      {/* User Name and Dropdown - in white area below */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full mt-4 md:mt-6 flex items-center justify-end pr-4 md:pr-8 gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
+        className="w-full mt-6 md:mt-8 flex items-center justify-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <span className="font-semibold text-sm md:text-base text-foreground">
+        <span className="font-semibold text-base md:text-lg text-foreground">
           {displayName}
         </span>
         <ChevronDown 
           className={cn(
-            "h-3.5 w-3.5 text-muted-foreground transition-transform",
+            "h-4 w-4 text-muted-foreground transition-transform",
             isOpen && "rotate-180"
           )} 
         />
