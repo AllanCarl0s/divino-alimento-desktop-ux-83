@@ -11,6 +11,7 @@ import { ArrowLeft, Search, Download, FileText } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { formatBRL } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PedidoItem {
   id: string;
@@ -29,6 +30,7 @@ interface PedidoItem {
 export default function ConsumidorRelatorio() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [periodFilter, setPeriodFilter] = useState('todos');
   const [statusFilter, setStatusFilter] = useState('todos');
@@ -232,66 +234,124 @@ export default function ConsumidorRelatorio() {
           </div>
         </div>
 
-        {/* Table */}
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Ciclo</TableHead>
-                <TableHead>Produto</TableHead>
-                <TableHead>Medida</TableHead>
-                <TableHead className="text-right">Valor Unit.</TableHead>
-                <TableHead className="text-right">Qtd.</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-                <TableHead>Local</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPedidos.length === 0 ? (
+        {/* Table / Cards */}
+        {isMobile ? (
+          <div className="space-y-3">
+            {filteredPedidos.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center">
+                  <p className="text-muted-foreground">
+                    {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhum pedido registrado.'}
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              filteredPedidos.map((pedido) => (
+                <Card key={pedido.id} className="border border-border">
+                  <CardContent className="p-4 space-y-2">
+                    <div className="space-y-1.5">
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium">Ciclo:</span> {pedido.ciclo}
+                      </p>
+                      <p className="text-base font-bold text-primary">
+                        <span className="font-medium text-sm text-muted-foreground">Produto:</span> {pedido.produto}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium">Medida:</span> {pedido.medida}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium">Quantidade:</span> {pedido.quantidade}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium">Valor Unitário:</span> {formatBRL(pedido.valor_unitario)}
+                      </p>
+                      <p className="text-sm font-semibold text-primary">
+                        <span className="font-medium text-muted-foreground">Valor Total:</span> {formatBRL(pedido.total)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium">Local:</span> {pedido.local_recebimento}
+                      </p>
+                      <div className="flex items-center gap-2 pt-1">
+                        <span className="text-sm font-medium text-muted-foreground">Status:</span>
+                        <Badge 
+                          className={
+                            pedido.status_pagamento === 'Pago' 
+                              ? 'bg-primary text-primary-foreground' 
+                              : pedido.status_pagamento === 'Pendente' 
+                              ? 'bg-[hsl(var(--warning))] text-white' 
+                              : 'bg-muted text-muted-foreground'
+                          }
+                        >
+                          {pedido.status_pagamento}
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        ) : (
+          <Card>
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhum pedido registrado.'}
-                    </p>
-                  </TableCell>
+                  <TableHead>Ciclo</TableHead>
+                  <TableHead>Produto</TableHead>
+                  <TableHead>Medida</TableHead>
+                  <TableHead className="text-right">Valor Unit.</TableHead>
+                  <TableHead className="text-right">Qtd.</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead>Local</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
-              ) : (
-                filteredPedidos.map((pedido) => (
-                  <TableRow key={pedido.id}>
-                    <TableCell className="font-medium text-sm">{pedido.ciclo}</TableCell>
-                    <TableCell className="font-medium">{pedido.produto}</TableCell>
-                    <TableCell>{pedido.medida}</TableCell>
-                    <TableCell className="text-right">
-                      {formatBRL(pedido.valor_unitario)}
-                    </TableCell>
-                    <TableCell className="text-right">{pedido.quantidade}</TableCell>
-                    <TableCell className="text-right font-semibold text-success">
-                      {formatBRL(pedido.total)}
-                    </TableCell>
-                    <TableCell className="text-sm">{pedido.local_recebimento}</TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={
-                          pedido.status_pagamento === 'Pago' ? 'default' : 
-                          pedido.status_pagamento === 'Pendente' ? 'secondary' : 
-                          'destructive'
-                        }
-                        className={
-                          pedido.status_pagamento === 'Pago' ? 'bg-green-500' : 
-                          pedido.status_pagamento === 'Pendente' ? 'bg-yellow-500' : 
-                          'bg-red-500'
-                        }
-                      >
-                        {pedido.status_pagamento}
-                      </Badge>
+              </TableHeader>
+              <TableBody>
+                {filteredPedidos.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhum pedido registrado.'}
+                      </p>
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                ) : (
+                  filteredPedidos.map((pedido) => (
+                    <TableRow key={pedido.id}>
+                      <TableCell className="font-medium text-sm">{pedido.ciclo}</TableCell>
+                      <TableCell className="font-medium">{pedido.produto}</TableCell>
+                      <TableCell>{pedido.medida}</TableCell>
+                      <TableCell className="text-right">
+                        {formatBRL(pedido.valor_unitario)}
+                      </TableCell>
+                      <TableCell className="text-right">{pedido.quantidade}</TableCell>
+                      <TableCell className="text-right font-semibold text-success">
+                        {formatBRL(pedido.total)}
+                      </TableCell>
+                      <TableCell className="text-sm">{pedido.local_recebimento}</TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant={
+                            pedido.status_pagamento === 'Pago' ? 'default' : 
+                            pedido.status_pagamento === 'Pendente' ? 'secondary' : 
+                            'destructive'
+                          }
+                          className={
+                            pedido.status_pagamento === 'Pago' ? 'bg-green-500' : 
+                            pedido.status_pagamento === 'Pendente' ? 'bg-yellow-500' : 
+                            'bg-red-500'
+                          }
+                        >
+                          {pedido.status_pagamento}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        )}
 
         {/* Footer Button */}
         <div className="flex justify-start">

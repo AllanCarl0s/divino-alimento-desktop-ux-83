@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Search, Eye } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Pagamento {
   id: string;
@@ -21,6 +22,7 @@ interface Pagamento {
 
 export default function ConsumidorPagamentos() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('todos');
   const [sortOrder, setSortOrder] = useState<string>('recente');
@@ -161,59 +163,103 @@ export default function ConsumidorPagamentos() {
           </Select>
         </div>
 
-        {/* Table */}
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Data</TableHead>
-                <TableHead>Descrição</TableHead>
-                <TableHead className="text-right">Valor</TableHead>
-                <TableHead className="text-center">Status</TableHead>
-                <TableHead className="text-center">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPagamentos.length === 0 ? (
+        {/* Table / Cards */}
+        {isMobile ? (
+          <div className="space-y-3">
+            {filteredPagamentos.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center">
+                  <p className="text-muted-foreground">
+                    Nenhum pagamento encontrado.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              filteredPagamentos.map((pagamento) => (
+                <Card key={pagamento.id} className="border border-border">
+                  <CardContent className="p-4 space-y-2">
+                    <div className="space-y-1.5">
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium">Data:</span> {pagamento.data}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium">Descrição:</span> {pagamento.descricao}
+                      </p>
+                      <p className="text-base font-semibold text-primary">
+                        <span className="font-medium text-sm text-muted-foreground">Valor:</span> {formatBRL(pagamento.valor)}
+                      </p>
+                      <div className="flex items-center gap-2 pt-1">
+                        <span className="text-sm font-medium text-muted-foreground">Status:</span>
+                        <Badge 
+                          className={
+                            pagamento.status === 'Pago' 
+                              ? 'bg-primary text-primary-foreground' 
+                              : 'bg-[hsl(var(--warning))] text-white'
+                          }
+                        >
+                          {pagamento.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        ) : (
+          <Card>
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      Nenhum pagamento encontrado.
-                    </p>
-                  </TableCell>
+                  <TableHead>Data</TableHead>
+                  <TableHead>Descrição</TableHead>
+                  <TableHead className="text-right">Valor</TableHead>
+                  <TableHead className="text-center">Status</TableHead>
+                  <TableHead className="text-center">Ações</TableHead>
                 </TableRow>
-              ) : (
-                filteredPagamentos.map((pagamento) => (
-                  <TableRow key={pagamento.id}>
-                    <TableCell className="font-medium">{pagamento.data}</TableCell>
-                    <TableCell>{pagamento.descricao}</TableCell>
-                    <TableCell className="text-right font-semibold">
-                      {formatBRL(pagamento.valor)}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Badge 
-                        variant={pagamento.status === 'Pago' ? 'default' : 'secondary'}
-                        className={pagamento.status === 'Pago' ? 'bg-success' : 'bg-warning'}
-                      >
-                        {pagamento.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-primary text-primary hover:bg-primary/10"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        Ver Detalhes
-                      </Button>
+              </TableHeader>
+              <TableBody>
+                {filteredPagamentos.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        Nenhum pagamento encontrado.
+                      </p>
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                ) : (
+                  filteredPagamentos.map((pagamento) => (
+                    <TableRow key={pagamento.id}>
+                      <TableCell className="font-medium">{pagamento.data}</TableCell>
+                      <TableCell>{pagamento.descricao}</TableCell>
+                      <TableCell className="text-right font-semibold">
+                        {formatBRL(pagamento.valor)}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Badge 
+                          variant={pagamento.status === 'Pago' ? 'default' : 'secondary'}
+                          className={pagamento.status === 'Pago' ? 'bg-success' : 'bg-warning'}
+                        >
+                          {pagamento.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-primary text-primary hover:bg-primary/10"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          Ver Detalhes
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        )}
 
         {/* Footer Button */}
         <div className="flex justify-start">
