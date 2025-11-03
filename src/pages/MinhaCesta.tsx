@@ -200,7 +200,6 @@ const MinhaCesta = () => {
                     className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
                   >
                     <div className="flex items-start gap-2 mb-3">
-                      <span className="text-2xl">🥬</span>
                       <div className="flex-1">
                         <h3 className="font-poppins font-bold text-base text-primary leading-tight">
                           {item.produto}
