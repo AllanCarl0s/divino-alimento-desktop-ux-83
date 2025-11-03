@@ -102,7 +102,7 @@ export const UserMenuLarge: React.FC = () => {
 
   return (
     <div ref={menuRef} className="relative">
-      <div className="flex flex-col items-end pr-20 pt-12 md:items-center md:pr-0 md:pt-14">
+      <div className="flex flex-col items-start pl-4 pt-12 md:items-center md:pl-0 md:pt-14">
         {/* Avatar - inside orange header */}
         <Avatar className="h-12 w-12 md:h-20 md:w-20 border-4 border-white shadow-lg">
           <AvatarImage src={user.photoURL} alt={displayName} />
