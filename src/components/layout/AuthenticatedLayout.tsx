@@ -30,14 +30,11 @@ export const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({
       <main 
         className={cn(
           "flex-1 pt-2",
-          isMobile && showBottomTabs ? "pb-20" : "",
           className
         )}
       >
         {children}
       </main>
-      
-      {isMobile && showBottomTabs && <BottomTabs />}
     </div>
   );
 };

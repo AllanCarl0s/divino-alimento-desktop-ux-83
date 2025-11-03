@@ -69,7 +69,10 @@ export const UserMenuLarge: React.FC = () => {
       description: `Você está agora como ${getRoleLabel(role)}`,
     });
     
-    setIsOpen(false);
+    // Don't close on mobile - keep modal open for easier navigation
+    if (!isMobile) {
+      setIsOpen(false);
+    }
     navigate(newRoute);
   };
 
