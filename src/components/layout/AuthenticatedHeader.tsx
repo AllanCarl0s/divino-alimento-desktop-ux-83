@@ -98,7 +98,7 @@ export const AuthenticatedHeader: React.FC = () => {
     return names[0].charAt(0).toUpperCase();
   };
 
-  const avatarSize = isMobile ? 'w-10 h-10' : 'w-13 h-13';
+  const avatarSize = isMobile ? 'w-9 h-9' : 'w-12 h-12';
 
   return (
     <header 
@@ -108,41 +108,114 @@ export const AuthenticatedHeader: React.FC = () => {
         borderBottom: '4px solid #2E7D32',
       }}
     >
-      <div 
-        className={cn(
-          "flex items-center justify-between px-4 md:px-6 lg:px-8",
-          isMobile ? "h-14" : "min-h-[72px]"
-        )}
-      >
-        {/* Logo à esquerda */}
-        <div className="flex items-center">
-          <img 
-            src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
-            alt="Divino Alimento"
-            className={cn(
-              "h-auto object-contain",
-              isMobile ? "max-w-[140px]" : "max-w-[200px] md:max-w-[240px]"
-            )}
-            style={{ maxHeight: isMobile ? '40px' : '56px' }}
-          />
-        </div>
+      {isMobile ? (
+        /* Mobile Layout: Logo centralizada acima, avatar + nome abaixo à direita */
+        <div className="px-4 py-2">
+          {/* Logo centralizada */}
+          <div className="flex justify-center mb-1">
+            <img 
+              src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
+              alt="Divino Alimento"
+              className="h-auto object-contain max-w-[160px]"
+              style={{ maxHeight: '60px' }}
+            />
+          </div>
 
-        {/* Avatar + Nome + Menu à direita */}
-        <div className="flex items-center gap-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#F29B2C] rounded-lg p-2 hover:bg-white/10 transition-colors">
-                <Avatar className={cn(avatarSize, "border-2 border-white shadow-md")}>
-                  <AvatarImage src={user.email || ''} alt={user.name || ''} />
-                  <AvatarFallback 
-                    className="font-semibold text-white"
-                    style={{ backgroundColor: '#2E7D32' }}
-                  >
-                    {getInitials()}
-                  </AvatarFallback>
-                </Avatar>
+          {/* Avatar + Nome à direita */}
+          <div className="flex justify-end items-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#F29B2C] rounded-lg p-1 hover:bg-white/10 transition-all">
+                  <Avatar className={cn(avatarSize, "border-2 border-white shadow-md")}>
+                    <AvatarImage src={user.email || ''} alt={user.name || ''} />
+                    <AvatarFallback 
+                      className="font-semibold text-white text-sm"
+                      style={{ backgroundColor: '#2E7D32' }}
+                    >
+                      {getInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  <span className="text-white font-medium text-sm" style={{ fontFamily: 'Poppins' }}>
+                    {getDisplayName()}
+                  </span>
+                  
+                  <ChevronDown className="w-3.5 h-3.5 text-white" />
+                </button>
+              </DropdownMenuTrigger>
+              
+              <DropdownMenuContent 
+                align="end" 
+                className="w-56 bg-background border shadow-lg z-[100] animate-in fade-in slide-in-from-top-2 duration-200"
+              >
+                <div className="px-3 py-2">
+                  <p className="text-sm font-semibold text-foreground">{getDisplayName()}</p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
+                </div>
+                <DropdownMenuSeparator />
                 
-                {!isMobile && (
+                {user.roles.length > 1 && (
+                  <>
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">
+                      Trocar Perfil
+                    </DropdownMenuLabel>
+                    {user.roles.map((role) => (
+                      <DropdownMenuItem
+                        key={role}
+                        onClick={() => handleSwitchRole(role)}
+                        disabled={role === activeRole}
+                        className="gap-2 cursor-pointer"
+                      >
+                        {getRoleIcon(role)}
+                        <span>{getRoleLabel(role)}</span>
+                        {role === activeRole && (
+                          <span className="ml-auto text-xs text-muted-foreground">(Ativo)</span>
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+                
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="gap-2 cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sair</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      ) : (
+        /* Desktop Layout: Logo à esquerda, avatar + nome à direita na mesma linha */
+        <div className="flex items-center justify-between px-6 lg:px-8 min-h-[72px]">
+          {/* Logo à esquerda */}
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
+              alt="Divino Alimento"
+              className="h-auto object-contain max-w-[200px] md:max-w-[240px]"
+              style={{ maxHeight: '56px' }}
+            />
+          </div>
+
+          {/* Avatar + Nome + Menu à direita */}
+          <div className="flex items-center gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#F29B2C] rounded-lg p-2 hover:bg-white/10 transition-colors">
+                  <Avatar className={cn(avatarSize, "border-2 border-white shadow-md")}>
+                    <AvatarImage src={user.email || ''} alt={user.name || ''} />
+                    <AvatarFallback 
+                      className="font-semibold text-white"
+                      style={{ backgroundColor: '#2E7D32' }}
+                    >
+                      {getInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                  
                   <div className="flex flex-col items-start">
                     <span className="text-white font-semibold text-sm leading-tight">
                       {getDisplayName()}
@@ -151,70 +224,56 @@ export const AuthenticatedHeader: React.FC = () => {
                       {getRoleLabel(activeRole)}
                     </span>
                   </div>
+                  
+                  <ChevronDown className="w-4 h-4 text-white" />
+                </button>
+              </DropdownMenuTrigger>
+              
+              <DropdownMenuContent 
+                align="end" 
+                className="w-56 bg-background border shadow-lg z-[100]"
+              >
+                <div className="px-3 py-2">
+                  <p className="text-sm font-semibold text-foreground">{getDisplayName()}</p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
+                </div>
+                <DropdownMenuSeparator />
+                
+                {user.roles.length > 1 && (
+                  <>
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">
+                      Trocar Perfil
+                    </DropdownMenuLabel>
+                    {user.roles.map((role) => (
+                      <DropdownMenuItem
+                        key={role}
+                        onClick={() => handleSwitchRole(role)}
+                        disabled={role === activeRole}
+                        className="gap-2 cursor-pointer"
+                      >
+                        {getRoleIcon(role)}
+                        <span>{getRoleLabel(role)}</span>
+                        {role === activeRole && (
+                          <span className="ml-auto text-xs text-muted-foreground">(Ativo)</span>
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                  </>
                 )}
                 
-                <ChevronDown className="w-4 h-4 text-white" />
-              </button>
-            </DropdownMenuTrigger>
-            
-            <DropdownMenuContent 
-              align="end" 
-              className="w-56 bg-background border shadow-lg z-[100]"
-            >
-              {!isMobile && (
-                <>
-                  <div className="px-3 py-2">
-                    <p className="text-sm font-semibold text-foreground">{getDisplayName()}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
-                  </div>
-                  <DropdownMenuSeparator />
-                </>
-              )}
-              
-              {isMobile && (
-                <>
-                  <div className="px-3 py-2">
-                    <p className="text-sm font-semibold text-foreground">{getDisplayName()}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
-                  </div>
-                  <DropdownMenuSeparator />
-                </>
-              )}
-              
-              {user.roles.length > 1 && (
-                <>
-                  <DropdownMenuLabel className="text-xs text-muted-foreground">
-                    Trocar Perfil
-                  </DropdownMenuLabel>
-                  {user.roles.map((role) => (
-                    <DropdownMenuItem
-                      key={role}
-                      onClick={() => handleSwitchRole(role)}
-                      disabled={role === activeRole}
-                      className="gap-2 cursor-pointer"
-                    >
-                      {getRoleIcon(role)}
-                      <span>{getRoleLabel(role)}</span>
-                      {role === activeRole && (
-                        <span className="ml-auto text-xs text-muted-foreground">(Ativo)</span>
-                      )}
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                </>
-              )}
-              
-              <DropdownMenuItem
-                onClick={handleLogout}
-                className="gap-2 cursor-pointer text-destructive focus:text-destructive"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Sair</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="gap-2 cursor-pointer text-destructive focus:text-destructive"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sair</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
+      )}
     </header>
   );
 };
