@@ -8,11 +8,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Search, ShoppingCart, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Search, ShoppingCart, AlertCircle, Plus, Minus, Check, Circle } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
 import { toast } from '@/hooks/use-toast';
 import { groupAndSortProducts, type Oferta } from '@/utils/product-grouping';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Mock data - produtos disponíveis para venda direta
 const mockProdutos: Oferta[] = [
@@ -65,6 +66,7 @@ const mockProdutos: Oferta[] = [
 
 const PedidoConsumidores = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [searchParams] = useSearchParams();
   const idMercado = searchParams.get('cst');
   const idUsuario = searchParams.get('usr');
@@ -260,57 +262,128 @@ const PedidoConsumidores = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Produto</TableHead>
-                    <TableHead>Fornecedor</TableHead>
-                    <TableHead className="text-right">Valor Unit.</TableHead>
-                    <TableHead className="text-center w-32">Quantidade</TableHead>
-                    <TableHead className="text-right">Subtotal</TableHead>
-                    <TableHead className="w-20"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              {isMobile ? (
+                <div className="space-y-3">
                   {selectedItems.map(item => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{item.nome}</div>
-                          <div className="text-sm text-muted-foreground">{item.unidade}</div>
+                    <div
+                      key={item.id}
+                      className="bg-card border-2 border-primary/20 rounded-xl p-4 shadow-sm"
+                    >
+                      <div className="flex items-start gap-2 mb-3">
+                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <h3 className="font-poppins font-bold text-base text-primary leading-tight">
+                            {item.nome}
+                          </h3>
+                          <p className="text-sm text-muted-foreground mt-0.5">
+                            Fornecedor: {item.fornecedor}
+                          </p>
                         </div>
-                      </TableCell>
-                      <TableCell>{item.fornecedor}</TableCell>
-                      <TableCell className="text-right tabular-nums">
-                        {formatBRL(item.valor)}
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          type="number"
-                          min="1"
-                          max={item.quantidadeOfertada}
-                          value={item.quantidade}
-                          onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value) || 0)}
-                          className="w-20 mx-auto text-center"
-                        />
-                      </TableCell>
-                      <TableCell className="text-right tabular-nums font-medium">
-                        {formatBRL(item.subtotal)}
-                      </TableCell>
-                      <TableCell>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleToggleProduct(item.id)}
+                          className="h-8 w-8 p-0 -mt-1 -mr-1"
                           aria-label="Remover produto"
                         >
                           ✕
                         </Button>
-                      </TableCell>
-                    </TableRow>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Medida:</span>
+                          <span className="font-medium text-foreground">{item.unidade}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Valor Unitário:</span>
+                          <span className="font-medium text-foreground">{formatBRL(item.valor)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">Quantidade:</span>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleQuantityChange(item.id, item.quantidade - 1)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Minus className="w-4 h-4" />
+                            </Button>
+                            <span className="font-bold text-base w-8 text-center">{item.quantidade}</span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleQuantityChange(item.id, item.quantidade + 1)}
+                              disabled={item.quantidade >= item.quantidadeOfertada}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Plus className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="h-px bg-border my-2" />
+                        <div className="flex justify-between">
+                          <span className="font-semibold text-foreground">Subtotal:</span>
+                          <span className="font-bold text-primary">{formatBRL(item.subtotal)}</span>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </TableBody>
-              </Table>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Produto</TableHead>
+                      <TableHead>Fornecedor</TableHead>
+                      <TableHead className="text-right">Valor Unit.</TableHead>
+                      <TableHead className="text-center w-32">Quantidade</TableHead>
+                      <TableHead className="text-right">Subtotal</TableHead>
+                      <TableHead className="w-20"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {selectedItems.map(item => (
+                      <TableRow key={item.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{item.nome}</div>
+                            <div className="text-sm text-muted-foreground">{item.unidade}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{item.fornecedor}</TableCell>
+                        <TableCell className="text-right tabular-nums">
+                          {formatBRL(item.valor)}
+                        </TableCell>
+                        <TableCell>
+                          <Input
+                            type="number"
+                            min="1"
+                            max={item.quantidadeOfertada}
+                            value={item.quantidade}
+                            onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value) || 0)}
+                            className="w-20 mx-auto text-center"
+                          />
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums font-medium">
+                          {formatBRL(item.subtotal)}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleToggleProduct(item.id)}
+                            aria-label="Remover produto"
+                          >
+                            ✕
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         )}
@@ -343,20 +416,8 @@ const PedidoConsumidores = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12"></TableHead>
-                  <TableHead>Produto</TableHead>
-                  <TableHead>Medida</TableHead>
-                  <TableHead className="text-right">Valor Unitário</TableHead>
-                  <TableHead>Fornecedor</TableHead>
-                  <TableHead className="text-right">Disponível</TableHead>
-                  <TableHead className="text-center w-32">Quantidade</TableHead>
-                  <TableHead className="text-right">Subtotal</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            {isMobile ? (
+              <div className="space-y-3">
                 {productGroups.flatMap(group =>
                   group.variantes.map(produto => {
                     const isSelected = selectedProducts.has(produto.id);
@@ -365,66 +426,189 @@ const PedidoConsumidores = () => {
                     const isEsgotado = produto.quantidadeOfertada === 0;
 
                     return (
-                      <TableRow
+                      <div
                         key={produto.id}
-                        className={isEsgotado ? 'opacity-50' : ''}
+                        onClick={() => !isEsgotado && handleToggleProduct(produto.id)}
+                        className={`
+                          bg-card border rounded-xl p-4 shadow-sm transition-all
+                          ${isEsgotado ? 'opacity-60' : 'hover:shadow-md cursor-pointer'}
+                          ${isSelected ? 'border-2 border-primary bg-primary/5' : 'border-border'}
+                        `}
                       >
-                        <TableCell>
-                          <Checkbox
-                            checked={isSelected}
-                            onCheckedChange={() => handleToggleProduct(produto.id)}
-                            disabled={isEsgotado}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div>
-                              <div className="font-medium">{produto.nome}</div>
-                              {isEsgotado && (
-                                <Badge variant="secondary" className="mt-1">
-                                  Esgotado
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>{produto.unidade}</TableCell>
-                        <TableCell className="text-right tabular-nums">
-                          {formatBRL(produto.valor)}
-                        </TableCell>
-                        <TableCell>{produto.fornecedor}</TableCell>
-                        <TableCell className="text-right tabular-nums">
-                          {produto.quantidadeOfertada}
-                        </TableCell>
-                        <TableCell>
-                          {isSelected && (
-                            <Input
-                              type="number"
-                              min="1"
-                              max={produto.quantidadeOfertada}
-                              value={quantidade}
-                              onChange={(e) =>
-                                handleQuantityChange(produto.id, parseInt(e.target.value) || 0)
-                              }
-                              className="w-20 mx-auto text-center"
-                              disabled={isEsgotado}
-                            />
+                        <div className="flex items-start gap-2 mb-3">
+                          {isSelected ? (
+                            <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                          ) : (
+                            <Circle className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
                           )}
-                        </TableCell>
-                        <TableCell className="text-right tabular-nums font-medium">
-                          {isSelected ? formatBRL(subtotal) : '-'}
-                        </TableCell>
-                      </TableRow>
+                          <div className="flex-1">
+                            <h3 className="font-poppins font-bold text-base text-primary leading-tight">
+                              {produto.nome}
+                            </h3>
+                            <p className="text-sm text-muted-foreground mt-0.5">
+                              Fornecedor: {produto.fornecedor}
+                            </p>
+                            {isEsgotado && (
+                              <Badge 
+                                variant="secondary" 
+                                className="mt-1 text-xs bg-gray-200 text-gray-700"
+                              >
+                                Esgotado
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Medida:</span>
+                            <span className="font-medium text-foreground">{produto.unidade}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Valor Unitário:</span>
+                            <span className="font-medium text-foreground">{formatBRL(produto.valor)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Disponível:</span>
+                            <span className="font-medium text-foreground">{produto.quantidadeOfertada} unidades</span>
+                          </div>
+                          
+                          {isSelected && (
+                            <>
+                              <div className="h-px bg-border my-2" />
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Quantidade:</span>
+                                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleQuantityChange(produto.id, quantidade - 1);
+                                    }}
+                                    className="h-8 w-8 p-0"
+                                  >
+                                    <Minus className="w-4 h-4" />
+                                  </Button>
+                                  <span className="font-bold text-base w-8 text-center">{quantidade}</span>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleQuantityChange(produto.id, quantidade + 1);
+                                    }}
+                                    disabled={quantidade >= produto.quantidadeOfertada}
+                                    className="h-8 w-8 p-0"
+                                  >
+                                    <Plus className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="font-semibold text-foreground">Subtotal:</span>
+                                <span className="font-bold text-primary">{formatBRL(subtotal)}</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
                     );
                   })
                 )}
-              </TableBody>
-            </Table>
-
-            {productGroups.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                Nenhum produto encontrado
+                
+                {productGroups.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Nenhum produto encontrado
+                  </div>
+                )}
               </div>
+            ) : (
+              <>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12"></TableHead>
+                      <TableHead>Produto</TableHead>
+                      <TableHead>Medida</TableHead>
+                      <TableHead className="text-right">Valor Unitário</TableHead>
+                      <TableHead>Fornecedor</TableHead>
+                      <TableHead className="text-right">Disponível</TableHead>
+                      <TableHead className="text-center w-32">Quantidade</TableHead>
+                      <TableHead className="text-right">Subtotal</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {productGroups.flatMap(group =>
+                      group.variantes.map(produto => {
+                        const isSelected = selectedProducts.has(produto.id);
+                        const quantidade = quantities[produto.id] || 0;
+                        const subtotal = produto.valor * quantidade;
+                        const isEsgotado = produto.quantidadeOfertada === 0;
+
+                        return (
+                          <TableRow
+                            key={produto.id}
+                            className={isEsgotado ? 'opacity-50' : ''}
+                          >
+                            <TableCell>
+                              <Checkbox
+                                checked={isSelected}
+                                onCheckedChange={() => handleToggleProduct(produto.id)}
+                                disabled={isEsgotado}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <div>
+                                  <div className="font-medium">{produto.nome}</div>
+                                  {isEsgotado && (
+                                    <Badge variant="secondary" className="mt-1">
+                                      Esgotado
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>{produto.unidade}</TableCell>
+                            <TableCell className="text-right tabular-nums">
+                              {formatBRL(produto.valor)}
+                            </TableCell>
+                            <TableCell>{produto.fornecedor}</TableCell>
+                            <TableCell className="text-right tabular-nums">
+                              {produto.quantidadeOfertada}
+                            </TableCell>
+                            <TableCell>
+                              {isSelected && (
+                                <Input
+                                  type="number"
+                                  min="1"
+                                  max={produto.quantidadeOfertada}
+                                  value={quantidade}
+                                  onChange={(e) =>
+                                    handleQuantityChange(produto.id, parseInt(e.target.value) || 0)
+                                  }
+                                  className="w-20 mx-auto text-center"
+                                  disabled={isEsgotado}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right tabular-nums font-medium">
+                              {isSelected ? formatBRL(subtotal) : '-'}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    )}
+                  </TableBody>
+                </Table>
+
+                {productGroups.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Nenhum produto encontrado
+                  </div>
+                )}
+              </>
             )}
           </CardContent>
         </Card>

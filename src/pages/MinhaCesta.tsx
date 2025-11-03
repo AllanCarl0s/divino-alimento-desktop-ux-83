@@ -8,6 +8,7 @@ import { ArrowLeft, ShoppingBasket, MapPin, Clock, CalendarDays } from 'lucide-r
 import { formatBRL } from '@/utils/currency';
 import { Button } from '@/components/ui/button';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Mock data - cesta do consumidor
 const mockCesta = {
@@ -60,6 +61,7 @@ const mockCesta = {
 
 const MinhaCesta = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   // Estado vazio (comentar/descomentar para testar)
   const temCesta = true;
@@ -190,43 +192,90 @@ const MinhaCesta = () => {
             <CardTitle>Produtos da Minha Cesta</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Produto</TableHead>
-                  <TableHead>Medida</TableHead>
-                  <TableHead className="text-right">Quantidade</TableHead>
-                  <TableHead className="text-right">Valor Unitário</TableHead>
-                  <TableHead className="text-right">Valor Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            {isMobile ? (
+              <div className="space-y-3">
                 {mockCesta.itens.map(item => (
-                  <TableRow key={item.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{item.produto}</span>
+                  <div
+                    key={item.id}
+                    className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-start gap-2 mb-3">
+                      <span className="text-2xl">🥬</span>
+                      <div className="flex-1">
+                        <h3 className="font-poppins font-bold text-base text-primary leading-tight">
+                          {item.produto}
+                        </h3>
                         {item.isExtra && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge 
+                            className="mt-1 bg-secondary text-secondary-foreground text-xs"
+                          >
                             Extra
                           </Badge>
                         )}
                       </div>
-                    </TableCell>
-                    <TableCell>{item.medida}</TableCell>
-                    <TableCell className="text-right tabular-nums">
-                      {item.quantidade}
-                    </TableCell>
-                    <TableCell className="text-right tabular-nums">
-                      {formatBRL(item.valorUnitario)}
-                    </TableCell>
-                    <TableCell className="text-right tabular-nums font-medium">
-                      {formatBRL(item.valorUnitario * item.quantidade)}
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Medida:</span>
+                        <span className="font-medium text-foreground">{item.medida}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Quantidade:</span>
+                        <span className="font-medium text-foreground">{item.quantidade}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Valor Unitário:</span>
+                        <span className="font-medium text-foreground">{formatBRL(item.valorUnitario)}</span>
+                      </div>
+                      <div className="h-px bg-border my-2" />
+                      <div className="flex justify-between">
+                        <span className="font-semibold text-foreground">Valor Total:</span>
+                        <span className="font-bold text-primary">{formatBRL(item.valorUnitario * item.quantidade)}</span>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Produto</TableHead>
+                    <TableHead>Medida</TableHead>
+                    <TableHead className="text-right">Quantidade</TableHead>
+                    <TableHead className="text-right">Valor Unitário</TableHead>
+                    <TableHead className="text-right">Valor Total</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mockCesta.itens.map(item => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{item.produto}</span>
+                          {item.isExtra && (
+                            <Badge variant="secondary" className="text-xs">
+                              Extra
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>{item.medida}</TableCell>
+                      <TableCell className="text-right tabular-nums">
+                        {item.quantidade}
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums">
+                        {formatBRL(item.valorUnitario)}
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums font-medium">
+                        {formatBRL(item.valorUnitario * item.quantidade)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
 
