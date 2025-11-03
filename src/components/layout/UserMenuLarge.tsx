@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, ChevronDown, LogOut } from 'lucide-react';
+import { User, ChevronDown, LogOut, ShoppingBasket, Store, Shield, Building2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const getDefaultRoute = (role: UserRole): string => {
   switch (role) {
@@ -32,10 +33,24 @@ const getRoleLabel = (role: UserRole): string => {
   }
 };
 
+const getRoleIcon = (role: UserRole) => {
+  switch (role) {
+    case 'consumidor':
+      return ShoppingBasket;
+    case 'fornecedor':
+      return Store;
+    case 'admin':
+      return Shield;
+    case 'admin_mercado':
+      return Building2;
+  }
+};
+
 export const UserMenuLarge: React.FC = () => {
   const { user, activeRole, switchRole, logout } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -75,6 +90,14 @@ export const UserMenuLarge: React.FC = () => {
   
   const displayName = getDisplayName();
 
+  const getInitials = () => {
+    if (user.name) {
+      const nameParts = user.name.trim().split(' ');
+      return nameParts.slice(0, 2).map(n => n[0]).join('').toUpperCase();
+    }
+    return user.email?.[0]?.toUpperCase() || 'U';
+  };
+
   // Close menu on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -100,14 +123,104 @@ export const UserMenuLarge: React.FC = () => {
     };
   }, [isOpen]);
 
+  // Mobile version - Modal style Google
+  if (isMobile) {
+    return (
+      <>
+        <div ref={menuRef} className="relative">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center hover:opacity-80 transition-opacity"
+            aria-haspopup="menu"
+            aria-expanded={isOpen}
+          >
+            <Avatar className="h-11 w-11 border-2 border-white">
+              <AvatarImage src={user.photoURL} alt={displayName} />
+              <AvatarFallback className="bg-primary text-white font-semibold">
+                {getInitials()}
+              </AvatarFallback>
+            </Avatar>
+          </button>
+        </div>
+
+        {/* Mobile Modal */}
+        {isOpen && (
+          <div 
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[999] animate-in fade-in duration-300"
+            onClick={() => setIsOpen(false)}
+          >
+            <div 
+              className="bg-white w-[90%] max-w-[340px] rounded-2xl p-6 text-center shadow-2xl animate-in slide-in-from-top-4 duration-300"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Large Avatar */}
+              <Avatar className="h-20 w-20 border-3 border-primary mx-auto mb-2">
+                <AvatarImage src={user.photoURL} alt={displayName} />
+                <AvatarFallback className="bg-primary text-white font-semibold text-2xl">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
+
+              {/* User Info */}
+              <h3 className="text-lg font-semibold text-primary mb-1">
+                Olá, {displayName}!
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {user.email}
+              </p>
+
+              {/* Roles List */}
+              {user.roles && user.roles.length > 0 && (
+                <ul className="mb-3 border-t border-gray-200">
+                  {user.roles.map((role) => {
+                    const Icon = getRoleIcon(role);
+                    const isActive = role === activeRole;
+                    return (
+                      <li 
+                        key={role}
+                        onClick={() => !isActive && handleSwitchRole(role)}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 border-b border-gray-100 cursor-pointer transition-colors",
+                          isActive ? "bg-primary/5 font-medium" : "hover:bg-gray-50"
+                        )}
+                      >
+                        <Icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-gray-600")} />
+                        <span className={cn("text-sm text-left flex-1", isActive ? "text-primary" : "text-gray-700")}>
+                          {getRoleLabel(role)}
+                        </span>
+                        {isActive && (
+                          <span className="text-xs text-primary">Ativo</span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Sair
+              </button>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  // Desktop version - Original dropdown
   return (
     <div ref={menuRef} className="relative">
-      <div className="flex flex-col items-start pl-16 pt-12 md:items-center md:pl-0 md:pt-14">
+      <div className="flex flex-col items-center pt-14">
         {/* Avatar - inside orange header */}
-        <Avatar className="h-10 w-10 md:h-20 md:w-20 border-4 border-white shadow-lg">
+        <Avatar className="h-20 w-20 border-4 border-white shadow-lg">
           <AvatarImage src={user.photoURL} alt={displayName} />
           <AvatarFallback className="bg-primary text-primary-foreground text-xl">
-            <User className="h-5 w-5 md:h-10 md:w-10" />
+            <User className="h-10 w-10" />
           </AvatarFallback>
         </Avatar>
       </div>
@@ -115,11 +228,11 @@ export const UserMenuLarge: React.FC = () => {
       {/* User Name and Dropdown - in white area below */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full mt-6 md:mt-8 flex items-center justify-start md:justify-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
+        className="w-full mt-8 flex items-center justify-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <span className="font-semibold text-base md:text-lg text-foreground">
+        <span className="font-semibold text-lg text-foreground">
           {displayName}
         </span>
         <ChevronDown 
