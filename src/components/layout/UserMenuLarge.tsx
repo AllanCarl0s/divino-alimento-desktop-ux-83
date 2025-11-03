@@ -115,7 +115,7 @@ export const UserMenuLarge: React.FC = () => {
       {/* User Name and Dropdown - in white area below */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full mt-6 md:mt-8 flex items-center justify-start pl-32 md:justify-center md:pl-0 gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
+        className="w-full mt-6 md:mt-8 flex items-center justify-start pl-4 md:pl-0 md:justify-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
