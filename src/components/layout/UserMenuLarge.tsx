@@ -101,10 +101,11 @@ export const UserMenuLarge: React.FC = () => {
     return user.email?.[0]?.toUpperCase() || 'U';
   };
 
-  // Close menu on outside click and Escape key
+  // Close menu on outside click (desktop only) and Escape key
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      // Only close on outside click for desktop
+      if (!isMobile && menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -163,6 +164,7 @@ export const UserMenuLarge: React.FC = () => {
             aria-modal="true"
             aria-labelledby="avatar-menu-title"
             className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-40 animate-in fade-in duration-300"
+            onClick={(e) => e.stopPropagation()}
           >
             <div 
               className="bg-white w-[90%] max-w-[340px] rounded-2xl p-6 text-center shadow-2xl animate-in slide-in-from-top-4 duration-300 relative z-50"
@@ -170,9 +172,13 @@ export const UserMenuLarge: React.FC = () => {
             >
               {/* Close Button */}
               <button
-                onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                aria-label="Fechar"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsOpen(false);
+                }}
+                className="absolute top-3 right-3 h-10 w-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+                aria-label="Fechar menu de perfil"
               >
                 <X className="h-5 w-5 text-gray-600" />
               </button>
