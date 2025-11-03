@@ -102,7 +102,7 @@ export const UserMenuLarge: React.FC = () => {
 
   return (
     <div ref={menuRef} className="relative">
-      <div className="flex flex-col items-start pl-4 pt-12 md:items-center md:pl-0 md:pt-14">
+      <div className="flex flex-col items-start pl-16 pt-12 md:items-center md:pl-0 md:pt-14">
         {/* Avatar - inside orange header */}
         <Avatar className="h-10 w-10 md:h-20 md:w-20 border-4 border-white shadow-lg">
           <AvatarImage src={user.photoURL} alt={displayName} />
@@ -115,7 +115,7 @@ export const UserMenuLarge: React.FC = () => {
       {/* User Name and Dropdown - in white area below */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full mt-6 md:mt-8 flex items-center justify-start pl-4 md:pl-0 md:justify-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
+        className="w-full mt-6 md:mt-8 flex items-center justify-start md:justify-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
