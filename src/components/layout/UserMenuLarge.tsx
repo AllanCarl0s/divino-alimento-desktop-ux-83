@@ -150,11 +150,15 @@ export const UserMenuLarge: React.FC = () => {
         {isOpen && (
           <div 
             className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[999] animate-in fade-in duration-300"
-            onClick={() => setIsOpen(false)}
+            onClick={(e) => {
+              // Only close if clicking directly on backdrop, not on modal content
+              if (e.target === e.currentTarget) {
+                setIsOpen(false);
+              }
+            }}
           >
             <div 
               className="bg-white w-[90%] max-w-[340px] rounded-2xl p-6 text-center shadow-2xl animate-in slide-in-from-top-4 duration-300"
-              onClick={(e) => e.stopPropagation()}
             >
               {/* Large Avatar */}
               <Avatar className="h-20 w-20 border-3 border-primary mx-auto mb-2">

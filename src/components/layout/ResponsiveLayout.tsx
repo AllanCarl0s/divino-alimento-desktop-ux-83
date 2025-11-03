@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import AppBarDivino from './AppBarDivino';
 import AdminSidebar from './AdminSidebar';
-import BottomTabs from './BottomTabs';
 import AppShell from './AppShell';
 import Breadcrumb from './Breadcrumb';
 
@@ -88,9 +87,6 @@ export const ResponsiveLayout = ({
             {children}
           </div>
         </main>
-
-        {/* Mobile spacing for bottom tabs */}
-        <div className="h-20 lg:hidden" />
       </AppShell>
     );
   }
@@ -108,12 +104,6 @@ export const ResponsiveLayout = ({
         <main className="flex-1 px-4 py-6">
           {children}
         </main>
-        {/* Mobile spacing for bottom tabs */}
-        <div className="h-20" />
-        {/* Bottom Navigation for Mobile only */}
-        {!isLoginRoute && (
-          <BottomTabs variant={isFornecedorRoute ? 'fornecedor' : 'consumer'} />
-        )}
       </div>
 
       {/* Desktop Layout */}
