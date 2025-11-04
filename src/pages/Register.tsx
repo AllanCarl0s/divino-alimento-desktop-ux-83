@@ -188,7 +188,7 @@ const Register = () => {
     >
       {/* Desktop centered registration with co-brand */}
       <div className="flex items-center justify-center min-h-screen py-12">
-        <div className="w-full max-w-2xl lg:max-w-4xl px-4">
+        <div className="w-full max-w-[1080px] mx-auto px-4 md:px-6 xl:px-6">
           {/* Co-brand AKARUI */}
           <CoBrandAkarui />
           
@@ -210,7 +210,7 @@ const Register = () => {
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   {/* Desktop Two-Column Layout */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                  <div className="grid grid-cols-1 max-[991px]:gap-4 min-[992px]:gap-6 min-[1200px]:grid-cols-2 min-[1200px]:gap-6">
                     
                     {/* Left Column - Main Information */}
                     <div className="space-y-4">
@@ -369,11 +369,21 @@ const Register = () => {
                         <Label className="text-sm lg:text-base font-medium">Escolha seus perfis (múltipla seleção)</Label>
                         
                         {/* Grid responsivo para cards de perfil */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 max-[991px]:gap-3 min-[1200px]:grid-cols-2 min-[1200px]:gap-4">
                           {/* Consumidor/Consumidora */}
                           <div 
-                            className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer min-h-[140px]"
+                            className="flex items-start space-x-3 p-4 min-[1200px]:p-5 border rounded-xl transition-all cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] word-wrap break-words overflow-wrap-anywhere hyphens-auto data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 data-[selected=true]:shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
                             onClick={() => form.setValue('profiles.consumidor', !form.getValues('profiles.consumidor'))}
+                            data-selected={form.watch('profiles.consumidor')}
+                            role="checkbox"
+                            aria-checked={form.watch('profiles.consumidor')}
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                form.setValue('profiles.consumidor', !form.getValues('profiles.consumidor'));
+                              }
+                            }}
                           >
                             <FormField
                               control={form.control}
@@ -387,12 +397,12 @@ const Register = () => {
                                       onClick={(e) => e.stopPropagation()}
                                     />
                                   </FormControl>
-                                  <div className="space-y-1 leading-none flex-1">
-                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                      <ShoppingBasket className="w-5 h-5 text-primary flex-shrink-0" />
+                                   <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center space-x-2 cursor-pointer font-semibold text-sm min-[1200px]:text-base">
+                                      <ShoppingBasket className="w-5 h-5 min-[1200px]:w-6 min-[1200px]:h-6 text-primary flex-shrink-0" />
                                       <span className="break-words">Consumidor/Consumidora</span>
                                     </FormLabel>
-                                    <p className="text-sm text-muted-foreground leading-relaxed break-words">
+                                    <p className="text-[13px] min-[1200px]:text-sm text-muted-foreground leading-[1.45] break-words overflow-wrap-anywhere hyphens-auto">
                                       Acesso a cestas ou venda direta. Ideal para quem deseja receber produtos orgânicos.
                                     </p>
                                   </div>
@@ -403,8 +413,18 @@ const Register = () => {
 
                           {/* Fornecedor/Fornecedora */}
                           <div 
-                            className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer min-h-[140px]"
+                            className="flex items-start space-x-3 p-4 min-[1200px]:p-5 border rounded-xl transition-all cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] word-wrap break-words overflow-wrap-anywhere hyphens-auto data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 data-[selected=true]:shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
                             onClick={() => form.setValue('profiles.fornecedor', !form.getValues('profiles.fornecedor'))}
+                            data-selected={form.watch('profiles.fornecedor')}
+                            role="checkbox"
+                            aria-checked={form.watch('profiles.fornecedor')}
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                form.setValue('profiles.fornecedor', !form.getValues('profiles.fornecedor'));
+                              }
+                            }}
                           >
                             <FormField
                               control={form.control}
@@ -418,12 +438,12 @@ const Register = () => {
                                       onClick={(e) => e.stopPropagation()}
                                     />
                                   </FormControl>
-                                  <div className="space-y-1 leading-none flex-1">
-                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                      <Store className="w-5 h-5 text-accent flex-shrink-0" />
+                                   <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center space-x-2 cursor-pointer font-semibold text-sm min-[1200px]:text-base">
+                                      <Store className="w-5 h-5 min-[1200px]:w-6 min-[1200px]:h-6 text-accent flex-shrink-0" />
                                       <span className="break-words">Fornecedor/Fornecedora</span>
                                     </FormLabel>
-                                    <p className="text-sm text-muted-foreground leading-relaxed break-words">
+                                    <p className="text-[13px] min-[1200px]:text-sm text-muted-foreground leading-[1.45] break-words overflow-wrap-anywhere hyphens-auto">
                                       Gestão de produtos e vendas para estabelecimentos.
                                     </p>
                                   </div>
@@ -434,8 +454,18 @@ const Register = () => {
 
                           {/* Administrador Geral */}
                           <div 
-                            className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer min-h-[140px]"
+                            className="flex items-start space-x-3 p-4 min-[1200px]:p-5 border rounded-xl transition-all cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] word-wrap break-words overflow-wrap-anywhere hyphens-auto data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 data-[selected=true]:shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
                             onClick={() => form.setValue('profiles.adminGeral', !form.getValues('profiles.adminGeral'))}
+                            data-selected={form.watch('profiles.adminGeral')}
+                            role="checkbox"
+                            aria-checked={form.watch('profiles.adminGeral')}
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                form.setValue('profiles.adminGeral', !form.getValues('profiles.adminGeral'));
+                              }
+                            }}
                           >
                             <FormField
                               control={form.control}
@@ -449,12 +479,12 @@ const Register = () => {
                                       onClick={(e) => e.stopPropagation()}
                                     />
                                   </FormControl>
-                                  <div className="space-y-1 leading-none flex-1">
-                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                      <Shield className="w-5 h-5 text-destructive flex-shrink-0" />
+                                   <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center space-x-2 cursor-pointer font-semibold text-sm min-[1200px]:text-base">
+                                      <Shield className="w-5 h-5 min-[1200px]:w-6 min-[1200px]:h-6 text-destructive flex-shrink-0" />
                                       <span className="break-words">Administrador/Administradora Geral</span>
                                     </FormLabel>
-                                    <p className="text-sm text-muted-foreground leading-relaxed break-words">
+                                    <p className="text-[13px] min-[1200px]:text-sm text-muted-foreground leading-[1.45] break-words overflow-wrap-anywhere hyphens-auto">
                                       Gestão completa da plataforma e todos os mercados.
                                     </p>
                                   </div>
@@ -465,8 +495,18 @@ const Register = () => {
 
                           {/* Administrador de Mercado */}
                           <div 
-                            className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer min-h-[140px]"
+                            className="flex items-start space-x-3 p-4 min-[1200px]:p-5 border rounded-xl transition-all cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] word-wrap break-words overflow-wrap-anywhere hyphens-auto data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 data-[selected=true]:shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
                             onClick={() => form.setValue('profiles.adminMercado', !form.getValues('profiles.adminMercado'))}
+                            data-selected={form.watch('profiles.adminMercado')}
+                            role="checkbox"
+                            aria-checked={form.watch('profiles.adminMercado')}
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                form.setValue('profiles.adminMercado', !form.getValues('profiles.adminMercado'));
+                              }
+                            }}
                           >
                             <FormField
                               control={form.control}
@@ -480,12 +520,12 @@ const Register = () => {
                                       onClick={(e) => e.stopPropagation()}
                                     />
                                   </FormControl>
-                                  <div className="space-y-1 leading-none flex-1">
-                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                      <UserCheck className="w-5 h-5 text-warning flex-shrink-0" />
+                                   <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center space-x-2 cursor-pointer font-semibold text-sm min-[1200px]:text-base">
+                                      <UserCheck className="w-5 h-5 min-[1200px]:w-6 min-[1200px]:h-6 text-warning flex-shrink-0" />
                                       <span className="break-words">Administrador/Administradora de Mercado</span>
                                     </FormLabel>
-                                    <p className="text-sm text-muted-foreground leading-relaxed break-words">
+                                    <p className="text-[13px] min-[1200px]:text-sm text-muted-foreground leading-[1.45] break-words overflow-wrap-anywhere hyphens-auto">
                                       Gestão específica de um mercado e seus fornecedores.
                                     </p>
                                   </div>
@@ -497,7 +537,7 @@ const Register = () => {
                       </div>
 
                       {/* Validation Status */}
-                      <div className="bg-muted/50 p-4 rounded-lg">
+                      <div className="bg-muted/50 p-4 rounded-lg mt-4">
                         <h4 className="text-sm font-medium text-foreground mb-3">Status da Validação:</h4>
                         <div className="space-y-2">
                           <div className="flex items-center space-x-2">
