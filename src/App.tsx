@@ -42,7 +42,9 @@ import AdminComposicaoVendaDiretaLiberar from "./pages/admin/AdminComposicaoVend
 import AdminEntregasFornecedores from "./pages/admin/AdminEntregasFornecedores";
 import AdminPedidosConsumidores from "./pages/admin/AdminPedidosConsumidores";
 import AdminRelatorioFornecedores from "./pages/admin/AdminRelatorioFornecedores";
+import AdminRelatorioFornecedoresResultado from "./pages/admin/AdminRelatorioFornecedoresResultado";
 import AdminRelatorioConsumidores from "./pages/admin/AdminRelatorioConsumidores";
+import AdminRelatorioConsumidoresResultado from "./pages/admin/AdminRelatorioConsumidoresResultado";
 import AdminMigrarOfertas from "./pages/admin/AdminMigrarOfertas";
 import AdminPagamentosGerar from "./pages/admin/AdminPagamentosGerar";
 import AdminPagamentosGerir from "./pages/admin/AdminPagamentosGerir";
@@ -135,7 +137,9 @@ const App = () => (
           <Route path="/admin/entregas-fornecedores/:id" element={<ProtectedRoute><AdminEntregasFornecedores /></ProtectedRoute>} />
           <Route path="/admin/pedidos-consumidores/:id" element={<ProtectedRoute><AdminPedidosConsumidores /></ProtectedRoute>} />
           <Route path="/admin/relatorio-fornecedores" element={<ProtectedRoute><AdminRelatorioFornecedores /></ProtectedRoute>} />
+          <Route path="/admin/relatorio-fornecedores/resultado" element={<ProtectedRoute><AdminRelatorioFornecedoresResultado /></ProtectedRoute>} />
           <Route path="/admin/relatorio-consumidores" element={<ProtectedRoute><AdminRelatorioConsumidores /></ProtectedRoute>} />
+          <Route path="/admin/relatorio-consumidores/resultado" element={<ProtectedRoute><AdminRelatorioConsumidoresResultado /></ProtectedRoute>} />
           <Route path="/admin/migrar-ofertas/:destinoId" element={<ProtectedRoute><AdminMigrarOfertas /></ProtectedRoute>} />
           <Route path="/admin/pagamentos-gerar" element={<ProtectedRoute><AdminPagamentosGerar /></ProtectedRoute>} />
           <Route path="/admin/pagamentos-gerir" element={<ProtectedRoute><AdminPagamentosGerir /></ProtectedRoute>} />
