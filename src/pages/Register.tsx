@@ -368,112 +368,131 @@ const Register = () => {
                       <div className="space-y-3">
                         <Label className="text-sm lg:text-base font-medium">Escolha seus perfis (múltipla seleção)</Label>
                         
-                        {/* Consumidor/Consumidora */}
-                        <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
-                          <FormField
-                            control={form.control}
-                            name="profiles.consumidor"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                  />
-                                </FormControl>
-                                <div className="space-y-1 leading-none">
-                                  <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                    <ShoppingBasket className="w-5 h-5 text-primary" />
-                                    <span>Consumidor/Consumidora</span>
-                                  </FormLabel>
-                                  <p className="text-sm text-muted-foreground">
-                                    Acesso a cestas ou venda direta. Ideal para quem deseja receber produtos orgânicos.
-                                  </p>
-                                </div>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                        {/* Grid responsivo para cards de perfil */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                          {/* Consumidor/Consumidora */}
+                          <div 
+                            className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer min-h-[140px]"
+                            onClick={() => form.setValue('profiles.consumidor', !form.getValues('profiles.consumidor'))}
+                          >
+                            <FormField
+                              control={form.control}
+                              name="profiles.consumidor"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                      onClick={(e) => e.stopPropagation()}
+                                    />
+                                  </FormControl>
+                                  <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
+                                      <ShoppingBasket className="w-5 h-5 text-primary flex-shrink-0" />
+                                      <span className="break-words">Consumidor/Consumidora</span>
+                                    </FormLabel>
+                                    <p className="text-sm text-muted-foreground leading-relaxed break-words">
+                                      Acesso a cestas ou venda direta. Ideal para quem deseja receber produtos orgânicos.
+                                    </p>
+                                  </div>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
 
-                         {/* Fornecedor/Fornecedora */}
-                         <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
-                           <FormField
-                             control={form.control}
-                             name="profiles.fornecedor"
-                             render={({ field }) => (
-                               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                 <FormControl>
-                                   <Checkbox
-                                     checked={field.value}
-                                     onCheckedChange={field.onChange}
-                                   />
-                                 </FormControl>
-                                 <div className="space-y-1 leading-none">
-                                   <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                     <Store className="w-5 h-5 text-accent" />
-                                     <span>Fornecedor/Fornecedora</span>
-                                   </FormLabel>
-                                   <p className="text-sm text-muted-foreground">
-                                     Gestão de produtos e vendas para estabelecimentos.
-                                   </p>
-                                 </div>
-                               </FormItem>
-                             )}
-                           />
-                         </div>
+                          {/* Fornecedor/Fornecedora */}
+                          <div 
+                            className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer min-h-[140px]"
+                            onClick={() => form.setValue('profiles.fornecedor', !form.getValues('profiles.fornecedor'))}
+                          >
+                            <FormField
+                              control={form.control}
+                              name="profiles.fornecedor"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                      onClick={(e) => e.stopPropagation()}
+                                    />
+                                  </FormControl>
+                                  <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
+                                      <Store className="w-5 h-5 text-accent flex-shrink-0" />
+                                      <span className="break-words">Fornecedor/Fornecedora</span>
+                                    </FormLabel>
+                                    <p className="text-sm text-muted-foreground leading-relaxed break-words">
+                                      Gestão de produtos e vendas para estabelecimentos.
+                                    </p>
+                                  </div>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
 
-                         {/* Administrador Geral */}
-                         <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
-                           <FormField
-                             control={form.control}
-                             name="profiles.adminGeral"
-                             render={({ field }) => (
-                               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                 <FormControl>
-                                   <Checkbox
-                                     checked={field.value}
-                                     onCheckedChange={field.onChange}
-                                   />
-                                 </FormControl>
-                                 <div className="space-y-1 leading-none">
-                                   <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                     <Shield className="w-5 h-5 text-destructive" />
-                                     <span>Administrador/Administradora Geral</span>
-                                   </FormLabel>
-                                   <p className="text-sm text-muted-foreground">
-                                     Gestão completa da plataforma e todos os mercados.
-                                   </p>
-                                 </div>
-                               </FormItem>
-                             )}
-                           />
-                         </div>
+                          {/* Administrador Geral */}
+                          <div 
+                            className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer min-h-[140px]"
+                            onClick={() => form.setValue('profiles.adminGeral', !form.getValues('profiles.adminGeral'))}
+                          >
+                            <FormField
+                              control={form.control}
+                              name="profiles.adminGeral"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                      onClick={(e) => e.stopPropagation()}
+                                    />
+                                  </FormControl>
+                                  <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
+                                      <Shield className="w-5 h-5 text-destructive flex-shrink-0" />
+                                      <span className="break-words">Administrador/Administradora Geral</span>
+                                    </FormLabel>
+                                    <p className="text-sm text-muted-foreground leading-relaxed break-words">
+                                      Gestão completa da plataforma e todos os mercados.
+                                    </p>
+                                  </div>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
 
-                         {/* Administrador de Mercado */}
-                        <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
-                          <FormField
-                            control={form.control}
-                            name="profiles.adminMercado"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                  />
-                                </FormControl>
-                                <div className="space-y-1 leading-none">
-                                  <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                    <UserCheck className="w-5 h-5 text-warning" />
-                                    <span>Administrador/Administradora de Mercado</span>
-                                  </FormLabel>
-                                  <p className="text-sm text-muted-foreground">
-                                    Gestão específica de um mercado e seus fornecedores.
-                                  </p>
-                                </div>
-                              </FormItem>
-                            )}
-                          />
+                          {/* Administrador de Mercado */}
+                          <div 
+                            className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer min-h-[140px]"
+                            onClick={() => form.setValue('profiles.adminMercado', !form.getValues('profiles.adminMercado'))}
+                          >
+                            <FormField
+                              control={form.control}
+                              name="profiles.adminMercado"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                      onClick={(e) => e.stopPropagation()}
+                                    />
+                                  </FormControl>
+                                  <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
+                                      <UserCheck className="w-5 h-5 text-warning flex-shrink-0" />
+                                      <span className="break-words">Administrador/Administradora de Mercado</span>
+                                    </FormLabel>
+                                    <p className="text-sm text-muted-foreground leading-relaxed break-words">
+                                      Gestão específica de um mercado e seus fornecedores.
+                                    </p>
+                                  </div>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
                         </div>
                       </div>
 

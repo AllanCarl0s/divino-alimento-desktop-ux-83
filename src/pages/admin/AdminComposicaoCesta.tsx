@@ -15,6 +15,8 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
+import { useCompositionFilters } from '@/hooks/useCompositionFilters';
+import { CompositionFilters } from '@/components/admin/CompositionFilters';
 
 export default function AdminComposicaoCesta() {
   const { id } = useParams();
@@ -23,6 +25,15 @@ export default function AdminComposicaoCesta() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  
+  const {
+    certificacoes,
+    tiposAgricultura,
+    toggleCertificacao,
+    toggleTipoAgricultura,
+    clearFilters,
+    hasActiveFilters
+  } = useCompositionFilters();
   
   // selectedByGroup: groupKey -> Set of variantIds
   const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
@@ -39,6 +50,8 @@ export default function AdminComposicaoCesta() {
       valor: 4.50,
       fornecedor: 'João Produtor',
       quantidadeOfertada: 50,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '2',
@@ -48,6 +61,8 @@ export default function AdminComposicaoCesta() {
       valor: 20.00,
       fornecedor: 'Maria Horta',
       quantidadeOfertada: 15,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '3',
@@ -57,6 +72,8 @@ export default function AdminComposicaoCesta() {
       valor: 4.20,
       fornecedor: 'Sítio Verde',
       quantidadeOfertada: 30,
+      certificacao: 'transicao',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '4',
@@ -66,6 +83,8 @@ export default function AdminComposicaoCesta() {
       valor: 3.20,
       fornecedor: 'Maria Horta',
       quantidadeOfertada: 30,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '5',
@@ -75,6 +94,8 @@ export default function AdminComposicaoCesta() {
       valor: 2.00,
       fornecedor: 'João Produtor',
       quantidadeOfertada: 50,
+      certificacao: 'convencional',
+      tipo_agricultura: 'nao_familiar',
     },
     {
       id: '6',
@@ -84,6 +105,8 @@ export default function AdminComposicaoCesta() {
       valor: 15.00,
       fornecedor: 'Sítio Boa Vista',
       quantidadeOfertada: 100,
+      certificacao: 'convencional',
+      tipo_agricultura: 'familiar',
     },
   ]);
 
@@ -97,8 +120,11 @@ export default function AdminComposicaoCesta() {
   // Agrupar e filtrar produtos
   const productGroups = useMemo(() => {
     const groups = groupAndSortProducts(ofertas);
-    return filterProducts(groups, busca);
-  }, [ofertas, busca]);
+    return filterProducts(groups, busca, {
+      certificacoes,
+      tiposAgricultura,
+    });
+  }, [ofertas, busca, certificacoes, tiposAgricultura]);
 
   // Calcular itens selecionados
   const selectedItems = useMemo(() => {
@@ -393,7 +419,7 @@ export default function AdminComposicaoCesta() {
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <CardTitle>Produtos Ofertados</CardTitle>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <div className="relative w-64">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -422,6 +448,14 @@ export default function AdminComposicaoCesta() {
                   )}
                 </Button>
               </div>
+            </div>
+            <div className="mt-4">
+              <CompositionFilters
+                certificacoes={certificacoes}
+                tiposAgricultura={tiposAgricultura}
+                onToggleCertificacao={toggleCertificacao}
+                onToggleTipoAgricultura={toggleTipoAgricultura}
+              />
             </div>
           </CardHeader>
           <CardContent>

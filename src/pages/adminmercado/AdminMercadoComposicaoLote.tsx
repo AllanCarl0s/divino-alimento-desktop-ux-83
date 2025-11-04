@@ -13,6 +13,8 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
+import { useCompositionFilters } from '@/hooks/useCompositionFilters';
+import { CompositionFilters } from '@/components/admin/CompositionFilters';
 
 export default function AdminMercadoComposicaoLote() {
   const { cicloId } = useParams();
@@ -27,6 +29,15 @@ export default function AdminMercadoComposicaoLote() {
   
   const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
   const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
+  
+  const {
+    certificacoes,
+    tiposAgricultura,
+    toggleCertificacao,
+    toggleTipoAgricultura,
+    clearFilters,
+    hasActiveFilters
+  } = useCompositionFilters();
 
   // Carregar composição do localStorage
   useEffect(() => {
@@ -61,6 +72,8 @@ export default function AdminMercadoComposicaoLote() {
       valor: 4.50,
       fornecedor: 'João Produtor',
       quantidadeOfertada: 50,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '2',
@@ -70,6 +83,8 @@ export default function AdminMercadoComposicaoLote() {
       valor: 20.00,
       fornecedor: 'Maria Horta',
       quantidadeOfertada: 15,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '4',
@@ -79,6 +94,8 @@ export default function AdminMercadoComposicaoLote() {
       valor: 3.20,
       fornecedor: 'Maria Horta',
       quantidadeOfertada: 30,
+      certificacao: 'transicao',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '7',
@@ -88,6 +105,8 @@ export default function AdminMercadoComposicaoLote() {
       valor: 3.80,
       fornecedor: 'Fazenda Santa Clara',
       quantidadeOfertada: 40,
+      certificacao: 'convencional',
+      tipo_agricultura: 'nao_familiar',
     },
   ]);
 
@@ -100,8 +119,11 @@ export default function AdminMercadoComposicaoLote() {
 
   const productGroups = useMemo(() => {
     const groups = groupAndSortProducts(ofertas);
-    return filterProducts(groups, busca);
-  }, [ofertas, busca]);
+    return filterProducts(groups, busca, {
+      certificacoes,
+      tiposAgricultura,
+    });
+  }, [ofertas, busca, certificacoes, tiposAgricultura]);
 
   const selectedItems = useMemo(() => {
     const items: Array<{ id: string; valor: number; quantidade: number }> = [];
@@ -445,62 +467,78 @@ export default function AdminMercadoComposicaoLote() {
           </Card>
         )}
 
-        {/* Busca */}
-        <div className="flex gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar produto..."
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <Button variant="outline" onClick={expandAll} className="border-primary text-primary hover:bg-primary/10">
-            <ChevronDown className="h-4 w-4 mr-2" />
-            Expandir Tudo
-          </Button>
-          <Button variant="outline" onClick={collapseAll} className="border-primary text-primary hover:bg-primary/10">
-            <ChevronUp className="h-4 w-4 mr-2" />
-            Recolher Tudo
-          </Button>
-        </div>
+        {/* Busca e Filtros */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <CardTitle>Produtos Ofertados</CardTitle>
+              <div className="flex gap-2 flex-wrap">
+                <div className="relative w-64">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar produto..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Button variant="outline" onClick={expandAll} className="border-primary text-primary hover:bg-primary/10">
+                  <ChevronDown className="h-4 w-4 mr-2" />
+                  Expandir Tudo
+                </Button>
+                <Button variant="outline" onClick={collapseAll} className="border-primary text-primary hover:bg-primary/10">
+                  <ChevronUp className="h-4 w-4 mr-2" />
+                  Recolher Tudo
+                </Button>
+              </div>
+            </div>
+            <div className="mt-4">
+              <CompositionFilters
+                certificacoes={certificacoes}
+                tiposAgricultura={tiposAgricultura}
+                onToggleCertificacao={toggleCertificacao}
+                onToggleTipoAgricultura={toggleTipoAgricultura}
+              />
+            </div>
+          </CardHeader>
+          <CardContent>
+            {/* Lista de Produtos Agrupados */}
+            <div className="space-y-4">
+              {productGroups.map((group) => (
+                <ProductGroupItem
+                  key={group.produto_base}
+                  group={group}
+                  isExpanded={expandedGroups.has(group.produto_base)}
+                  onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
+                  selectedVariantIds={selectedByGroup.get(group.produto_base) || new Set()}
+                  onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
+                  onClear={() => handleClearGroup(group.produto_base)}
+                  quantidades={composicao}
+                  onQuantidadeChange={handleQuantidadeChange}
+                />
+              ))}
+            </div>
 
-        {/* Lista de Produtos Agrupados */}
-        <div className="space-y-4">
-          {productGroups.map((group) => (
-            <ProductGroupItem
-              key={group.produto_base}
-              group={group}
-              isExpanded={expandedGroups.has(group.produto_base)}
-              onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
-              selectedVariantIds={selectedByGroup.get(group.produto_base) || new Set()}
-              onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
-              onClear={() => handleClearGroup(group.produto_base)}
-              quantidades={composicao}
-              onQuantidadeChange={handleQuantidadeChange}
-            />
-          ))}
-        </div>
-
-        {/* Botões de Ação */}
-        <div className="flex justify-between gap-4">
-          <Button
-            variant="outline"
-            onClick={() => navigate('/adminmercado/ciclo-index')}
-            className="border-primary text-primary hover:bg-primary/10"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
-          </Button>
-          <Button
-            onClick={handlePublicarClick}
-            disabled={!podePublicar || isLoading}
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            {isLoading ? 'Salvando...' : 'Salvar Composição'}
-          </Button>
-        </div>
+            {/* Botões de Ação */}
+            <div className="flex justify-between gap-4 mt-6">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/adminmercado/ciclo-index')}
+                className="border-primary text-primary hover:bg-primary/10"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Voltar
+              </Button>
+              <Button
+                onClick={handlePublicarClick}
+                disabled={!podePublicar || isLoading}
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                {isLoading ? 'Salvando...' : 'Salvar Composição'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Modal de Confirmação */}
