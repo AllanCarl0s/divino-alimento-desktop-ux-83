@@ -12,7 +12,7 @@ import { FiltersBar } from '@/components/admin/FiltersBar';
 import { FiltersPanel } from '@/components/admin/FiltersPanel';
 import { useFilters } from '@/hooks/useFilters';
 import { toast } from '@/hooks/use-toast';
-import { Plus, Pencil, Trash2, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users, RefreshCw, Tags } from 'lucide-react';
+import { Plus, Settings, Trash2, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users, RefreshCw, Tags } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
@@ -285,7 +285,7 @@ export default function AdminMercadoCicloIndex() {
                         <TableCell className="text-right">
                           <TooltipProvider>
                             <div className="flex justify-end gap-2">
-                              {/* 1. Editar Ciclo */}
+                              {/* 1. Construir Ciclo */}
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button 
@@ -294,10 +294,10 @@ export default function AdminMercadoCicloIndex() {
                                     onClick={() => navigate(`/adminmercado/ciclo/${ciclo.id}`)} 
                                     className="h-10 w-10 border-2 border-primary hover:bg-primary/10"
                                   >
-                                    <Pencil className="h-5 w-5 text-primary" />
+                                    <Settings className="h-5 w-5 text-primary" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Editar Ciclo</p></TooltipContent>
+                                <TooltipContent><p>Construir ciclo</p></TooltipContent>
                               </Tooltip>
 
                               {/* 2. Migrar Ofertas */}
@@ -360,8 +360,8 @@ export default function AdminMercadoCicloIndex() {
                                     </Tooltip>
                                   )}
 
-                                  {/* 4. Compor Mercado (Lote ou Venda Direta) */}
-                                  {(mercadoAtual.tipo_venda === 'lote' || mercadoAtual.tipo_venda === 'venda_direta') && (
+                                  {/* 4. Compor Mercado (Cesta, Lote ou Venda Direta) */}
+                                  {(mercadoAtual.tipo_venda === 'cesta' || mercadoAtual.tipo_venda === 'lote' || mercadoAtual.tipo_venda === 'venda_direta') && (
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         <Button 
