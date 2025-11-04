@@ -119,7 +119,6 @@ const Register = () => {
     if (!data.confirmPassword.trim()) errors.push('Confirmação de senha é obrigatória');
     else if (data.password !== data.confirmPassword) errors.push('Senhas não coincidem');
     if (!hasAnyProfile) errors.push('Selecione pelo menos um perfil');
-    if (data.profiles.consumidor && !data.selectedMarket) errors.push('Selecione um mercado');
 
     return errors;
   };
@@ -144,15 +143,6 @@ const Register = () => {
       if (data.profiles.fornecedor) selectedRoles.push('fornecedor');
       if (data.profiles.adminGeral) selectedRoles.push('admin');
       if (data.profiles.adminMercado) selectedRoles.push('admin_mercado');
-      
-      // Save consumer market and type if selected
-      if (data.profiles.consumidor && data.selectedMarket) {
-        const selectedMarket = mockMarkets.find(m => m.id === data.selectedMarket);
-        const type = selectedMarket?.type || 'cesta';
-        localStorage.setItem('da.marketId', data.selectedMarket);
-        localStorage.setItem('da.consumerType', type);
-        setConsumerType(type);
-      }
       
       // Registrar usuário com roles
       await registerUser(data.email, data.password, data.name, selectedRoles);
@@ -379,147 +369,57 @@ const Register = () => {
                         <Label className="text-sm lg:text-base font-medium">Escolha seus perfis (múltipla seleção)</Label>
                         
                         {/* Consumidor/Consumidora */}
-                        <div className="space-y-2">
-                          <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
-                            <FormField
-                              control={form.control}
-                              name="profiles.consumidor"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                    />
-                                  </FormControl>
-                                  <div className="space-y-1 leading-none">
-                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                      <ShoppingBasket className="w-5 h-5 text-primary" />
-                                      <span>Consumidor/Consumidora</span>
-                                    </FormLabel>
-                                    <p className="text-sm text-muted-foreground">
-                                      Acesso a cestas ou venda direta. Ideal para quem deseja receber produtos orgânicos.
-                                    </p>
-                                  </div>
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          
-                          {profiles.consumidor && (
-                              <div className="ml-6">
-                                <FormField
-                                  control={form.control}
-                                  name="selectedMarket"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-sm">Selecione um mercado *</FormLabel>
-                                      <Select onValueChange={field.onChange} value={field.value ?? ''}>
-                                        <FormControl>
-                                          <SelectTrigger className="lg:h-10">
-                                            <SelectValue placeholder="Escolha um mercado">
-                                              {field.value && (() => {
-                                                const selectedMarket = mockMarkets.find(m => m.id === field.value);
-                                                if (selectedMarket) {
-                                                  return (
-                                                    <div className="flex items-center justify-between w-full">
-                                                      <span>{selectedMarket.name}</span>
-                                                      <Badge 
-                                                        variant={selectedMarket.type === 'cesta' ? 'success' : 'warning'} 
-                                                        className="ml-2 text-xs"
-                                                      >
-                                                        {selectedMarket.type === 'cesta' ? 'Cestas' : 'Venda Direta'}
-                                                      </Badge>
-                                                    </div>
-                                                  );
-                                                }
-                                              })()}
-                                            </SelectValue>
-                                          </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                          {mockMarkets.map((market) => (
-                                            <SelectItem key={market.id} value={market.id} className="cursor-pointer">
-                                              <div className="flex items-center justify-between w-full">
-                                                <span className="flex-1">{market.name}</span>
-                                                <Badge 
-                                                  variant={market.type === 'cesta' ? 'success' : 'warning'} 
-                                                  className="ml-2 text-xs"
-                                                >
-                                                  {market.type === 'cesta' ? 'Cestas' : 'Venda Direta'}
-                                                </Badge>
-                                              </div>
-                                            </SelectItem>
-                                          ))}
-                                        </SelectContent>
-                                      </Select>
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Há mercados de Cestas e de Venda Direta.
-                                      </p>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                          )}
+                        <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
+                          <FormField
+                            control={form.control}
+                            name="profiles.consumidor"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
+                                    <ShoppingBasket className="w-5 h-5 text-primary" />
+                                    <span>Consumidor/Consumidora</span>
+                                  </FormLabel>
+                                  <p className="text-sm text-muted-foreground">
+                                    Acesso a cestas ou venda direta. Ideal para quem deseja receber produtos orgânicos.
+                                  </p>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
                         </div>
 
                          {/* Fornecedor/Fornecedora */}
-                         <div className="space-y-2">
-                           <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
-                             <FormField
-                               control={form.control}
-                               name="profiles.fornecedor"
-                               render={({ field }) => (
-                                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                   <FormControl>
-                                     <Checkbox
-                                       checked={field.value}
-                                       onCheckedChange={field.onChange}
-                                     />
-                                   </FormControl>
-                                   <div className="space-y-1 leading-none">
-                                     <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                       <Store className="w-5 h-5 text-accent" />
-                                       <span>Fornecedor/Fornecedora</span>
-                                     </FormLabel>
-                                     <p className="text-sm text-muted-foreground">
-                                       Gestão de produtos e vendas para estabelecimentos.
-                                     </p>
-                                   </div>
-                                 </FormItem>
-                               )}
-                             />
-                           </div>
-                           
-                           {profiles.fornecedor && (
-                             <div className="ml-6">
-                               <FormField
-                                 control={form.control}
-                                 name="priorityMarket"
-                                 render={({ field }) => (
-                                   <FormItem>
-                                     <FormLabel className="text-sm">Mercados prioritários</FormLabel>
-                                     <Select onValueChange={field.onChange} value={field.value}>
-                                       <FormControl>
-                                         <SelectTrigger className="lg:h-10">
-                                           <SelectValue placeholder="Escolha um mercado prioritário" />
-                                         </SelectTrigger>
-                                       </FormControl>
-                                       <SelectContent>
-                                         {mockPriorityMarkets.map((market) => (
-                                           <SelectItem key={market.id} value={market.id}>
-                                             {market.name} - {market.priority}
-                                           </SelectItem>
-                                         ))}
-                                       </SelectContent>
-                                     </Select>
-                                     <FormMessage />
-                                   </FormItem>
-                                 )}
-                               />
-                             </div>
-                           )}
+                         <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
+                           <FormField
+                             control={form.control}
+                             name="profiles.fornecedor"
+                             render={({ field }) => (
+                               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                 <FormControl>
+                                   <Checkbox
+                                     checked={field.value}
+                                     onCheckedChange={field.onChange}
+                                   />
+                                 </FormControl>
+                                 <div className="space-y-1 leading-none">
+                                   <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
+                                     <Store className="w-5 h-5 text-accent" />
+                                     <span>Fornecedor/Fornecedora</span>
+                                   </FormLabel>
+                                   <p className="text-sm text-muted-foreground">
+                                     Gestão de produtos e vendas para estabelecimentos.
+                                   </p>
+                                 </div>
+                               </FormItem>
+                             )}
+                           />
                          </div>
 
                          {/* Administrador Geral */}
@@ -550,61 +450,30 @@ const Register = () => {
                          </div>
 
                          {/* Administrador de Mercado */}
-                        <div className="space-y-2">
-                          <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
-                            <FormField
-                              control={form.control}
-                              name="profiles.adminMercado"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                    />
-                                  </FormControl>
-                                  <div className="space-y-1 leading-none">
-                                    <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
-                                      <UserCheck className="w-5 h-5 text-warning" />
-                                      <span>Administrador/Administradora de Mercado</span>
-                                    </FormLabel>
-                                    <p className="text-sm text-muted-foreground">
-                                      Gestão específica de um mercado e seus fornecedores.
-                                    </p>
-                                  </div>
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          
-                          {profiles.adminMercado && (
-                            <div className="ml-6">
-                              <FormField
-                                control={form.control}
-                                name="managedMarket"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="text-sm">Mercado para administrar</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                      <FormControl>
-                                        <SelectTrigger className="lg:h-10">
-                                          <SelectValue placeholder="Escolha um mercado para administrar" />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {mockMarkets.map((market) => (
-                                          <SelectItem key={market.id} value={market.id}>
-                                            {market.name}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                          )}
+                        <div className="flex items-start space-x-3 p-4 border-2 rounded-lg hover:bg-muted/30 transition-colors">
+                          <FormField
+                            control={form.control}
+                            name="profiles.adminMercado"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel className="flex items-center space-x-3 cursor-pointer font-medium lg:text-base">
+                                    <UserCheck className="w-5 h-5 text-warning" />
+                                    <span>Administrador/Administradora de Mercado</span>
+                                  </FormLabel>
+                                  <p className="text-sm text-muted-foreground">
+                                    Gestão específica de um mercado e seus fornecedores.
+                                  </p>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
                         </div>
                       </div>
 

@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useCompositionFilters } from '@/hooks/useCompositionFilters';
+import { CompositionFilters } from '@/components/admin/CompositionFilters';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,11 +23,21 @@ export default function AdminComposicaoLote() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const mercadoId = searchParams.get('mercado');
-
+  
   const [busca, setBusca] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  
+  // Hook de filtros
+  const {
+    certificacoes,
+    tiposAgricultura,
+    toggleCertificacao,
+    toggleTipoAgricultura,
+    clearFilters: clearCompositionFilters,
+    hasActiveFilters,
+  } = useCompositionFilters();
   
   // selectedByGroup: groupKey -> Set of variantIds
   const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
@@ -66,6 +78,8 @@ export default function AdminComposicaoLote() {
       valor: 4.50,
       fornecedor: 'João Produtor',
       quantidadeOfertada: 50,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '2',
@@ -75,6 +89,8 @@ export default function AdminComposicaoLote() {
       valor: 20.00,
       fornecedor: 'Maria Horta',
       quantidadeOfertada: 15,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '3',
@@ -84,6 +100,8 @@ export default function AdminComposicaoLote() {
       valor: 4.20,
       fornecedor: 'Sítio Verde',
       quantidadeOfertada: 30,
+      certificacao: 'transicao',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '4',
@@ -93,6 +111,8 @@ export default function AdminComposicaoLote() {
       valor: 3.20,
       fornecedor: 'Maria Horta',
       quantidadeOfertada: 30,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '5',
@@ -102,6 +122,8 @@ export default function AdminComposicaoLote() {
       valor: 2.00,
       fornecedor: 'João Produtor',
       quantidadeOfertada: 50,
+      certificacao: 'convencional',
+      tipo_agricultura: 'nao_familiar',
     },
     {
       id: '6',
@@ -111,6 +133,8 @@ export default function AdminComposicaoLote() {
       valor: 15.00,
       fornecedor: 'Sítio Boa Vista',
       quantidadeOfertada: 100,
+      certificacao: 'organico',
+      tipo_agricultura: 'familiar',
     },
     {
       id: '7',
@@ -120,6 +144,8 @@ export default function AdminComposicaoLote() {
       valor: 3.80,
       fornecedor: 'Fazenda Santa Clara',
       quantidadeOfertada: 40,
+      certificacao: 'organico',
+      tipo_agricultura: 'nao_familiar',
     },
     {
       id: '8',
@@ -129,6 +155,8 @@ export default function AdminComposicaoLote() {
       valor: 2.50,
       fornecedor: 'João Produtor',
       quantidadeOfertada: 35,
+      certificacao: 'transicao',
+      tipo_agricultura: 'familiar',
     },
   ]);
 
@@ -138,11 +166,14 @@ export default function AdminComposicaoLote() {
     tipo: 'Lote'
   };
 
-  // Agrupar e filtrar produtos (com ordenação A-Z)
+  // Agrupar e filtrar produtos (com ordenação A-Z e filtros)
   const productGroups = useMemo(() => {
     const groups = groupAndSortProducts(ofertas);
-    return filterProducts(groups, busca);
-  }, [ofertas, busca]);
+    return filterProducts(groups, busca, {
+      certificacoes,
+      tiposAgricultura,
+    });
+  }, [ofertas, busca, certificacoes, tiposAgricultura]);
 
   // Calcular itens selecionados
   const selectedItems = useMemo(() => {
@@ -505,39 +536,59 @@ export default function AdminComposicaoLote() {
         {/* Produtos Agrupados (Lista de Todos os Produtos Ofertados) */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <CardTitle>Todos os Produtos Ofertados</CardTitle>
-              <div className="flex items-center gap-2">
-                <div className="relative w-64">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Buscar produto, fornecedor ou unidade..."
-                    value={busca}
-                    onChange={(e) => setBusca(e.target.value)}
-                    className="pl-10"
-                    aria-label="Buscar produtos ofertados"
-                  />
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
-                  className="whitespace-nowrap"
-                  aria-label={expandedGroups.size === productGroups.length ? 'Recolher todos os grupos' : 'Expandir todos os grupos'}
-                >
-                  {expandedGroups.size === productGroups.length ? (
-                    <>
-                      <ChevronUp className="h-4 w-4 mr-1" />
-                      Recolher tudo
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown className="h-4 w-4 mr-1" />
-                      Expandir tudo
-                    </>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <CardTitle>Todos os Produtos Ofertados</CardTitle>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="relative w-64">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar produto, fornecedor ou unidade..."
+                      value={busca}
+                      onChange={(e) => setBusca(e.target.value)}
+                      className="pl-10"
+                      aria-label="Buscar produtos ofertados"
+                    />
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
+                    className="whitespace-nowrap"
+                    aria-label={expandedGroups.size === productGroups.length ? 'Recolher todos os grupos' : 'Expandir todos os grupos'}
+                  >
+                    {expandedGroups.size === productGroups.length ? (
+                      <>
+                        <ChevronUp className="h-4 w-4 mr-1" />
+                        Recolher tudo
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-4 w-4 mr-1" />
+                        Expandir tudo
+                      </>
+                    )}
+                  </Button>
+                  {hasActiveFilters && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={clearCompositionFilters}
+                      className="whitespace-nowrap"
+                    >
+                      Limpar
+                    </Button>
                   )}
-                </Button>
+                </div>
               </div>
+
+              {/* Filtros de Certificação e Tipo de Agricultura */}
+              <CompositionFilters
+                certificacoes={certificacoes}
+                tiposAgricultura={tiposAgricultura}
+                onToggleCertificacao={toggleCertificacao}
+                onToggleTipoAgricultura={toggleTipoAgricultura}
+              />
             </div>
           </CardHeader>
           <CardContent>

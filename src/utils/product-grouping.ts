@@ -1,3 +1,6 @@
+export type CertificationType = 'organico' | 'transicao' | 'convencional';
+export type AgricultureType = 'familiar' | 'nao_familiar';
+
 export interface Oferta {
   id: string;
   produto_base: string;
@@ -6,6 +9,8 @@ export interface Oferta {
   fornecedor: string;
   valor: number;
   quantidadeOfertada: number;
+  certificacao?: CertificationType;
+  tipo_agricultura?: AgricultureType;
 }
 
 export interface ProductGroup {
@@ -64,6 +69,8 @@ export function filterProducts(
     precoMin?: number;
     precoMax?: number;
     disponivelMin?: number;
+    certificacoes?: Set<CertificationType>;
+    tiposAgricultura?: Set<AgricultureType>;
   }
 ): ProductGroup[] {
   const searchLower = busca.toLowerCase();
@@ -82,7 +89,7 @@ export function filterProducts(
         );
       }
 
-      // Filtros
+      // Filtros existentes
       if (filtros?.unidades?.length) {
         variantes = variantes.filter(v => filtros.unidades!.includes(v.unidade));
       }
@@ -99,9 +106,19 @@ export function filterProducts(
         variantes = variantes.filter(v => v.quantidadeOfertada >= filtros.disponivelMin!);
       }
 
+      // Novos filtros de certificação e tipo de agricultura
+      if (filtros?.certificacoes && filtros.certificacoes.size > 0 && filtros.certificacoes.size < 3) {
+        variantes = variantes.filter(v => v.certificacao && filtros.certificacoes!.has(v.certificacao));
+      }
+      if (filtros?.tiposAgricultura && filtros.tiposAgricultura.size > 0 && filtros.tiposAgricultura.size < 2) {
+        variantes = variantes.filter(v => v.tipo_agricultura && filtros.tiposAgricultura!.has(v.tipo_agricultura));
+      }
+
       return {
         ...group,
         variantes,
+        minPreco: variantes.length > 0 ? Math.min(...variantes.map(v => v.valor)) : group.minPreco,
+        totalVariantes: variantes.length,
       };
     })
     .filter(group => group.variantes.length > 0); // Remover grupos vazios
