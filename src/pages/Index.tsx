@@ -73,18 +73,32 @@ const Index = () => {
           <div className="w-[200px] h-[4px] bg-[#2E7D32] opacity-40" />
           <p className="text-[#4B5563] text-lg sm:text-xl lg:text-2xl font-semibold">desenvolvido por:</p>
           <div className="flex items-center gap-12 sm:gap-16 lg:gap-20">
-            <img 
-              src={logoAkarui}
-              alt="Akarui"
-              className="h-20 sm:h-28 lg:h-[120px] object-contain"
-              style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
-            />
-            <img 
-              src={logoTekopora}
-              alt="Tekoporã"
-              className="h-20 sm:h-28 lg:h-[120px] object-contain"
-              style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
-            />
+            <a 
+              href="https://www.akarui.org.br/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <img 
+                src={logoAkarui}
+                alt="Akarui"
+                className="h-20 sm:h-28 lg:h-[120px] object-contain"
+                style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
+              />
+            </a>
+            <a 
+              href="https://www.tekopora.top/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <img 
+                src={logoTekopora}
+                alt="Tekoporã"
+                className="h-20 sm:h-28 lg:h-[120px] object-contain"
+                style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
+              />
+            </a>
           </div>
         </footer>
       </main>
