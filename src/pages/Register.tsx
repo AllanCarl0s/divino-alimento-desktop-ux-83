@@ -187,8 +187,8 @@ const Register = () => {
       }
     >
       {/* Desktop centered registration with co-brand */}
-      <div className="flex items-center justify-center min-h-screen py-12">
-        <div className="w-full max-w-[1080px] mx-auto px-4 md:px-6 xl:px-6">
+      <div className="flex items-center justify-center min-h-screen py-12 max-[767px]:pb-24">
+        <div className="w-full max-w-[1140px] mx-auto px-6">
           {/* Co-brand AKARUI */}
           <CoBrandAkarui />
           
@@ -210,7 +210,7 @@ const Register = () => {
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   {/* Desktop Two-Column Layout */}
-                  <div className="grid grid-cols-1 max-[991px]:gap-4 min-[992px]:gap-6 min-[1200px]:grid-cols-2 min-[1200px]:gap-6">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-[7fr_5fr] md:gap-8 min-[1200px]:grid-cols-2 min-[1200px]:gap-6">
                     
                     {/* Left Column - Main Information */}
                     <div className="space-y-4">
@@ -361,22 +361,20 @@ const Register = () => {
 
                     {/* Right Column - Profile Selection & Markets */}
                     <div className="space-y-4">
-                      <h3 className="font-poppins text-lg font-semibold text-foreground">
-                        Seleção de Perfis
-                      </h3>
+                      <div>
+                        <h3 className="font-poppins text-lg font-semibold text-foreground mb-2 max-[767px]:mb-2.5 min-[1200px]:mb-4">
+                          Seleção de Perfis
+                        </h3>
+                        <Label className="text-sm lg:text-base font-medium text-muted-foreground">Escolha seus perfis (múltipla seleção)</Label>
+                      </div>
                       
                       <div className="space-y-3">
-                        <Label className="text-sm lg:text-base font-medium">Escolha seus perfis (múltipla seleção)</Label>
-                        
                         {/* Grid responsivo para cards de perfil */}
-                        <div className="grid grid-cols-1 max-[991px]:gap-3 min-[1200px]:grid-cols-2 min-[1200px]:gap-4">
+                        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-3 min-[1200px]:gap-3">
                           {/* Consumidor/Consumidora */}
-                          <div 
-                            className="flex items-start space-x-3 p-4 min-[1200px]:p-5 border rounded-xl transition-all cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] word-wrap break-words overflow-wrap-anywhere hyphens-auto data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 data-[selected=true]:shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
-                            onClick={() => form.setValue('profiles.consumidor', !form.getValues('profiles.consumidor'))}
+                          <label 
+                            className="flex flex-col gap-2.5 p-4 max-[767px]:p-3.5 min-[1200px]:p-[18px] border rounded-[14px] transition-all duration-150 cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] bg-white shadow-sm data-[selected=true]:border-[#239B56] data-[selected=true]:bg-[#EDF8F1] hover:border-[#BFE8CF] hover:shadow-md focus-within:outline focus-within:outline-2 focus-within:outline-[#239B56] focus-within:outline-offset-2"
                             data-selected={form.watch('profiles.consumidor')}
-                            role="checkbox"
-                            aria-checked={form.watch('profiles.consumidor')}
                             tabIndex={0}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' || e.key === ' ') {
@@ -389,35 +387,32 @@ const Register = () => {
                               control={form.control}
                               name="profiles.consumidor"
                               render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                      onClick={(e) => e.stopPropagation()}
-                                    />
-                                  </FormControl>
-                                   <div className="space-y-1 leading-none flex-1">
-                                    <FormLabel className="flex items-center space-x-2 cursor-pointer font-semibold text-sm min-[1200px]:text-base">
-                                      <ShoppingBasket className="w-5 h-5 min-[1200px]:w-6 min-[1200px]:h-6 text-primary flex-shrink-0" />
-                                      <span className="break-words">Consumidor/Consumidora</span>
+                                <FormItem className="flex flex-col gap-1 w-full">
+                                  <div className="flex items-center gap-2.5">
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                        className="pointer-events-none"
+                                      />
+                                    </FormControl>
+                                    <ShoppingBasket className="w-5 h-5 max-[767px]:w-[20px] max-[767px]:h-[20px] min-[1200px]:w-[22px] min-[1200px]:h-[22px] text-primary flex-shrink-0" />
+                                    <FormLabel className="cursor-pointer font-semibold text-base max-[767px]:text-[15px] min-[1200px]:text-[17px] leading-[1.25] whitespace-normal break-words hyphens-auto m-0">
+                                      Consumidor/Consumidora
                                     </FormLabel>
-                                    <p className="text-[13px] min-[1200px]:text-sm text-muted-foreground leading-[1.45] break-words overflow-wrap-anywhere hyphens-auto">
-                                      Acesso a cestas ou venda direta. Ideal para quem deseja receber produtos orgânicos.
-                                    </p>
                                   </div>
+                                  <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
+                                    Acesso a cestas ou venda direta. Ideal para quem deseja receber produtos orgânicos.
+                                  </p>
                                 </FormItem>
                               )}
                             />
-                          </div>
+                          </label>
 
                           {/* Fornecedor/Fornecedora */}
-                          <div 
-                            className="flex items-start space-x-3 p-4 min-[1200px]:p-5 border rounded-xl transition-all cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] word-wrap break-words overflow-wrap-anywhere hyphens-auto data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 data-[selected=true]:shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
-                            onClick={() => form.setValue('profiles.fornecedor', !form.getValues('profiles.fornecedor'))}
+                          <label 
+                            className="flex flex-col gap-2.5 p-4 max-[767px]:p-3.5 min-[1200px]:p-[18px] border rounded-[14px] transition-all duration-150 cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] bg-white shadow-sm data-[selected=true]:border-[#239B56] data-[selected=true]:bg-[#EDF8F1] hover:border-[#BFE8CF] hover:shadow-md focus-within:outline focus-within:outline-2 focus-within:outline-[#239B56] focus-within:outline-offset-2"
                             data-selected={form.watch('profiles.fornecedor')}
-                            role="checkbox"
-                            aria-checked={form.watch('profiles.fornecedor')}
                             tabIndex={0}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' || e.key === ' ') {
@@ -430,35 +425,32 @@ const Register = () => {
                               control={form.control}
                               name="profiles.fornecedor"
                               render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                      onClick={(e) => e.stopPropagation()}
-                                    />
-                                  </FormControl>
-                                   <div className="space-y-1 leading-none flex-1">
-                                    <FormLabel className="flex items-center space-x-2 cursor-pointer font-semibold text-sm min-[1200px]:text-base">
-                                      <Store className="w-5 h-5 min-[1200px]:w-6 min-[1200px]:h-6 text-accent flex-shrink-0" />
-                                      <span className="break-words">Fornecedor/Fornecedora</span>
+                                <FormItem className="flex flex-col gap-1 w-full">
+                                  <div className="flex items-center gap-2.5">
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                        className="pointer-events-none"
+                                      />
+                                    </FormControl>
+                                    <Store className="w-5 h-5 max-[767px]:w-[20px] max-[767px]:h-[20px] min-[1200px]:w-[22px] min-[1200px]:h-[22px] text-accent flex-shrink-0" />
+                                    <FormLabel className="cursor-pointer font-semibold text-base max-[767px]:text-[15px] min-[1200px]:text-[17px] leading-[1.25] whitespace-normal break-words hyphens-auto m-0">
+                                      Fornecedor/Fornecedora
                                     </FormLabel>
-                                    <p className="text-[13px] min-[1200px]:text-sm text-muted-foreground leading-[1.45] break-words overflow-wrap-anywhere hyphens-auto">
-                                      Gestão de produtos e vendas para estabelecimentos.
-                                    </p>
                                   </div>
+                                  <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
+                                    Gestão de produtos e vendas para estabelecimentos.
+                                  </p>
                                 </FormItem>
                               )}
                             />
-                          </div>
+                          </label>
 
                           {/* Administrador Geral */}
-                          <div 
-                            className="flex items-start space-x-3 p-4 min-[1200px]:p-5 border rounded-xl transition-all cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] word-wrap break-words overflow-wrap-anywhere hyphens-auto data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 data-[selected=true]:shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
-                            onClick={() => form.setValue('profiles.adminGeral', !form.getValues('profiles.adminGeral'))}
+                          <label 
+                            className="flex flex-col gap-2.5 p-4 max-[767px]:p-3.5 min-[1200px]:p-[18px] border rounded-[14px] transition-all duration-150 cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] bg-white shadow-sm data-[selected=true]:border-[#239B56] data-[selected=true]:bg-[#EDF8F1] hover:border-[#BFE8CF] hover:shadow-md focus-within:outline focus-within:outline-2 focus-within:outline-[#239B56] focus-within:outline-offset-2"
                             data-selected={form.watch('profiles.adminGeral')}
-                            role="checkbox"
-                            aria-checked={form.watch('profiles.adminGeral')}
                             tabIndex={0}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' || e.key === ' ') {
@@ -471,35 +463,32 @@ const Register = () => {
                               control={form.control}
                               name="profiles.adminGeral"
                               render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                      onClick={(e) => e.stopPropagation()}
-                                    />
-                                  </FormControl>
-                                   <div className="space-y-1 leading-none flex-1">
-                                    <FormLabel className="flex items-center space-x-2 cursor-pointer font-semibold text-sm min-[1200px]:text-base">
-                                      <Shield className="w-5 h-5 min-[1200px]:w-6 min-[1200px]:h-6 text-destructive flex-shrink-0" />
-                                      <span className="break-words">Administrador/Administradora Geral</span>
+                                <FormItem className="flex flex-col gap-1 w-full">
+                                  <div className="flex items-center gap-2.5">
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                        className="pointer-events-none"
+                                      />
+                                    </FormControl>
+                                    <Shield className="w-5 h-5 max-[767px]:w-[20px] max-[767px]:h-[20px] min-[1200px]:w-[22px] min-[1200px]:h-[22px] text-destructive flex-shrink-0" />
+                                    <FormLabel className="cursor-pointer font-semibold text-base max-[767px]:text-[15px] min-[1200px]:text-[17px] leading-[1.25] whitespace-normal break-words hyphens-auto m-0">
+                                      Administrador/Administradora Geral
                                     </FormLabel>
-                                    <p className="text-[13px] min-[1200px]:text-sm text-muted-foreground leading-[1.45] break-words overflow-wrap-anywhere hyphens-auto">
-                                      Gestão completa da plataforma e todos os mercados.
-                                    </p>
                                   </div>
+                                  <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
+                                    Gestão completa da plataforma e todos os mercados.
+                                  </p>
                                 </FormItem>
                               )}
                             />
-                          </div>
+                          </label>
 
                           {/* Administrador de Mercado */}
-                          <div 
-                            className="flex items-start space-x-3 p-4 min-[1200px]:p-5 border rounded-xl transition-all cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] word-wrap break-words overflow-wrap-anywhere hyphens-auto data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 data-[selected=true]:shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
-                            onClick={() => form.setValue('profiles.adminMercado', !form.getValues('profiles.adminMercado'))}
+                          <label 
+                            className="flex flex-col gap-2.5 p-4 max-[767px]:p-3.5 min-[1200px]:p-[18px] border rounded-[14px] transition-all duration-150 cursor-pointer min-h-[112px] min-[1200px]:min-h-[120px] bg-white shadow-sm data-[selected=true]:border-[#239B56] data-[selected=true]:bg-[#EDF8F1] hover:border-[#BFE8CF] hover:shadow-md focus-within:outline focus-within:outline-2 focus-within:outline-[#239B56] focus-within:outline-offset-2"
                             data-selected={form.watch('profiles.adminMercado')}
-                            role="checkbox"
-                            aria-checked={form.watch('profiles.adminMercado')}
                             tabIndex={0}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' || e.key === ' ') {
@@ -512,33 +501,33 @@ const Register = () => {
                               control={form.control}
                               name="profiles.adminMercado"
                               render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                      onClick={(e) => e.stopPropagation()}
-                                    />
-                                  </FormControl>
-                                   <div className="space-y-1 leading-none flex-1">
-                                    <FormLabel className="flex items-center space-x-2 cursor-pointer font-semibold text-sm min-[1200px]:text-base">
-                                      <UserCheck className="w-5 h-5 min-[1200px]:w-6 min-[1200px]:h-6 text-warning flex-shrink-0" />
-                                      <span className="break-words">Administrador/Administradora de Mercado</span>
+                                <FormItem className="flex flex-col gap-1 w-full">
+                                  <div className="flex items-center gap-2.5">
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                        className="pointer-events-none"
+                                      />
+                                    </FormControl>
+                                    <UserCheck className="w-5 h-5 max-[767px]:w-[20px] max-[767px]:h-[20px] min-[1200px]:w-[22px] min-[1200px]:h-[22px] text-warning flex-shrink-0" />
+                                    <FormLabel className="cursor-pointer font-semibold text-base max-[767px]:text-[15px] min-[1200px]:text-[17px] leading-[1.25] whitespace-normal break-words hyphens-auto m-0">
+                                      Administrador/Administradora de Mercado
                                     </FormLabel>
-                                    <p className="text-[13px] min-[1200px]:text-sm text-muted-foreground leading-[1.45] break-words overflow-wrap-anywhere hyphens-auto">
-                                      Gestão específica de um mercado e seus fornecedores.
-                                    </p>
                                   </div>
+                                  <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
+                                    Gestão específica de um mercado e seus fornecedores.
+                                  </p>
                                 </FormItem>
                               )}
                             />
-                          </div>
+                          </label>
                         </div>
                       </div>
 
                       {/* Validation Status */}
-                      <div className="bg-muted/50 p-4 rounded-lg mt-4">
-                        <h4 className="text-sm font-medium text-foreground mb-3">Status da Validação:</h4>
+                      <div className="p-4 border rounded-[14px] bg-white shadow-sm mt-4">
+                        <h4 className="text-sm font-semibold text-foreground mb-3">Status da Validação:</h4>
                         <div className="space-y-2">
                           <div className="flex items-center space-x-2">
                             {watchedValues.name?.trim() ? (
@@ -602,11 +591,11 @@ const Register = () => {
                   </div>
 
                   {/* Submit Button - Full Width */}
-                  <div className="pt-4">
+                  <div className="pt-4 max-[767px]:fixed max-[767px]:bottom-3 max-[767px]:left-1/2 max-[767px]:-translate-x-1/2 max-[767px]:w-[94%] max-[767px]:z-50">
                     <Button 
                       type="submit" 
                       variant="success"
-                      className="w-full lg:h-12 lg:text-base font-semibold" 
+                      className="w-full lg:h-12 lg:text-base font-semibold max-[767px]:rounded-[10px] max-[767px]:shadow-lg" 
                       disabled={isLoading}
                       size="lg"
                     >
