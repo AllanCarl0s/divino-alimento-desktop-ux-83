@@ -108,8 +108,8 @@ const Register = () => {
     const errors: string[] = [];
     
     if (!data.name.trim()) errors.push('Nome é obrigatório');
-    if (!data.phone.trim()) errors.push('Telefone é obrigatório');
-    else if (!/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(data.phone)) errors.push('Telefone inválido');
+    if (!data.phone.trim()) errors.push('Celular é obrigatório');
+    else if (!/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(data.phone)) errors.push('Celular inválido');
     if (!data.email.trim()) errors.push('E-mail é obrigatório');
     else if (!/\S+@\S+\.\S+/.test(data.email)) errors.push('E-mail inválido');
     if (!data.confirmEmail.trim()) errors.push('Confirmação de e-mail é obrigatória');
@@ -244,7 +244,7 @@ const Register = () => {
                         name="phone"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Telefone</FormLabel>
+                            <FormLabel>Celular</FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <Phone className="absolute left-3 top-3 w-4 h-4 lg:w-5 lg:h-5 text-muted-foreground" />
@@ -495,7 +495,7 @@ const Register = () => {
                             ) : (
                               <div className="w-4 h-4 rounded-full border-2 border-muted-foreground" />
                             )}
-                            <span className="text-sm">Telefone válido</span>
+                            <span className="text-sm">Celular válido</span>
                           </div>
                           <div className="flex items-center space-x-2">
                             {watchedValues.email && /\S+@\S+\.\S+/.test(watchedValues.email) ? (
