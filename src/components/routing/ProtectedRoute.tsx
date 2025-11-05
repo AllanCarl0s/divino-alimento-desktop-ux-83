@@ -18,7 +18,6 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
     '/dashboard',
     '/minhaCesta/1',
     '/pedidoConsumidores/1',
-    '/consumidor/relatorio/1',
     '/consumidor/pagamentos',
     '/usuario/1',
   ],

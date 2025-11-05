@@ -31,13 +31,6 @@ const Dashboard = () => {
       habilitado: true
     },
     {
-      titulo: 'Relatório de Recebimentos',
-      descricao: 'Veja o que você irá receber por ciclo (data/hora e local)',
-      icone: FileText,
-      rota: '/consumidor/relatorio/1',
-      habilitado: true
-    },
-    {
       titulo: 'Meus Pagamentos',
       descricao: 'Acompanhe seus pagamentos (em aberto e quitados)',
       icone: Wallet,

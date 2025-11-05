@@ -10,7 +10,6 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import MinhaCesta from "./pages/MinhaCesta";
 import PedidoConsumidores from "./pages/PedidoConsumidores";
-import ConsumidorRelatorio from "./pages/consumidor/ConsumidorRelatorio";
 import ConsumidorPagamentos from "./pages/consumidor/ConsumidorPagamentos";
 import NotFound from "./pages/NotFound";
 
@@ -85,7 +84,6 @@ const App = () => (
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/minhaCesta/:id" element={<ProtectedRoute><MinhaCesta /></ProtectedRoute>} />
           <Route path="/pedidoConsumidores/:id" element={<ProtectedRoute><PedidoConsumidores /></ProtectedRoute>} />
-          <Route path="/consumidor/relatorio/:id" element={<ProtectedRoute><ConsumidorRelatorio /></ProtectedRoute>} />
           <Route path="/consumidor/pagamentos" element={<ProtectedRoute><ConsumidorPagamentos /></ProtectedRoute>} />
           
           {/* Fornecedor Routes */}
