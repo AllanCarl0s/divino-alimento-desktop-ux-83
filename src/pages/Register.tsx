@@ -398,7 +398,7 @@ const Register = () => {
                                     </FormControl>
                                     <ShoppingBasket className="w-5 h-5 max-[767px]:w-[20px] max-[767px]:h-[20px] min-[1200px]:w-[22px] min-[1200px]:h-[22px] text-primary flex-shrink-0" />
                                     <FormLabel className="cursor-pointer font-semibold text-base max-[767px]:text-[15px] min-[1200px]:text-[17px] leading-[1.25] whitespace-normal break-words hyphens-auto m-0">
-                                      Consumidor/Consumidora
+                                      Consumidor(@)
                                     </FormLabel>
                                   </div>
                                   <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
@@ -436,7 +436,7 @@ const Register = () => {
                                     </FormControl>
                                     <Store className="w-5 h-5 max-[767px]:w-[20px] max-[767px]:h-[20px] min-[1200px]:w-[22px] min-[1200px]:h-[22px] text-accent flex-shrink-0" />
                                     <FormLabel className="cursor-pointer font-semibold text-base max-[767px]:text-[15px] min-[1200px]:text-[17px] leading-[1.25] whitespace-normal break-words hyphens-auto m-0">
-                                      Fornecedor/Fornecedora
+                                      Fornecedor(@)
                                     </FormLabel>
                                   </div>
                                   <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
@@ -474,7 +474,7 @@ const Register = () => {
                                     </FormControl>
                                     <Shield className="w-5 h-5 max-[767px]:w-[20px] max-[767px]:h-[20px] min-[1200px]:w-[22px] min-[1200px]:h-[22px] text-destructive flex-shrink-0" />
                                     <FormLabel className="cursor-pointer font-semibold text-base max-[767px]:text-[15px] min-[1200px]:text-[17px] leading-[1.25] whitespace-normal break-words hyphens-auto m-0">
-                                      Administrador/Administradora Geral
+                                      Administrador(@)
                                     </FormLabel>
                                   </div>
                                   <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
@@ -512,7 +512,7 @@ const Register = () => {
                                     </FormControl>
                                     <UserCheck className="w-5 h-5 max-[767px]:w-[20px] max-[767px]:h-[20px] min-[1200px]:w-[22px] min-[1200px]:h-[22px] text-warning flex-shrink-0" />
                                     <FormLabel className="cursor-pointer font-semibold text-base max-[767px]:text-[15px] min-[1200px]:text-[17px] leading-[1.25] whitespace-normal break-words hyphens-auto m-0">
-                                      Administrador/Administradora de Mercado
+                                      Administrador(@) de mercado
                                     </FormLabel>
                                   </div>
                                   <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
