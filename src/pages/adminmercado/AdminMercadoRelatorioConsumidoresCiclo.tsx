@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { ArrowLeft, FileDown, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -92,7 +93,7 @@ const AdminMercadoRelatorioConsumidoresCiclo = () => {
           <CardContent>
             <div className="space-y-3">
               {ciclosDisponiveis.map(ciclo => (
-                <div key={ciclo.id} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-accent/50 transition-colors">
+                <div key={ciclo.id} className="flex items-center gap-4 p-4 border rounded-lg hover:bg-accent/50 transition-colors">
                   <Checkbox
                     id={`ciclo-${ciclo.id}`}
                     checked={selectedCiclos.includes(ciclo.id)}
@@ -100,22 +101,16 @@ const AdminMercadoRelatorioConsumidoresCiclo = () => {
                   />
                   <label
                     htmlFor={`ciclo-${ciclo.id}`}
-                    className="flex-1 cursor-pointer"
+                    className="flex-1 cursor-pointer flex items-center justify-between"
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <div>
-                        <span className="font-medium">{ciclo.nome}</span>
-                        <span className={`ml-2 text-xs px-2 py-1 rounded-full ${
-                          ciclo.status === 'Ativo' 
-                            ? 'bg-green-100 text-green-700' 
-                            : 'bg-gray-100 text-gray-600'
-                        }`}>
-                          {ciclo.status}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium">{ciclo.nome}</span>
+                      <Badge variant={ciclo.status === 'Ativo' ? 'success' : 'secondary'}>
+                        {ciclo.status}
+                      </Badge>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      Retirada: {ciclo.dataRetirada} às {ciclo.horaRetirada} • {ciclo.localRetirada}
+                      Entrega: {ciclo.dataRetirada}
                     </div>
                   </label>
                 </div>
