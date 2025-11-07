@@ -13,7 +13,13 @@ const ciclosDisponiveis = [
   { id: 1, nome: "1º Ciclo de Outubro", status: "Finalizado", dataEntrega: "15/10/2024" },
   { id: 2, nome: "2º Ciclo de Outubro", status: "Finalizado", dataEntrega: "30/10/2024" },
   { id: 3, nome: "1º Ciclo de Novembro", status: "Ativo", dataEntrega: "15/11/2024" },
-];
+].sort((a, b) => {
+  const [diaA, mesA, anoA] = a.dataEntrega.split('/').map(Number);
+  const [diaB, mesB, anoB] = b.dataEntrega.split('/').map(Number);
+  const dateA = new Date(anoA, mesA - 1, diaA);
+  const dateB = new Date(anoB, mesB - 1, diaB);
+  return dateB.getTime() - dateA.getTime(); // Most recent first
+});
 
 const AdminRelatorioConsumidores = () => {
   const navigate = useNavigate();
