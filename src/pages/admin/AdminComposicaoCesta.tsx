@@ -15,8 +15,6 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
-import { useCompositionFilters } from '@/hooks/useCompositionFilters';
-import { CompositionFilters } from '@/components/admin/CompositionFilters';
 
 export default function AdminComposicaoCesta() {
   const { id } = useParams();
@@ -25,19 +23,6 @@ export default function AdminComposicaoCesta() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
-  
-  const {
-    certificacoes,
-    tiposAgricultura,
-    toggleCertificacao,
-    toggleTipoAgricultura,
-    clearFilters,
-    hasActiveFilters
-  } = useCompositionFilters();
-
-  const clearCompositionFilters = () => {
-    clearFilters();
-  };
   
   // selectedByGroup: groupKey -> Set of variantIds
   const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
@@ -124,11 +109,8 @@ export default function AdminComposicaoCesta() {
   // Agrupar e filtrar produtos
   const productGroups = useMemo(() => {
     const groups = groupAndSortProducts(ofertas);
-    return filterProducts(groups, busca, {
-      certificacoes,
-      tiposAgricultura,
-    });
-  }, [ofertas, busca, certificacoes, tiposAgricultura]);
+    return filterProducts(groups, busca);
+  }, [ofertas, busca]);
 
   // Calcular itens selecionados
   const selectedItems = useMemo(() => {
@@ -425,58 +407,34 @@ export default function AdminComposicaoCesta() {
               <CardTitle>Produtos Ofertados</CardTitle>
               
               {/* Action Bar */}
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                {/* Left side - Search and Expand/Collapse */}
-                <div className="flex items-center gap-2 flex-1 min-w-[280px]">
-                  <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Buscar produto, fornecedor ou unidade..."
-                      value={busca}
-                      onChange={(e) => setBusca(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
-                    className="whitespace-nowrap h-9"
-                  >
-                    {expandedGroups.size === productGroups.length ? (
-                      <>
-                        <ChevronUp className="h-4 w-4 mr-1" />
-                        Recolher tudo
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="h-4 w-4 mr-1" />
-                        Expandir tudo
-                      </>
-                    )}
-                  </Button>
-                </div>
-
-                {/* Right side - Filters and Clear */}
-                <div className="flex items-center gap-2">
-                  <CompositionFilters
-                    certificacoes={certificacoes}
-                    tiposAgricultura={tiposAgricultura}
-                    onToggleCertificacao={toggleCertificacao}
-                    onToggleTipoAgricultura={toggleTipoAgricultura}
-                    onClearAll={clearCompositionFilters}
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar produto, fornecedor ou unidade..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    className="pl-10"
                   />
-                  {hasActiveFilters && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={clearCompositionFilters}
-                      className="whitespace-nowrap h-9 hidden md:flex"
-                    >
-                      Limpar
-                    </Button>
-                  )}
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
+                  className="whitespace-nowrap h-9"
+                >
+                  {expandedGroups.size === productGroups.length ? (
+                    <>
+                      <ChevronUp className="h-4 w-4 mr-1" />
+                      Recolher tudo
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-4 w-4 mr-1" />
+                      Expandir tudo
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
           </CardHeader>

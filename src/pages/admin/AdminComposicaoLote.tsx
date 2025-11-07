@@ -1,7 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { useCompositionFilters } from '@/hooks/useCompositionFilters';
-import { CompositionFilters } from '@/components/admin/CompositionFilters';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,16 +26,6 @@ export default function AdminComposicaoLote() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
-  
-  // Hook de filtros
-  const {
-    certificacoes,
-    tiposAgricultura,
-    toggleCertificacao,
-    toggleTipoAgricultura,
-    clearFilters: clearCompositionFilters,
-    hasActiveFilters,
-  } = useCompositionFilters();
   
   // selectedByGroup: groupKey -> Set of variantIds
   const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
@@ -166,14 +154,11 @@ export default function AdminComposicaoLote() {
     tipo: 'Lote'
   };
 
-  // Agrupar e filtrar produtos (com ordenação A-Z e filtros)
+  // Agrupar e filtrar produtos (com ordenação A-Z)
   const productGroups = useMemo(() => {
     const groups = groupAndSortProducts(ofertas);
-    return filterProducts(groups, busca, {
-      certificacoes,
-      tiposAgricultura,
-    });
-  }, [ofertas, busca, certificacoes, tiposAgricultura]);
+    return filterProducts(groups, busca);
+  }, [ofertas, busca]);
 
   // Calcular itens selecionados
   const selectedItems = useMemo(() => {
@@ -572,27 +557,6 @@ export default function AdminComposicaoLote() {
                       </>
                     )}
                   </Button>
-                </div>
-
-                {/* Right side - Filters and Clear */}
-                <div className="flex items-center gap-2">
-                  <CompositionFilters
-                    certificacoes={certificacoes}
-                    tiposAgricultura={tiposAgricultura}
-                    onToggleCertificacao={toggleCertificacao}
-                    onToggleTipoAgricultura={toggleTipoAgricultura}
-                    onClearAll={clearCompositionFilters}
-                  />
-                  {hasActiveFilters && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={clearCompositionFilters}
-                      className="whitespace-nowrap h-9 hidden md:flex"
-                    >
-                      Limpar
-                    </Button>
-                  )}
                 </div>
               </div>
             </div>

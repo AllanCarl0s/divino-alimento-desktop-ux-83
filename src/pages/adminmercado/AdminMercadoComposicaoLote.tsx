@@ -13,8 +13,6 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
-import { useCompositionFilters } from '@/hooks/useCompositionFilters';
-import { CompositionFilters } from '@/components/admin/CompositionFilters';
 
 export default function AdminMercadoComposicaoLote() {
   const { cicloId } = useParams();
@@ -29,15 +27,6 @@ export default function AdminMercadoComposicaoLote() {
   
   const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
   const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
-  
-  const {
-    certificacoes,
-    tiposAgricultura,
-    toggleCertificacao,
-    toggleTipoAgricultura,
-    clearFilters,
-    hasActiveFilters
-  } = useCompositionFilters();
 
   // Carregar composição do localStorage
   useEffect(() => {
@@ -119,11 +108,8 @@ export default function AdminMercadoComposicaoLote() {
 
   const productGroups = useMemo(() => {
     const groups = groupAndSortProducts(ofertas);
-    return filterProducts(groups, busca, {
-      certificacoes,
-      tiposAgricultura,
-    });
-  }, [ofertas, busca, certificacoes, tiposAgricultura]);
+    return filterProducts(groups, busca);
+  }, [ofertas, busca]);
 
   const selectedItems = useMemo(() => {
     const items: Array<{ id: string; valor: number; quantidade: number }> = [];
@@ -474,58 +460,34 @@ export default function AdminMercadoComposicaoLote() {
               <CardTitle>Produtos Ofertados</CardTitle>
               
               {/* Action Bar */}
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                {/* Left side - Search and Expand/Collapse */}
-                <div className="flex items-center gap-2 flex-1 min-w-[280px]">
-                  <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Buscar produto..."
-                      value={busca}
-                      onChange={(e) => setBusca(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
-                    className="whitespace-nowrap h-9 border-primary text-primary hover:bg-primary/10"
-                  >
-                    {expandedGroups.size === productGroups.length ? (
-                      <>
-                        <ChevronUp className="h-4 w-4 mr-1" />
-                        Recolher Tudo
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="h-4 w-4 mr-1" />
-                        Expandir Tudo
-                      </>
-                    )}
-                  </Button>
-                </div>
-
-                {/* Right side - Filters */}
-                <div className="flex items-center gap-2">
-                  <CompositionFilters
-                    certificacoes={certificacoes}
-                    tiposAgricultura={tiposAgricultura}
-                    onToggleCertificacao={toggleCertificacao}
-                    onToggleTipoAgricultura={toggleTipoAgricultura}
-                    onClearAll={clearFilters}
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar produto..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    className="pl-10"
                   />
-                  {hasActiveFilters && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={clearFilters}
-                      className="whitespace-nowrap h-9 hidden md:flex"
-                    >
-                      Limpar
-                    </Button>
-                  )}
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
+                  className="whitespace-nowrap h-9 border-primary text-primary hover:bg-primary/10"
+                >
+                  {expandedGroups.size === productGroups.length ? (
+                    <>
+                      <ChevronUp className="h-4 w-4 mr-1" />
+                      Recolher Tudo
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-4 w-4 mr-1" />
+                      Expandir Tudo
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
           </CardHeader>
