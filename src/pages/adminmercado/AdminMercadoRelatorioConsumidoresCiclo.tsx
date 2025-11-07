@@ -13,7 +13,13 @@ const ciclosDisponiveis = [
   { id: 1, nome: "1º Ciclo de Outubro", status: "Finalizado", dataRetirada: "16/10/2024", horaRetirada: "14:00", localRetirada: "Mercado Central - Praça Central, 123" },
   { id: 2, nome: "2º Ciclo de Outubro", status: "Finalizado", dataRetirada: "31/10/2024", horaRetirada: "14:00", localRetirada: "Mercado Central - Praça Central, 123" },
   { id: 3, nome: "1º Ciclo de Novembro", status: "Ativo", dataRetirada: "16/11/2024", horaRetirada: "14:00", localRetirada: "Mercado Central - Praça Central, 123" },
-];
+].sort((a, b) => {
+  const [diaA, mesA, anoA] = a.dataRetirada.split('/').map(Number);
+  const [diaB, mesB, anoB] = b.dataRetirada.split('/').map(Number);
+  const dateA = new Date(anoA, mesA - 1, diaA);
+  const dateB = new Date(anoB, mesB - 1, diaB);
+  return dateB.getTime() - dateA.getTime(); // Most recent first
+});
 
 const AdminMercadoRelatorioConsumidoresCiclo = () => {
   const navigate = useNavigate();
