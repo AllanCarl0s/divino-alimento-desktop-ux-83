@@ -43,20 +43,55 @@ const AdminMercadoRelatorioFornecedoresCiclo = () => {
     navigate(`/adminmercado/relatorio-fornecedores/resultado?ciclos=${selectedCiclos.join(',')}`);
   };
 
-  const handleExportCSV = () => {
+  const handleExportCSV = async () => {
     if (selectedCiclos.length === 0) {
       toast.error('Selecione pelo menos um ciclo');
       return;
     }
-    toast.success('Download do CSV concluído');
+    
+    try {
+      const selectedCiclosData = ciclosDisponiveis.filter(c => selectedCiclos.includes(c.id));
+      
+      // Mock data para export - em produção viria da API
+      const mockEntregas = [
+        { ciclo: '1º Ciclo de Outubro', fornecedor: 'Fazenda Verde', produto: 'Tomate', unidade_medida: 'kg', valor_unitario: 5.50, quantidade_entregue: 120, valor_total: 660.00 },
+        { ciclo: '1º Ciclo de Outubro', fornecedor: 'Sítio do Sol', produto: 'Alface', unidade_medida: 'unidade', valor_unitario: 2.00, quantidade_entregue: 200, valor_total: 400.00 }
+      ];
+      
+      const { exportFornecedoresCSV } = await import('@/utils/export');
+      exportFornecedoresCSV(mockEntregas, selectedCiclosData);
+      toast.success('Download do CSV concluído');
+    } catch (error) {
+      toast.error('Erro ao exportar CSV');
+    }
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     if (selectedCiclos.length === 0) {
       toast.error('Selecione pelo menos um ciclo');
       return;
     }
-    toast.success('Download do PDF concluído');
+    
+    try {
+      const selectedCiclosData = ciclosDisponiveis.filter(c => selectedCiclos.includes(c.id));
+      
+      // Mock data para export - em produção viria da API
+      const mockEntregas = [
+        { ciclo: '1º Ciclo de Outubro', fornecedor: 'Fazenda Verde', produto: 'Tomate', unidade_medida: 'kg', valor_unitario: 5.50, quantidade_entregue: 120, valor_total: 660.00 },
+        { ciclo: '1º Ciclo de Outubro', fornecedor: 'Sítio do Sol', produto: 'Alface', unidade_medida: 'unidade', valor_unitario: 2.00, quantidade_entregue: 200, valor_total: 400.00 }
+      ];
+      
+      const resumo = {
+        totalQuantidade: 320,
+        valorTotal: 1060.00
+      };
+      
+      const { exportFornecedoresPDF } = await import('@/utils/export');
+      exportFornecedoresPDF(mockEntregas, selectedCiclosData, resumo);
+      toast.success('Download do PDF concluído');
+    } catch (error) {
+      toast.error('Erro ao exportar PDF');
+    }
   };
 
   return (

@@ -42,20 +42,57 @@ const AdminRelatorioConsumidores = () => {
     navigate(`/admin/relatorio-consumidores/resultado?ciclos=${selectedCiclos.join(',')}`);
   };
 
-  const handleExportCSV = () => {
+  const handleExportCSV = async () => {
     if (selectedCiclos.length === 0) {
       toast.error('Selecione pelo menos um ciclo');
       return;
     }
-    toast.success('Download do CSV concluído');
+    
+    try {
+      const response = await fetch(`/admin/relatorio-consumidores/resultado?ciclos=${selectedCiclos.join(',')}`);
+      const selectedCiclosData = ciclosDisponiveis.filter(c => selectedCiclos.includes(c.id));
+      
+      // Mock data para export - em produção viria da API
+      const mockPedidos = [
+        { ciclo: '1º Ciclo de Outubro', consumidor: 'Maria Silva', produto: 'Tomate', fornecedor: 'Sítio Verde', medida: 'kg', valor_unitario: 5.50, quantidade: 3, total: 16.50, agricultura_familiar: true, certificacao: 'organico' },
+        { ciclo: '1º Ciclo de Outubro', consumidor: 'Maria Silva', produto: 'Alface', fornecedor: 'Maria Horta', medida: 'unidade', valor_unitario: 2.00, quantidade: 5, total: 10.00, agricultura_familiar: true, certificacao: 'transicao' }
+      ];
+      
+      const { exportConsumidoresCSV } = await import('@/utils/export');
+      exportConsumidoresCSV(mockPedidos, selectedCiclosData);
+      toast.success('Download do CSV concluído');
+    } catch (error) {
+      toast.error('Erro ao exportar CSV');
+    }
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     if (selectedCiclos.length === 0) {
       toast.error('Selecione pelo menos um ciclo');
       return;
     }
-    toast.success('Download do PDF concluído');
+    
+    try {
+      const selectedCiclosData = ciclosDisponiveis.filter(c => selectedCiclos.includes(c.id));
+      
+      // Mock data para export - em produção viria da API
+      const mockPedidos = [
+        { ciclo: '1º Ciclo de Outubro', consumidor: 'Maria Silva', produto: 'Tomate', fornecedor: 'Sítio Verde', medida: 'kg', valor_unitario: 5.50, quantidade: 3, total: 16.50, agricultura_familiar: true, certificacao: 'organico' },
+        { ciclo: '1º Ciclo de Outubro', consumidor: 'Maria Silva', produto: 'Alface', fornecedor: 'Maria Horta', medida: 'unidade', valor_unitario: 2.00, quantidade: 5, total: 10.00, agricultura_familiar: true, certificacao: 'transicao' }
+      ];
+      
+      const resumo = {
+        totalConsumidores: 1,
+        totalKg: 3,
+        valorTotal: 26.50
+      };
+      
+      const { exportConsumidoresPDF } = await import('@/utils/export');
+      exportConsumidoresPDF(mockPedidos, selectedCiclosData, resumo);
+      toast.success('Download do PDF concluído');
+    } catch (error) {
+      toast.error('Erro ao exportar PDF');
+    }
   };
 
   return (
