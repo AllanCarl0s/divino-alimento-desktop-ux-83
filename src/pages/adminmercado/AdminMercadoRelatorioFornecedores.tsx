@@ -102,7 +102,7 @@ export default function AdminMercadoRelatorioFornecedores() {
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={() => navigate('/adminmercado/ciclo-index')} 
+          onClick={() => navigate('/adminmercado/relatorios/fornecedores-ciclo')} 
           className="text-white hover:bg-white/20"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -230,7 +230,7 @@ export default function AdminMercadoRelatorioFornecedores() {
         <div className="flex justify-start">
           <Button
             variant="outline"
-            onClick={() => navigate('/adminmercado/ciclo-index')}
+            onClick={() => navigate('/adminmercado/relatorios/fornecedores-ciclo')}
             className="border-primary text-primary hover:bg-primary/10"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
