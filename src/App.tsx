@@ -54,6 +54,7 @@ import UsuarioNovo from "./pages/UsuarioNovo";
 import AdminMercadoDashboard from './pages/adminmercado/AdminMercadoDashboard';
 import AdminMercadoMercados from './pages/adminmercado/AdminMercadoMercados';
 import AdminMercadoPrecos from './pages/adminmercado/AdminMercadoPrecos';
+import AdminMercadoPrecosGestao from './pages/adminmercado/AdminMercadoPrecosGestao';
 import AdminMercadoCicloIndex from './pages/adminmercado/AdminMercadoCicloIndex';
 import AdminMercadoCiclo from './pages/adminmercado/AdminMercadoCiclo';
 import AdminMercadoComposicaoCesta from './pages/adminmercado/AdminMercadoComposicaoCesta';
@@ -98,6 +99,7 @@ const App = () => (
           <Route path="/adminmercado/dashboard" element={<ProtectedRoute><AdminMercadoDashboard /></ProtectedRoute>} />
           <Route path="/adminmercado/mercados" element={<ProtectedRoute><AdminMercadoMercados /></ProtectedRoute>} />
           <Route path="/adminmercado/precos" element={<ProtectedRoute><AdminMercadoPrecos /></ProtectedRoute>} />
+          <Route path="/adminmercado/precos/:id" element={<ProtectedRoute><AdminMercadoPrecosGestao /></ProtectedRoute>} />
           <Route path="/adminmercado/ciclo-index" element={<ProtectedRoute><AdminMercadoCicloIndex /></ProtectedRoute>} />
           <Route path="/adminmercado/ciclo" element={<ProtectedRoute><AdminMercadoCiclo /></ProtectedRoute>} />
           <Route path="/adminmercado/ciclo/:id" element={<ProtectedRoute><AdminMercadoCiclo /></ProtectedRoute>} />
