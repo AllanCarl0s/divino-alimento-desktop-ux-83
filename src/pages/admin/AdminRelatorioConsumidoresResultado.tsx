@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Search, Download, FileText, Eye, ArrowUpDown } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -20,6 +22,8 @@ interface PedidoConsumidor {
   quantidade: number;
   total: number;
   ciclo: string;
+  agricultura_familiar: boolean;
+  certificacao: 'organico' | 'transicao' | 'convencional';
 }
 
 interface PedidoDetalhado extends PedidoConsumidor {
@@ -37,6 +41,8 @@ export default function AdminRelatorioConsumidoresResultado() {
   const [modalOpen, setModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'fornecedor' | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [filtroAgriculturaFamiliar, setFiltroAgriculturaFamiliar] = useState<string>('todos');
+  const [filtroCertificacao, setFiltroCertificacao] = useState<string>('todos');
 
   // Mock data - pedidos consolidados dos ciclos selecionados
   const pedidos: PedidoConsumidor[] = [
@@ -49,7 +55,9 @@ export default function AdminRelatorioConsumidoresResultado() {
       valor_unitario: 5.50,
       quantidade: 3,
       total: 16.50,
-      ciclo: '1º Ciclo de Outubro'
+      ciclo: '1º Ciclo de Outubro',
+      agricultura_familiar: true,
+      certificacao: 'organico'
     },
     {
       id: '2',
@@ -60,7 +68,9 @@ export default function AdminRelatorioConsumidoresResultado() {
       valor_unitario: 2.00,
       quantidade: 5,
       total: 10.00,
-      ciclo: '1º Ciclo de Outubro'
+      ciclo: '1º Ciclo de Outubro',
+      agricultura_familiar: true,
+      certificacao: 'transicao'
     },
     {
       id: '3',
@@ -71,7 +81,9 @@ export default function AdminRelatorioConsumidoresResultado() {
       valor_unitario: 4.00,
       quantidade: 2,
       total: 8.00,
-      ciclo: '2º Ciclo de Outubro'
+      ciclo: '2º Ciclo de Outubro',
+      agricultura_familiar: false,
+      certificacao: 'convencional'
     },
     {
       id: '4',
@@ -82,7 +94,9 @@ export default function AdminRelatorioConsumidoresResultado() {
       valor_unitario: 3.50,
       quantidade: 4,
       total: 14.00,
-      ciclo: '2º Ciclo de Outubro'
+      ciclo: '2º Ciclo de Outubro',
+      agricultura_familiar: true,
+      certificacao: 'organico'
     },
     {
       id: '5',
@@ -93,7 +107,9 @@ export default function AdminRelatorioConsumidoresResultado() {
       valor_unitario: 3.80,
       quantidade: 5,
       total: 19.00,
-      ciclo: '1º Ciclo de Novembro'
+      ciclo: '1º Ciclo de Novembro',
+      agricultura_familiar: true,
+      certificacao: 'convencional'
     },
     {
       id: '6',
@@ -104,17 +120,31 @@ export default function AdminRelatorioConsumidoresResultado() {
       valor_unitario: 4.20,
       quantidade: 3,
       total: 12.60,
-      ciclo: '1º Ciclo de Novembro'
+      ciclo: '1º Ciclo de Novembro',
+      agricultura_familiar: true,
+      certificacao: 'organico'
     }
   ];
 
   const filteredPedidos = pedidos
-    .filter(pedido =>
-      pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pedido.ciclo.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter(pedido => {
+      // Filtro de busca
+      const matchSearch = pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.ciclo.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      // Filtro agricultura familiar
+      const matchAgriculturaFamiliar = filtroAgriculturaFamiliar === 'todos' ||
+        (filtroAgriculturaFamiliar === 'sim' && pedido.agricultura_familiar) ||
+        (filtroAgriculturaFamiliar === 'nao' && !pedido.agricultura_familiar);
+      
+      // Filtro certificação
+      const matchCertificacao = filtroCertificacao === 'todos' ||
+        pedido.certificacao === filtroCertificacao;
+      
+      return matchSearch && matchAgriculturaFamiliar && matchCertificacao;
+    })
     .sort((a, b) => {
       if (sortBy === 'fornecedor') {
         const compareResult = a.fornecedor.localeCompare(b.fornecedor);
@@ -207,31 +237,64 @@ export default function AdminRelatorioConsumidoresResultado() {
         </Card>
 
         {/* Toolbar */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Filtrar por consumidor, produto, fornecedor ou ciclo"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row gap-4 justify-between">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Filtrar por consumidor, produto, fornecedor ou ciclo"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={handleExportCSV}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Exportar CSV
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleExportPDF}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Exportar PDF
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={handleExportCSV}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Exportar CSV
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={handleExportPDF}
-            >
-              <FileText className="h-4 w-4 mr-2" />
-              Exportar PDF
-            </Button>
+
+          {/* Filtros de Etiquetas */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1">
+              <label className="text-sm font-medium mb-2 block">Agricultura Familiar</label>
+              <Select value={filtroAgriculturaFamiliar} onValueChange={setFiltroAgriculturaFamiliar}>
+                <SelectTrigger className="w-full bg-background">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="sim">Sim</SelectItem>
+                  <SelectItem value="nao">Não</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex-1">
+              <label className="text-sm font-medium mb-2 block">Certificação</label>
+              <Select value={filtroCertificacao} onValueChange={setFiltroCertificacao}>
+                <SelectTrigger className="w-full bg-background">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="organico">Orgânico</SelectItem>
+                  <SelectItem value="transicao">Transição</SelectItem>
+                  <SelectItem value="convencional">Convencional</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -278,7 +341,30 @@ export default function AdminRelatorioConsumidoresResultado() {
                   <TableRow key={pedido.id}>
                     <TableCell className="font-medium">{pedido.ciclo}</TableCell>
                     <TableCell>{pedido.consumidor}</TableCell>
-                    <TableCell>{pedido.produto}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        <span>{pedido.produto}</span>
+                        <div className="flex gap-1">
+                          {pedido.agricultura_familiar && (
+                            <Badge variant="secondary" className="text-xs">
+                              Agricultura Familiar
+                            </Badge>
+                          )}
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${
+                              pedido.certificacao === 'organico' ? 'border-green-600 text-green-600' :
+                              pedido.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
+                              'border-gray-400 text-gray-600'
+                            }`}
+                          >
+                            {pedido.certificacao === 'organico' ? 'Orgânico' :
+                             pedido.certificacao === 'transicao' ? 'Transição' :
+                             'Convencional'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell>{pedido.fornecedor}</TableCell>
                     <TableCell>{pedido.medida}</TableCell>
                     <TableCell className="text-right">
