@@ -470,35 +470,63 @@ export default function AdminMercadoComposicaoLote() {
         {/* Busca e Filtros */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="space-y-4">
               <CardTitle>Produtos Ofertados</CardTitle>
-              <div className="flex gap-2 flex-wrap">
-                <div className="relative w-64">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Buscar produto..."
-                    value={busca}
-                    onChange={(e) => setBusca(e.target.value)}
-                    className="pl-10"
-                  />
+              
+              {/* Action Bar */}
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                {/* Left side - Search and Expand/Collapse */}
+                <div className="flex items-center gap-2 flex-1 min-w-[280px]">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar produto..."
+                      value={busca}
+                      onChange={(e) => setBusca(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
+                    className="whitespace-nowrap h-9 border-primary text-primary hover:bg-primary/10"
+                  >
+                    {expandedGroups.size === productGroups.length ? (
+                      <>
+                        <ChevronUp className="h-4 w-4 mr-1" />
+                        Recolher Tudo
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-4 w-4 mr-1" />
+                        Expandir Tudo
+                      </>
+                    )}
+                  </Button>
                 </div>
-                <Button variant="outline" onClick={expandAll} className="border-primary text-primary hover:bg-primary/10">
-                  <ChevronDown className="h-4 w-4 mr-2" />
-                  Expandir Tudo
-                </Button>
-                <Button variant="outline" onClick={collapseAll} className="border-primary text-primary hover:bg-primary/10">
-                  <ChevronUp className="h-4 w-4 mr-2" />
-                  Recolher Tudo
-                </Button>
+
+                {/* Right side - Filters */}
+                <div className="flex items-center gap-2">
+                  <CompositionFilters
+                    certificacoes={certificacoes}
+                    tiposAgricultura={tiposAgricultura}
+                    onToggleCertificacao={toggleCertificacao}
+                    onToggleTipoAgricultura={toggleTipoAgricultura}
+                    onClearAll={clearFilters}
+                  />
+                  {hasActiveFilters && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={clearFilters}
+                      className="whitespace-nowrap h-9 hidden md:flex"
+                    >
+                      Limpar
+                    </Button>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="mt-4">
-              <CompositionFilters
-                certificacoes={certificacoes}
-                tiposAgricultura={tiposAgricultura}
-                onToggleCertificacao={toggleCertificacao}
-                onToggleTipoAgricultura={toggleTipoAgricultura}
-              />
             </div>
           </CardHeader>
           <CardContent>

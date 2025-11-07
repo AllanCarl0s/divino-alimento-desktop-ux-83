@@ -420,45 +420,63 @@ export default function AdminMercadoComposicaoCesta() {
         {/* Produtos Agrupados */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="space-y-4">
               <CardTitle>Produtos Ofertados</CardTitle>
-              <div className="flex items-center gap-2 flex-wrap">
-                <div className="relative w-64">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Buscar produto, fornecedor ou unidade..."
-                    value={busca}
-                    onChange={(e) => setBusca(e.target.value)}
-                    className="pl-10"
-                  />
+              
+              {/* Action Bar */}
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                {/* Left side - Search and Expand/Collapse */}
+                <div className="flex items-center gap-2 flex-1 min-w-[280px]">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar produto, fornecedor ou unidade..."
+                      value={busca}
+                      onChange={(e) => setBusca(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
+                    className="whitespace-nowrap h-9"
+                  >
+                    {expandedGroups.size === productGroups.length ? (
+                      <>
+                        <ChevronUp className="h-4 w-4 mr-1" />
+                        Recolher tudo
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-4 w-4 mr-1" />
+                        Expandir tudo
+                      </>
+                    )}
+                  </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
-                  className="whitespace-nowrap"
-                >
-                  {expandedGroups.size === productGroups.length ? (
-                    <>
-                      <ChevronUp className="h-4 w-4 mr-1" />
-                      Colapsar tudo
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown className="h-4 w-4 mr-1" />
-                      Expandir tudo
-                    </>
+
+                {/* Right side - Filters and Clear */}
+                <div className="flex items-center gap-2">
+                  <CompositionFilters
+                    certificacoes={certificacoes}
+                    tiposAgricultura={tiposAgricultura}
+                    onToggleCertificacao={toggleCertificacao}
+                    onToggleTipoAgricultura={toggleTipoAgricultura}
+                    onClearAll={clearFilters}
+                  />
+                  {hasActiveFilters && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={clearFilters}
+                      className="whitespace-nowrap h-9 hidden md:flex"
+                    >
+                      Limpar
+                    </Button>
                   )}
-                </Button>
+                </div>
               </div>
-            </div>
-            <div className="mt-4">
-              <CompositionFilters
-                certificacoes={certificacoes}
-                tiposAgricultura={tiposAgricultura}
-                onToggleCertificacao={toggleCertificacao}
-                onToggleTipoAgricultura={toggleTipoAgricultura}
-              />
             </div>
           </CardHeader>
           <CardContent>

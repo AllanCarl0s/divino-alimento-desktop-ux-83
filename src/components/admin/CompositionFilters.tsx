@@ -1,5 +1,6 @@
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { FilterDropdown, FilterOption } from "./FilterDropdown";
+import { MobileFiltersSheet, FilterSection } from "./MobileFiltersSheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export type CertificationType = 'organico' | 'transicao' | 'convencional';
 export type AgricultureType = 'familiar' | 'nao_familiar';
@@ -9,18 +10,19 @@ interface CompositionFiltersProps {
   tiposAgricultura: Set<AgricultureType>;
   onToggleCertificacao: (cert: CertificationType) => void;
   onToggleTipoAgricultura: (tipo: AgricultureType) => void;
+  onClearAll?: () => void;
   className?: string;
 }
 
 const certificacaoLabels: Record<CertificationType, string> = {
-  organico: 'Orgânico',
-  transicao: 'Transição',
-  convencional: 'Convencional',
+  organico: 'Produto orgânico',
+  transicao: 'Produto em transição agroecológica',
+  convencional: 'Produto convencional',
 };
 
 const agriculturaLabels: Record<AgricultureType, string> = {
-  familiar: 'Agri. familiar',
-  nao_familiar: 'Agri. não familiar',
+  familiar: 'Agricultura familiar',
+  nao_familiar: 'Agricultura não familiar',
 };
 
 export function CompositionFilters({
@@ -28,63 +30,86 @@ export function CompositionFilters({
   tiposAgricultura,
   onToggleCertificacao,
   onToggleTipoAgricultura,
-  className,
+  onClearAll,
+  className = "",
 }: CompositionFiltersProps) {
-  return (
-    <div className={cn('space-y-3', className)}>
-      {/* Certificação */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-          Certificação:
-        </span>
-        <div className="flex flex-wrap gap-2">
-          {(Object.entries(certificacaoLabels) as [CertificationType, string][]).map(([key, label]) => {
-            const isActive = certificacoes.has(key);
-            return (
-              <Badge
-                key={key}
-                variant={isActive ? 'default' : 'outline'}
-                className={cn(
-                  'cursor-pointer select-none transition-all min-h-[44px] px-3 py-2',
-                  isActive
-                    ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                    : 'bg-background hover:bg-accent'
-                )}
-                onClick={() => onToggleCertificacao(key)}
-              >
-                {label}
-              </Badge>
-            );
-          })}
-        </div>
-      </div>
+  const isMobile = useIsMobile();
 
-      {/* Tipo de Agricultura */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-          Agricultura:
-        </span>
-        <div className="flex flex-wrap gap-2">
-          {(Object.entries(agriculturaLabels) as [AgricultureType, string][]).map(([key, label]) => {
-            const isActive = tiposAgricultura.has(key);
-            return (
-              <Badge
-                key={key}
-                variant={isActive ? 'default' : 'outline'}
-                className={cn(
-                  'cursor-pointer select-none transition-all min-h-[44px] px-3 py-2',
-                  isActive
-                    ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                    : 'bg-background hover:bg-accent'
-                )}
-                onClick={() => onToggleTipoAgricultura(key)}
-              >
-                {label}
-              </Badge>
-            );
-          })}
-        </div>
-      </div>
+  const certificacaoOptions: FilterOption[] = (Object.keys(certificacaoLabels) as CertificationType[]).map((cert) => ({
+    value: cert,
+    label: certificacaoLabels[cert],
+  }));
+
+  const agriculturaOptions: FilterOption[] = (Object.keys(agriculturaLabels) as AgricultureType[]).map((tipo) => ({
+    value: tipo,
+    label: agriculturaLabels[tipo],
+  }));
+
+  const handleClearCertificacao = () => {
+    // Reset to all selected (default state)
+    (Object.keys(certificacaoLabels) as CertificationType[]).forEach((cert) => {
+      if (!certificacoes.has(cert)) {
+        onToggleCertificacao(cert);
+      }
+    });
+  };
+
+  const handleClearAgricultura = () => {
+    // Reset to all selected (default state)
+    (Object.keys(agriculturaLabels) as AgricultureType[]).forEach((tipo) => {
+      if (!tiposAgricultura.has(tipo)) {
+        onToggleTipoAgricultura(tipo);
+      }
+    });
+  };
+
+  const handleClearAll = () => {
+    handleClearCertificacao();
+    handleClearAgricultura();
+    onClearAll?.();
+  };
+
+  if (isMobile) {
+    const sections: FilterSection[] = [
+      {
+        title: "Certificação",
+        options: certificacaoOptions,
+        selectedValues: certificacoes,
+        onToggle: onToggleCertificacao,
+      },
+      {
+        title: "Agricultura",
+        options: agriculturaOptions,
+        selectedValues: tiposAgricultura,
+        onToggle: onToggleTipoAgricultura,
+      },
+    ];
+
+    return (
+      <MobileFiltersSheet
+        sections={sections}
+        onClearAll={handleClearAll}
+        className={className}
+      />
+    );
+  }
+
+  return (
+    <div className={`flex items-center gap-2 ${className}`}>
+      <FilterDropdown
+        title="Certificação"
+        options={certificacaoOptions}
+        selectedValues={certificacoes}
+        onToggle={onToggleCertificacao}
+        onClear={handleClearCertificacao}
+      />
+      <FilterDropdown
+        title="Agricultura"
+        options={agriculturaOptions}
+        selectedValues={tiposAgricultura}
+        onToggle={onToggleTipoAgricultura}
+        onClear={handleClearAgricultura}
+      />
     </div>
   );
 }

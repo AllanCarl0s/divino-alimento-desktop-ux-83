@@ -537,10 +537,13 @@ export default function AdminComposicaoLote() {
         <Card>
           <CardHeader>
             <div className="space-y-4">
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <CardTitle>Todos os Produtos Ofertados</CardTitle>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="relative w-64">
+              <CardTitle>Todos os Produtos Ofertados</CardTitle>
+              
+              {/* Action Bar */}
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                {/* Left side - Search and Expand/Collapse */}
+                <div className="flex items-center gap-2 flex-1 min-w-[280px]">
+                  <div className="relative flex-1 max-w-md">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Buscar produto, fornecedor ou unidade..."
@@ -554,7 +557,7 @@ export default function AdminComposicaoLote() {
                     variant="outline"
                     size="sm"
                     onClick={expandedGroups.size === productGroups.length ? collapseAll : expandAll}
-                    className="whitespace-nowrap"
+                    className="whitespace-nowrap h-9"
                     aria-label={expandedGroups.size === productGroups.length ? 'Recolher todos os grupos' : 'Expandir todos os grupos'}
                   >
                     {expandedGroups.size === productGroups.length ? (
@@ -569,26 +572,29 @@ export default function AdminComposicaoLote() {
                       </>
                     )}
                   </Button>
+                </div>
+
+                {/* Right side - Filters and Clear */}
+                <div className="flex items-center gap-2">
+                  <CompositionFilters
+                    certificacoes={certificacoes}
+                    tiposAgricultura={tiposAgricultura}
+                    onToggleCertificacao={toggleCertificacao}
+                    onToggleTipoAgricultura={toggleTipoAgricultura}
+                    onClearAll={clearCompositionFilters}
+                  />
                   {hasActiveFilters && (
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={clearCompositionFilters}
-                      className="whitespace-nowrap"
+                      className="whitespace-nowrap h-9 hidden md:flex"
                     >
                       Limpar
                     </Button>
                   )}
                 </div>
               </div>
-
-              {/* Filtros de Certificação e Tipo de Agricultura */}
-              <CompositionFilters
-                certificacoes={certificacoes}
-                tiposAgricultura={tiposAgricultura}
-                onToggleCertificacao={toggleCertificacao}
-                onToggleTipoAgricultura={toggleTipoAgricultura}
-              />
             </div>
           </CardHeader>
           <CardContent>
