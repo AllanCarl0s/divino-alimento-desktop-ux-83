@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ArrowLeft, Search, Download, FileText, Eye } from 'lucide-react';
+import { ArrowLeft, Search, Download, FileText, Eye, ArrowUpDown } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface PedidoConsumidor {
@@ -35,6 +35,8 @@ export default function AdminRelatorioConsumidoresResultado() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPedido, setSelectedPedido] = useState<PedidoDetalhado | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<'fornecedor' | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   // Mock data - pedidos consolidados dos ciclos selecionados
   const pedidos: PedidoConsumidor[] = [
@@ -106,12 +108,20 @@ export default function AdminRelatorioConsumidoresResultado() {
     }
   ];
 
-  const filteredPedidos = pedidos.filter(pedido =>
-    pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    pedido.ciclo.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPedidos = pedidos
+    .filter(pedido =>
+      pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pedido.ciclo.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === 'fornecedor') {
+        const compareResult = a.fornecedor.localeCompare(b.fornecedor);
+        return sortOrder === 'asc' ? compareResult : -compareResult;
+      }
+      return 0;
+    });
 
   const totalConsumidores = new Set(filteredPedidos.map(p => p.consumidor)).size;
   const totalKg = filteredPedidos
@@ -136,6 +146,15 @@ export default function AdminRelatorioConsumidoresResultado() {
 
   const handleExportPDF = () => {
     toast.success('Download do PDF iniciado');
+  };
+
+  const handleSortByFornecedor = () => {
+    if (sortBy === 'fornecedor') {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy('fornecedor');
+      setSortOrder('asc');
+    }
   };
 
   return (
@@ -224,7 +243,20 @@ export default function AdminRelatorioConsumidoresResultado() {
                 <TableHead>Ciclo</TableHead>
                 <TableHead>Consumidor</TableHead>
                 <TableHead>Produto</TableHead>
-                <TableHead>Fornecedor</TableHead>
+                <TableHead 
+                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={handleSortByFornecedor}
+                >
+                  <div className="flex items-center gap-2">
+                    Fornecedor
+                    <ArrowUpDown className="h-4 w-4" />
+                    {sortBy === 'fornecedor' && (
+                      <span className="text-xs text-muted-foreground">
+                        ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
+                      </span>
+                    )}
+                  </div>
+                </TableHead>
                 <TableHead>Medida</TableHead>
                 <TableHead className="text-right">Valor Unit.</TableHead>
                 <TableHead className="text-right">Quantidade</TableHead>
