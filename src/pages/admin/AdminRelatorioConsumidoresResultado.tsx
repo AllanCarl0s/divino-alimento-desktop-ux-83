@@ -248,29 +248,35 @@ export default function AdminRelatorioConsumidoresResultado() {
             />
           </div>
           
-          <div className="flex flex-wrap gap-2">
-            <Select value={filtroAgriculturaFamiliar} onValueChange={setFiltroAgriculturaFamiliar}>
-              <SelectTrigger className="w-[180px] bg-background">
-                <SelectValue placeholder="Agric. Familiar" />
-              </SelectTrigger>
-              <SelectContent className="bg-background z-50">
-                <SelectItem value="todos">Todos</SelectItem>
-                <SelectItem value="sim">Sim</SelectItem>
-                <SelectItem value="nao">Não</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex flex-wrap gap-2 items-end">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-muted-foreground">Agricultura Familiar</label>
+              <Select value={filtroAgriculturaFamiliar} onValueChange={setFiltroAgriculturaFamiliar}>
+                <SelectTrigger className="w-[180px] bg-background">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="sim">Sim</SelectItem>
+                  <SelectItem value="nao">Não</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-            <Select value={filtroCertificacao} onValueChange={setFiltroCertificacao}>
-              <SelectTrigger className="w-[180px] bg-background">
-                <SelectValue placeholder="Certificação" />
-              </SelectTrigger>
-              <SelectContent className="bg-background z-50">
-                <SelectItem value="todos">Todos</SelectItem>
-                <SelectItem value="organico">Orgânico</SelectItem>
-                <SelectItem value="transicao">Transição</SelectItem>
-                <SelectItem value="convencional">Convencional</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-muted-foreground">Certificação</label>
+              <Select value={filtroCertificacao} onValueChange={setFiltroCertificacao}>
+                <SelectTrigger className="w-[180px] bg-background">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="organico">Orgânico</SelectItem>
+                  <SelectItem value="transicao">Transição</SelectItem>
+                  <SelectItem value="convencional">Convencional</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             <Button 
               variant="outline" 
