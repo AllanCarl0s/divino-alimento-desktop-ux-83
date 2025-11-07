@@ -5,11 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Search, Download, FileText, Package } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { formatBRL } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { parseISO } from 'date-fns';
 
 interface EntregaFornecedor {
   id: string;
@@ -28,6 +30,7 @@ export default function FornecedorEntregas() {
   const { cicloId } = useParams();
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
+  const [orderBy, setOrderBy] = useState<'urgente' | 'antiga'>('urgente');
 
   // Mock data - in production this would come from API filtered by fornecedor_id and ciclo_id
   const entregas: EntregaFornecedor[] = [
@@ -66,10 +69,21 @@ export default function FornecedorEntregas() {
     }
   ];
 
-  const filteredEntregas = entregas.filter(entrega =>
-    entrega.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    entrega.local_nome.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEntregas = entregas
+    .filter(entrega =>
+      entrega.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entrega.local_nome.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      const dateA = parseISO(a.data_hora_entrega.split(' ')[0].split('/').reverse().join('-') + 'T' + a.data_hora_entrega.split(' ')[1]);
+      const dateB = parseISO(b.data_hora_entrega.split(' ')[0].split('/').reverse().join('-') + 'T' + b.data_hora_entrega.split(' ')[1]);
+      
+      if (orderBy === 'urgente') {
+        return dateA.getTime() - dateB.getTime(); // Mais próxima primeiro
+      } else {
+        return dateB.getTime() - dateA.getTime(); // Mais antiga primeiro
+      }
+    });
 
   const totalQuantidade = filteredEntregas.reduce((acc, e) => acc + e.quantidade_entregue, 0);
   const valorTotalGeral = filteredEntregas.reduce((acc, e) => acc + e.valor_total, 0);
@@ -172,14 +186,25 @@ export default function FornecedorEntregas() {
 
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-4 justify-between">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar produto..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+          <div className="flex flex-col sm:flex-row gap-4 flex-1">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar produto..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={orderBy} onValueChange={(value: 'urgente' | 'antiga') => setOrderBy(value)}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="urgente">Mais urgente</SelectItem>
+                <SelectItem value="antiga">Mais antiga</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex gap-2">
             <Button 
