@@ -14,6 +14,7 @@ interface PedidoConsumidor {
   id: string;
   consumidor: string;
   produto: string;
+  fornecedor: string;
   medida: string;
   valor_unitario: number;
   quantidade: number;
@@ -41,6 +42,7 @@ export default function AdminRelatorioConsumidoresResultado() {
       id: '1',
       consumidor: 'Maria Silva',
       produto: 'Tomate',
+      fornecedor: 'Sítio Verde',
       medida: 'kg',
       valor_unitario: 5.50,
       quantidade: 3,
@@ -51,6 +53,7 @@ export default function AdminRelatorioConsumidoresResultado() {
       id: '2',
       consumidor: 'Maria Silva',
       produto: 'Alface',
+      fornecedor: 'Maria Horta',
       medida: 'unidade',
       valor_unitario: 2.00,
       quantidade: 5,
@@ -61,6 +64,7 @@ export default function AdminRelatorioConsumidoresResultado() {
       id: '3',
       consumidor: 'João Santos',
       produto: 'Cenoura',
+      fornecedor: 'Fazenda Santa Clara',
       medida: 'kg',
       valor_unitario: 4.00,
       quantidade: 2,
@@ -71,6 +75,7 @@ export default function AdminRelatorioConsumidoresResultado() {
       id: '4',
       consumidor: 'Ana Costa',
       produto: 'Rúcula',
+      fornecedor: 'João Produtor',
       medida: 'maço',
       valor_unitario: 3.50,
       quantidade: 4,
@@ -81,6 +86,7 @@ export default function AdminRelatorioConsumidoresResultado() {
       id: '5',
       consumidor: 'Pedro Lima',
       produto: 'Batata',
+      fornecedor: 'Sítio Boa Vista',
       medida: 'kg',
       valor_unitario: 3.80,
       quantidade: 5,
@@ -91,6 +97,7 @@ export default function AdminRelatorioConsumidoresResultado() {
       id: '6',
       consumidor: 'Carla Souza',
       produto: 'Abóbora',
+      fornecedor: 'Sítio Verde',
       medida: 'kg',
       valor_unitario: 4.20,
       quantidade: 3,
@@ -102,6 +109,7 @@ export default function AdminRelatorioConsumidoresResultado() {
   const filteredPedidos = pedidos.filter(pedido =>
     pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
     pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
     pedido.ciclo.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -181,7 +189,7 @@ export default function AdminRelatorioConsumidoresResultado() {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Filtrar por consumidor, produto ou ciclo"
+              placeholder="Filtrar por consumidor, produto, fornecedor ou ciclo"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -213,6 +221,7 @@ export default function AdminRelatorioConsumidoresResultado() {
                 <TableHead>Ciclo</TableHead>
                 <TableHead>Consumidor</TableHead>
                 <TableHead>Produto</TableHead>
+                <TableHead>Fornecedor</TableHead>
                 <TableHead>Medida</TableHead>
                 <TableHead className="text-right">Valor Unit.</TableHead>
                 <TableHead className="text-right">Quantidade</TableHead>
@@ -223,7 +232,7 @@ export default function AdminRelatorioConsumidoresResultado() {
             <TableBody>
               {filteredPedidos.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
+                  <TableCell colSpan={9} className="text-center py-8">
                     <p className="text-muted-foreground">
                       {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhum pedido registrado.'}
                     </p>
@@ -235,6 +244,7 @@ export default function AdminRelatorioConsumidoresResultado() {
                     <TableCell className="font-medium">{pedido.ciclo}</TableCell>
                     <TableCell>{pedido.consumidor}</TableCell>
                     <TableCell>{pedido.produto}</TableCell>
+                    <TableCell>{pedido.fornecedor}</TableCell>
                     <TableCell>{pedido.medida}</TableCell>
                     <TableCell className="text-right">
                       R$ {pedido.valor_unitario.toFixed(2).replace('.', ',')}
