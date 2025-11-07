@@ -52,7 +52,7 @@ const mockMarkets: MarketType[] = [
   },
   {
     id: 2,
-    name: 'Feira da Manhã',
+    name: 'Mercado Verde',
     deliveryPoints: ['Bairro Alto', 'Vila Nova'],
     types: ['venda_direta'],
     administratorId: 1,
