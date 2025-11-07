@@ -94,7 +94,10 @@ export default function AdminMercadoRelatorioConsumidores() {
     pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const totalQuantidade = filteredPedidos.reduce((acc, p) => acc + p.quantidade, 0);
+  const totalConsumidores = new Set(filteredPedidos.map(p => p.consumidor)).size;
+  const totalKg = filteredPedidos
+    .filter(p => p.medida === 'kg')
+    .reduce((acc, p) => acc + p.quantidade, 0);
   const valorTotalGeral = filteredPedidos.reduce((acc, p) => acc + p.total, 0);
 
   const handleVerPedido = (pedido: PedidoConsumidor) => {
@@ -153,26 +156,19 @@ export default function AdminMercadoRelatorioConsumidores() {
             <CardTitle className="text-lg text-primary">Resumo do Ciclo</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Quantidade de Pedidos</p>
-                <p className="text-2xl font-bold text-primary">{filteredPedidos.length}</p>
+                <p className="text-sm text-muted-foreground">Total de Consumidores</p>
+                <p className="text-2xl font-bold text-primary">{totalConsumidores}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Quantidade Total de Itens</p>
-                <p className="text-2xl font-bold text-primary">{totalQuantidade}</p>
+                <p className="text-sm text-muted-foreground">Total de Kg de Alimento</p>
+                <p className="text-2xl font-bold text-primary">{totalKg.toFixed(2).replace('.', ',')} kg</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Valor Total Consolidado</p>
+                <p className="text-sm text-muted-foreground">Valor Total Comercializado</p>
                 <p className="text-2xl font-bold text-success">
                   R$ {valorTotalGeral.toFixed(2).replace('.', ',')}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Local / Data / Horário</p>
-                <p className="text-base font-semibold">{mercadoInfo.pontoRetirada}</p>
-                <p className="text-sm text-muted-foreground">
-                  {mercadoInfo.dataRetirada} às {mercadoInfo.horaRetirada}
                 </p>
               </div>
             </div>
