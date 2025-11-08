@@ -128,13 +128,14 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
   return (
     <ResponsiveLayout 
       leftHeaderContent={
-        <button
-          onClick={() => navigate('/adminmercado/relatorios/consumidores-ciclo')}
-          className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
-          aria-label="Voltar"
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => navigate('/adminmercado/relatorios/consumidores-ciclo')} 
+          className="text-white hover:bg-white/20"
         >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
       }
       headerContent={<UserMenuLarge />}
     >
@@ -309,6 +310,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
           <Button
             variant="outline"
             onClick={() => navigate('/adminmercado/relatorios/consumidores-ciclo')}
+            className="border-primary text-primary hover:bg-primary/10"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar
