@@ -331,7 +331,7 @@ export default function AdminOferta() {
           size="icon"
           onClick={() => {
             if (activeRole === 'fornecedor') {
-              navigate('/fornecedor/loja');
+              navigate('/fornecedor/selecionar-ciclo');
             } else if (activeRole === 'admin_mercado') {
               navigate('/adminmercado/ciclo-index');
             } else {
