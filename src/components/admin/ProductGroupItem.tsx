@@ -210,13 +210,15 @@ export function ProductGroupItem({
           <div className="p-4 pt-0">
             <div className="space-y-2 mt-4">
               {/* Header */}
-              <div className="grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
-                <div className="col-span-1">Sel.</div>
-                <div className="col-span-2">Unidade</div>
-                <div className="col-span-3">Fornecedor</div>
-                <div className="col-span-2">Preço Unit.</div>
-                <div className="col-span-2">Ofertados</div>
-                <div className="col-span-2">Pedidos</div>
+              <div className="grid grid-cols-[auto_1fr_2fr_1.5fr_1fr_1fr_1fr_1.5fr_1fr] gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
+                <div>Sel.</div>
+                <div>Unidade</div>
+                <div>Fornecedor</div>
+                <div>Preço Unit.</div>
+                <div>Ofertados</div>
+                <div>Disponível</div>
+                <div>Pedidos</div>
+                <div>Valor Acum.</div>
               </div>
 
               {/* Variantes */}
@@ -232,11 +234,11 @@ export function ProductGroupItem({
                 return (
                   <div
                     key={variante.id}
-                    className={`grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
+                    className={`grid grid-cols-[auto_1fr_2fr_1.5fr_1fr_1fr_1fr_1.5fr_1fr] gap-4 items-center py-3 px-2 rounded transition-colors ${
                       isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
                     }`}
                   >
-                    <div className="col-span-1">
+                    <div>
                       <Checkbox
                         id={variante.id}
                         checked={isSelected}
@@ -244,25 +246,28 @@ export function ProductGroupItem({
                         disabled={variante.quantidadeOfertada === 0}
                       />
                     </div>
-                    <div className="col-span-2">
+                    <div>
                       <Label htmlFor={variante.id} className="cursor-pointer">
                         {variante.unidade}
                       </Label>
                     </div>
-                    <div className="col-span-3">
+                    <div>
                       <Label htmlFor={variante.id} className="cursor-pointer truncate block">
                         {variante.fornecedor}
                       </Label>
                     </div>
-                    <div className="col-span-2">
+                    <div>
                       <Label htmlFor={variante.id} className="cursor-pointer">
                         R$ {variante.valor.toFixed(2).replace('.', ',')}
                       </Label>
                     </div>
-                    <div className="col-span-2">
+                    <div>
                       <span className="text-sm">{variante.quantidadeOfertada}</span>
                     </div>
-                    <div className="col-span-2">
+                    <div>
+                      <span className="text-sm">{variante.quantidadeDisponivel}</span>
+                    </div>
+                    <div>
                       {isSelected ? (
                         <Input
                           type="number"
@@ -275,6 +280,11 @@ export function ProductGroupItem({
                       ) : (
                         <span className="text-sm text-muted-foreground">-</span>
                       )}
+                    </div>
+                    <div>
+                      <span className="text-sm">
+                        R$ {variante.valorAcumulado.toFixed(2).replace('.', ',')}
+                      </span>
                     </div>
                   </div>
                 );

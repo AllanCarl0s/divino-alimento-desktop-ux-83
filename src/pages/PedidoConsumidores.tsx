@@ -25,6 +25,8 @@ const mockProdutos: Oferta[] = [
     fornecedor: 'Sítio Verde',
     valor: 3.50,
     quantidadeOfertada: 50,
+    quantidadeDisponivel: 50,
+    valorAcumulado: 0,
   },
   {
     id: '2',
@@ -34,6 +36,8 @@ const mockProdutos: Oferta[] = [
     fornecedor: 'Fazenda Boa Vista',
     valor: 8.90,
     quantidadeOfertada: 30,
+    quantidadeDisponivel: 30,
+    valorAcumulado: 0,
   },
   {
     id: '3',
@@ -43,6 +47,8 @@ const mockProdutos: Oferta[] = [
     fornecedor: 'Horta da Serra',
     valor: 4.50,
     quantidadeOfertada: 40,
+    quantidadeDisponivel: 40,
+    valorAcumulado: 0,
   },
   {
     id: '4',
@@ -52,6 +58,8 @@ const mockProdutos: Oferta[] = [
     fornecedor: 'Sítio Frutas',
     valor: 6.00,
     quantidadeOfertada: 0,
+    quantidadeDisponivel: 0,
+    valorAcumulado: 0,
   },
   {
     id: '5',
@@ -61,6 +69,8 @@ const mockProdutos: Oferta[] = [
     fornecedor: 'Pomar do Vale',
     valor: 5.50,
     quantidadeOfertada: 25,
+    quantidadeDisponivel: 25,
+    valorAcumulado: 0,
   },
 ];
 

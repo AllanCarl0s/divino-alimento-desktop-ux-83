@@ -9,6 +9,8 @@ export interface Oferta {
   fornecedor: string;
   valor: number;
   quantidadeOfertada: number;
+  quantidadeDisponivel: number; // Quantidade disponível considerando composições anteriores
+  valorAcumulado: number; // Valor acumulado de composições anteriores
   certificacao?: CertificationType;
   tipo_agricultura?: AgricultureType;
 }
