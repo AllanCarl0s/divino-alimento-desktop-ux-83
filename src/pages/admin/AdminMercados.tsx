@@ -44,7 +44,8 @@ type MarketType = {
   id: number;
   name: string;
   deliveryPoints: string[];
-  types: string[];
+  type: string;
+  valorMaximoCesta?: number | null;
   administratorId: number;
   administrativeFee: number | null;
   status: 'ativo' | 'inativo';
@@ -55,7 +56,8 @@ const mockMarkets: MarketType[] = [
     id: 1,
     name: 'Mercado Central',
     deliveryPoints: ['Centro', 'Zona Norte'],
-    types: ['cesta'],
+    type: 'cesta',
+    valorMaximoCesta: 150.00,
     administratorId: 1,
     administrativeFee: 5,
     status: 'ativo'
@@ -64,7 +66,7 @@ const mockMarkets: MarketType[] = [
     id: 2,
     name: 'Feira Livre',
     deliveryPoints: ['Bairro Alto', 'Vila Nova'],
-    types: ['venda_direta'],
+    type: 'venda_direta',
     administratorId: 2,
     administrativeFee: null,
     status: 'ativo'
@@ -94,7 +96,8 @@ const AdminMercados = () => {
   const [newMarket, setNewMarket] = useState({ 
     name: '', 
     deliveryPoints: [] as string[], 
-    types: [] as string[],
+    type: '',
+    valorMaximoCesta: null as number | null,
     administratorId: null as number | null,
     administrativeFee: null as number | null,
     status: 'ativo' as 'ativo' | 'inativo'
@@ -139,19 +142,8 @@ const AdminMercados = () => {
     return mockMarketAdministrators.find(admin => admin.id === id)?.name || '';
   };
 
-  const getMarketTypeLabel = (types: string[]) => {
-    return types.map(type => 
-      marketTypeOptions.find(option => option.value === type)?.label || ''
-    ).filter(Boolean).join(', ');
-  };
-
-  const toggleMarketType = (typeValue: string) => {
-    setNewMarket(prev => {
-      const types = prev.types.includes(typeValue)
-        ? prev.types.filter(t => t !== typeValue)
-        : [...prev.types, typeValue];
-      return { ...prev, types };
-    });
+  const getMarketTypeLabel = (type: string) => {
+    return marketTypeOptions.find(option => option.value === type)?.label || '';
   };
 
   const startEditMarket = (market: typeof mockMarkets[0]) => {
@@ -195,9 +187,7 @@ const AdminMercados = () => {
 
     // Aplicar filtro de tipo
     if (filters.tipo.length > 0) {
-      result = result.filter(market =>
-        market.types.some(type => filters.tipo.includes(type))
-      );
+      result = result.filter(market => filters.tipo.includes(market.type));
     }
 
     return result;
@@ -214,10 +204,19 @@ const AdminMercados = () => {
       return;
     }
 
-    if (newMarket.types.length === 0) {
+    if (!newMarket.type) {
       toast({
         title: "Erro",
-        description: "Selecione ao menos um tipo de mercado",
+        description: "Selecione o tipo de mercado",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (newMarket.type === 'cesta' && (!newMarket.valorMaximoCesta || newMarket.valorMaximoCesta <= 0)) {
+      toast({
+        title: "Erro",
+        description: "Informe o valor máximo por cesta",
         variant: "destructive"
       });
       return;
@@ -255,14 +254,15 @@ const AdminMercados = () => {
       id: markets.length + 1,
       name: newMarket.name,
       deliveryPoints: validDeliveryPoints,
-      types: newMarket.types,
+      type: newMarket.type,
+      valorMaximoCesta: newMarket.type === 'cesta' ? newMarket.valorMaximoCesta : undefined,
       administratorId: newMarket.administratorId,
       administrativeFee: newMarket.administrativeFee,
       status: newMarket.status
     };
 
     setMarkets([...markets, market]);
-    setNewMarket({ name: '', deliveryPoints: [], types: [], administratorId: null, administrativeFee: null, status: 'ativo' });
+    setNewMarket({ name: '', deliveryPoints: [], type: '', valorMaximoCesta: null, administratorId: null, administrativeFee: null, status: 'ativo' });
     setCurrentDeliveryPoint('');
     setIsDialogOpen(false);
     setSelectedMarket(market);
@@ -544,37 +544,55 @@ const AdminMercados = () => {
                     </div>
 
                     <div>
-                      <Label>Tipos de Mercado</Label>
+                      <Label>Tipo de Mercado</Label>
                       {isEditingMarket ? (
-                        <div className="mt-2 space-y-3">
-                          {marketTypeOptions.map((option) => (
-                            <div key={option.value} className="flex items-center space-x-3">
-                              <Checkbox
-                                id={`edit-market-type-${option.value}`}
-                                checked={editData?.types.includes(option.value) || false}
-                                onCheckedChange={() => {
-                                  setEditData(prev => {
-                                    if (!prev) return null;
-                                    const types = prev.types.includes(option.value)
-                                      ? prev.types.filter(t => t !== option.value)
-                                      : [...prev.types, option.value];
-                                    return { ...prev, types };
-                                  });
+                        <div className="mt-2">
+                          <RadioGroup
+                            value={editData?.type || ''}
+                            onValueChange={(value: string) => 
+                              setEditData(prev => prev ? { ...prev, type: value } : null)
+                            }
+                          >
+                            {marketTypeOptions.map((option) => (
+                              <div key={option.value} className="flex items-center space-x-2">
+                                <RadioGroupItem value={option.value} id={`edit-market-type-${option.value}`} />
+                                <Label
+                                  htmlFor={`edit-market-type-${option.value}`}
+                                  className="cursor-pointer font-normal"
+                                >
+                                  {option.label}
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                          
+                          {editData?.type === 'cesta' && (
+                            <div className="mt-4 space-y-2">
+                              <Label htmlFor="edit-valorMaximoCesta">Valor Máximo por Cesta *</Label>
+                              <Input
+                                id="edit-valorMaximoCesta"
+                                type="text"
+                                value={editData.valorMaximoCesta !== null && editData.valorMaximoCesta !== undefined ? String(editData.valorMaximoCesta).replace('.', ',') : ''}
+                                onChange={(e) => {
+                                  const value = e.target.value.replace(',', '.');
+                                  setEditData(prev => prev ? { 
+                                    ...prev, 
+                                    valorMaximoCesta: value ? parseFloat(value) : null 
+                                  } : null);
                                 }}
-                                className="h-5 w-5"
+                                placeholder="Ex: 150,00"
                               />
-                              <Label
-                                htmlFor={`edit-market-type-${option.value}`}
-                                className="text-sm font-normal cursor-pointer flex-1"
-                              >
-                                {option.label}
-                              </Label>
                             </div>
-                          ))}
+                          )}
                         </div>
                       ) : (
                         <div className="mt-2 p-3 bg-muted/30 rounded-lg border">
-                          <span className="text-sm font-medium">{getMarketTypeLabel(selectedMarket.types)}</span>
+                          <span className="text-sm font-medium">{getMarketTypeLabel(selectedMarket.type)}</span>
+                          {selectedMarket.type === 'cesta' && selectedMarket.valorMaximoCesta && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              Valor Máximo por Cesta: R$ {selectedMarket.valorMaximoCesta.toFixed(2).replace('.', ',')}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -810,27 +828,49 @@ const AdminMercados = () => {
 
                 <div className="space-y-3">
                   <Label className="text-sm font-medium">
-                    Tipos de Mercado * <span className="text-muted-foreground text-xs">(selecione um ou mais)</span>
+                    Tipo de Mercado *
                   </Label>
-                  <div className="space-y-3">
+                  <RadioGroup
+                    value={newMarket.type}
+                    onValueChange={(value: string) => 
+                      setNewMarket(prev => ({ ...prev, type: value }))
+                    }
+                  >
                     {marketTypeOptions.map((option) => (
-                      <div key={option.value} className="flex items-center space-x-3">
-                        <Checkbox
-                          id={`market-type-${option.value}`}
-                          checked={newMarket.types.includes(option.value)}
-                          onCheckedChange={() => toggleMarketType(option.value)}
-                          className="h-5 w-5"
-                        />
+                      <div key={option.value} className="flex items-center space-x-2">
+                        <RadioGroupItem value={option.value} id={`market-type-${option.value}`} />
                         <Label
                           htmlFor={`market-type-${option.value}`}
-                          className="text-sm font-normal cursor-pointer flex-1"
+                          className="cursor-pointer font-normal"
                         >
                           {option.label}
                         </Label>
                       </div>
                     ))}
-                  </div>
+                  </RadioGroup>
                 </div>
+
+                {newMarket.type === 'cesta' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="valorMaximoCesta" className="text-sm font-medium">
+                      Valor Máximo por Cesta *
+                    </Label>
+                    <Input
+                      id="valorMaximoCesta"
+                      type="text"
+                      value={newMarket.valorMaximoCesta !== null ? String(newMarket.valorMaximoCesta).replace('.', ',') : ''}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(',', '.');
+                        setNewMarket(prev => ({ 
+                          ...prev, 
+                          valorMaximoCesta: value ? parseFloat(value) : null 
+                        }));
+                      }}
+                      placeholder="Ex: 150,00"
+                      className="h-11"
+                    />
+                  </div>
+                )}
 
                 <div className="space-y-2">
                   <Label htmlFor="administrator" className="text-sm font-medium">
@@ -968,7 +1008,7 @@ const AdminMercados = () => {
                 variant="outline" 
                 onClick={() => {
                   setIsDialogOpen(false);
-                  setNewMarket({ name: '', deliveryPoints: [''], types: [], administratorId: null, administrativeFee: null, status: 'ativo' });
+                  setNewMarket({ name: '', deliveryPoints: [], type: '', valorMaximoCesta: null, administratorId: null, administrativeFee: null, status: 'ativo' });
                 }}
                 className="px-6 h-12 border-primary text-primary hover:bg-primary/10"
               >
