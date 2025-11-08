@@ -23,6 +23,7 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
   ],
   fornecedor: [
     '/fornecedor/loja',
+    '/fornecedor/selecionar-ciclo',
     '/oferta/*',
     '/fornecedor/entregas/*',
     '/fornecedor/pagamentos',
