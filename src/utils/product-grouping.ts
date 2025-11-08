@@ -11,6 +11,7 @@ export interface Oferta {
   quantidadeOfertada: number;
   certificacao?: CertificationType;
   tipo_agricultura?: AgricultureType;
+  pedidosAcumulados?: number; // Total já alocado em composições anteriores
 }
 
 export interface ProductGroup {

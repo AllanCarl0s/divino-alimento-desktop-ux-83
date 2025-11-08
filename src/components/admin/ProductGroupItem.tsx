@@ -10,6 +10,7 @@ import { ProductGroup, Oferta } from '@/utils/product-grouping';
 import { FilterDropdown, FilterOption } from './FilterDropdown';
 import { MobileFiltersSheet, FilterSection } from './MobileFiltersSheet';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { formatBRL } from '@/utils/currency';
 
 interface ProductGroupItemProps {
   group: ProductGroup;
@@ -209,14 +210,16 @@ export function ProductGroupItem({
         <CollapsibleContent>
           <div className="p-4 pt-0">
             <div className="space-y-2 mt-4">
-              {/* Header */}
-              <div className="grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
+              {/* Header - Desktop */}
+              <div className="hidden md:grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
                 <div className="col-span-1">Sel.</div>
                 <div className="col-span-2">Unidade</div>
-                <div className="col-span-3">Fornecedor</div>
-                <div className="col-span-2">Preço Unit.</div>
-                <div className="col-span-2">Ofertados</div>
+                <div className="col-span-2">Fornecedor</div>
+                <div className="col-span-1 text-right">Preço Unit.</div>
+                <div className="col-span-1 text-right" aria-label="Quantidade ofertada">Ofertados</div>
+                <div className="col-span-1 text-right" aria-label="Quantidade disponível">Disponível</div>
                 <div className="col-span-2">Pedidos</div>
+                <div className="col-span-2 text-right" aria-label="Valor acumulado">Valor acumulado</div>
               </div>
 
               {/* Variantes */}
@@ -228,55 +231,163 @@ export function ProductGroupItem({
                 filteredVariantes.map((variante) => {
                 const isSelected = selectedVariantIds.has(variante.id);
                 const pedidos = quantidades.get(variante.id) || 0;
+                const pedidosAcumulados = variante.pedidosAcumulados || 0;
+                const disponivel = Math.max(0, variante.quantidadeOfertada - pedidosAcumulados);
+                const valorAcumulado = variante.valor * pedidosAcumulados;
 
                 return (
-                  <div
-                    key={variante.id}
-                    className={`grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
-                      isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
-                    }`}
-                  >
-                    <div className="col-span-1">
-                      <Checkbox
-                        id={variante.id}
-                        checked={isSelected}
-                        onCheckedChange={() => onToggleVariant(variante.id)}
-                        disabled={variante.quantidadeOfertada === 0}
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <Label htmlFor={variante.id} className="cursor-pointer">
-                        {variante.unidade}
-                      </Label>
-                    </div>
-                    <div className="col-span-3">
-                      <Label htmlFor={variante.id} className="cursor-pointer truncate block">
-                        {variante.fornecedor}
-                      </Label>
-                    </div>
-                    <div className="col-span-2">
-                      <Label htmlFor={variante.id} className="cursor-pointer">
-                        R$ {variante.valor.toFixed(2).replace('.', ',')}
-                      </Label>
-                    </div>
-                    <div className="col-span-2">
-                      <span className="text-sm">{variante.quantidadeOfertada}</span>
-                    </div>
-                    <div className="col-span-2">
-                      {isSelected ? (
-                        <Input
-                          type="number"
-                          value={pedidos}
-                          onChange={(e) => onQuantidadeChange(variante.id, parseInt(e.target.value) || 0)}
-                          className="w-full"
-                          min="0"
-                          max={variante.quantidadeOfertada}
+                  <>
+                    {/* Desktop View */}
+                    <div
+                      key={variante.id}
+                      className={`hidden md:grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
+                        isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
+                      }`}
+                    >
+                      <div className="col-span-1">
+                        <Checkbox
+                          id={variante.id}
+                          checked={isSelected}
+                          onCheckedChange={() => onToggleVariant(variante.id)}
+                          disabled={variante.quantidadeOfertada === 0}
                         />
-                      ) : (
-                        <span className="text-sm text-muted-foreground">-</span>
-                      )}
+                      </div>
+                      <div className="col-span-2">
+                        <Label htmlFor={variante.id} className="cursor-pointer">
+                          {variante.unidade}
+                        </Label>
+                      </div>
+                      <div className="col-span-2">
+                        <Label htmlFor={variante.id} className="cursor-pointer truncate block">
+                          {variante.fornecedor}
+                        </Label>
+                      </div>
+                      <div className="col-span-1 text-right">
+                        <Label htmlFor={variante.id} className="cursor-pointer">
+                          {formatBRL(variante.valor)}
+                        </Label>
+                      </div>
+                      <div className="col-span-1 text-right">
+                        <span className="text-sm">{variante.quantidadeOfertada}</span>
+                      </div>
+                      <div className="col-span-1 text-right" title="Quantidade disponível considerando alocações anteriores deste ciclo.">
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="text-sm">{disponivel}</span>
+                          {disponivel > 0 ? (
+                            <Badge className="bg-[#E6F7EC] text-[#1E8E3E] hover:bg-[#E6F7EC] text-xs px-2 py-0">
+                              OK
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary" className="bg-[#F1F3F4] text-[#5F6368] hover:bg-[#F1F3F4] text-xs px-2 py-0">
+                              Esgotado
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      <div className="col-span-2">
+                        {isSelected ? (
+                          <Input
+                            type="number"
+                            value={pedidos}
+                            onChange={(e) => onQuantidadeChange(variante.id, parseInt(e.target.value) || 0)}
+                            className="w-full"
+                            min="0"
+                            max={variante.quantidadeOfertada}
+                          />
+                        ) : (
+                          <span className="text-sm text-muted-foreground">-</span>
+                        )}
+                      </div>
+                      <div className="col-span-2 text-right" title="Soma dos valores já alocados neste ciclo para esta variante.">
+                        <span className={`text-sm ${valorAcumulado > 0 ? 'font-medium' : ''}`}>
+                          {formatBRL(valorAcumulado)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+
+                    {/* Mobile View */}
+                    <div
+                      key={`${variante.id}-mobile`}
+                      className={`md:hidden p-4 rounded-lg space-y-3 ${
+                        isSelected ? 'bg-primary/5 border border-primary/20' : 'bg-muted/30'
+                      }`}
+                    >
+                      {/* Linha 1: Produto • Fornecedor */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-sm truncate">
+                            {variante.unidade} • {variante.fornecedor}
+                          </div>
+                        </div>
+                        <Checkbox
+                          id={`${variante.id}-mobile`}
+                          checked={isSelected}
+                          onCheckedChange={() => onToggleVariant(variante.id)}
+                          disabled={variante.quantidadeOfertada === 0}
+                        />
+                      </div>
+
+                      {/* Linha 2: Unidade | Preço Unit. */}
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-muted-foreground text-xs">Unidade</span>
+                          <div className="font-medium">{variante.unidade}</div>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">Preço Unit.</span>
+                          <div className="font-medium">{formatBRL(variante.valor)}</div>
+                        </div>
+                      </div>
+
+                      {/* Linha 3: Ofertados | Disponível */}
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-muted-foreground text-xs">Ofertados</span>
+                          <div className="font-medium">{variante.quantidadeOfertada}</div>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">Disponível</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{disponivel}</span>
+                            {disponivel > 0 ? (
+                              <Badge className="bg-[#E6F7EC] text-[#1E8E3E] hover:bg-[#E6F7EC] text-xs px-2 py-0">
+                                OK
+                              </Badge>
+                            ) : (
+                              <Badge variant="secondary" className="bg-[#F1F3F4] text-[#5F6368] hover:bg-[#F1F3F4] text-xs px-2 py-0">
+                                Esgotado
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Linha 4: Pedidos | Valor acumulado */}
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-muted-foreground text-xs">Pedidos</span>
+                          {isSelected ? (
+                            <Input
+                              type="number"
+                              value={pedidos}
+                              onChange={(e) => onQuantidadeChange(variante.id, parseInt(e.target.value) || 0)}
+                              className="w-full mt-1"
+                              min="0"
+                              max={variante.quantidadeOfertada}
+                            />
+                          ) : (
+                            <div className="text-muted-foreground">-</div>
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">Valor acumulado</span>
+                          <div className={`font-medium ${valorAcumulado > 0 ? 'font-semibold' : ''}`}>
+                            {formatBRL(valorAcumulado)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
                 );
               })
               )}

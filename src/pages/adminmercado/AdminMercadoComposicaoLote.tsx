@@ -63,6 +63,7 @@ export default function AdminMercadoComposicaoLote() {
       quantidadeOfertada: 50,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
+      pedidosAcumulados: 10,
     },
     {
       id: '2',
@@ -74,6 +75,7 @@ export default function AdminMercadoComposicaoLote() {
       quantidadeOfertada: 15,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
+      pedidosAcumulados: 5,
     },
     {
       id: '4',
@@ -85,6 +87,7 @@ export default function AdminMercadoComposicaoLote() {
       quantidadeOfertada: 30,
       certificacao: 'transicao',
       tipo_agricultura: 'familiar',
+      pedidosAcumulados: 6,
     },
     {
       id: '7',
@@ -96,6 +99,7 @@ export default function AdminMercadoComposicaoLote() {
       quantidadeOfertada: 40,
       certificacao: 'convencional',
       tipo_agricultura: 'nao_familiar',
+      pedidosAcumulados: 8,
     },
   ]);
 

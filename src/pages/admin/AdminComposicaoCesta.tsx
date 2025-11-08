@@ -41,6 +41,7 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 50,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
+      pedidosAcumulados: 15,
     },
     {
       id: '2',
@@ -52,6 +53,7 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 15,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
+      pedidosAcumulados: 5,
     },
     {
       id: '3',
@@ -63,6 +65,7 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 30,
       certificacao: 'transicao',
       tipo_agricultura: 'familiar',
+      pedidosAcumulados: 10,
     },
     {
       id: '4',
@@ -74,6 +77,7 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 30,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
+      pedidosAcumulados: 8,
     },
     {
       id: '5',
@@ -85,6 +89,7 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 50,
       certificacao: 'convencional',
       tipo_agricultura: 'nao_familiar',
+      pedidosAcumulados: 20,
     },
     {
       id: '6',
@@ -96,6 +101,7 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 100,
       certificacao: 'convencional',
       tipo_agricultura: 'familiar',
+      pedidosAcumulados: 0,
     },
   ]);
 
