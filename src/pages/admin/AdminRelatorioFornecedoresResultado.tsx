@@ -6,7 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Search, Download, FileText } from 'lucide-react';
+import { ArrowLeft, Search, Download, FileText, ArrowUpDown } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 
 interface EntregaFornecedor {
@@ -18,6 +20,8 @@ interface EntregaFornecedor {
   quantidade_entregue: number;
   valor_total: number;
   ciclo: string;
+  agricultura_familiar: boolean;
+  certificacao: 'organico' | 'transicao' | 'convencional';
 }
 
 export default function AdminRelatorioFornecedoresResultado() {
@@ -25,6 +29,10 @@ export default function AdminRelatorioFornecedoresResultado() {
   const [searchParams] = useSearchParams();
   const ciclosIds = searchParams.get('ciclos')?.split(',') || [];
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'fornecedor' | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [filtroAgriculturaFamiliar, setFiltroAgriculturaFamiliar] = useState<string>('todos');
+  const [filtroCertificacao, setFiltroCertificacao] = useState<string>('todos');
 
   // Mock data - entregas consolidadas dos ciclos selecionados
   const entregas: EntregaFornecedor[] = [
@@ -36,7 +44,9 @@ export default function AdminRelatorioFornecedoresResultado() {
       valor_unitario: 5.50,
       quantidade_entregue: 120,
       valor_total: 660.00,
-      ciclo: '1º Ciclo de Outubro'
+      ciclo: '1º Ciclo de Outubro',
+      agricultura_familiar: true,
+      certificacao: 'organico'
     },
     {
       id: '2',
@@ -46,7 +56,9 @@ export default function AdminRelatorioFornecedoresResultado() {
       valor_unitario: 2.00,
       quantidade_entregue: 200,
       valor_total: 400.00,
-      ciclo: '1º Ciclo de Outubro'
+      ciclo: '1º Ciclo de Outubro',
+      agricultura_familiar: true,
+      certificacao: 'transicao'
     },
     {
       id: '3',
@@ -56,7 +68,9 @@ export default function AdminRelatorioFornecedoresResultado() {
       valor_unitario: 4.00,
       quantidade_entregue: 80,
       valor_total: 320.00,
-      ciclo: '2º Ciclo de Outubro'
+      ciclo: '2º Ciclo de Outubro',
+      agricultura_familiar: false,
+      certificacao: 'convencional'
     },
     {
       id: '4',
@@ -66,7 +80,9 @@ export default function AdminRelatorioFornecedoresResultado() {
       valor_unitario: 3.50,
       quantidade_entregue: 150,
       valor_total: 525.00,
-      ciclo: '2º Ciclo de Outubro'
+      ciclo: '2º Ciclo de Outubro',
+      agricultura_familiar: true,
+      certificacao: 'organico'
     },
     {
       id: '5',
@@ -76,7 +92,9 @@ export default function AdminRelatorioFornecedoresResultado() {
       valor_unitario: 3.80,
       quantidade_entregue: 95,
       valor_total: 361.00,
-      ciclo: '1º Ciclo de Novembro'
+      ciclo: '1º Ciclo de Novembro',
+      agricultura_familiar: true,
+      certificacao: 'convencional'
     },
     {
       id: '6',
@@ -86,25 +104,80 @@ export default function AdminRelatorioFornecedoresResultado() {
       valor_unitario: 4.20,
       quantidade_entregue: 65,
       valor_total: 273.00,
-      ciclo: '1º Ciclo de Novembro'
+      ciclo: '1º Ciclo de Novembro',
+      agricultura_familiar: true,
+      certificacao: 'organico'
     }
   ];
 
-  const filteredEntregas = entregas.filter(entrega =>
-    entrega.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    entrega.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    entrega.ciclo.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEntregas = entregas
+    .filter(entrega => {
+      const matchSearch = entrega.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        entrega.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        entrega.ciclo.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchAgriculturaFamiliar = filtroAgriculturaFamiliar === 'todos' ||
+        (filtroAgriculturaFamiliar === 'sim' && entrega.agricultura_familiar) ||
+        (filtroAgriculturaFamiliar === 'nao' && !entrega.agricultura_familiar);
+      
+      const matchCertificacao = filtroCertificacao === 'todos' ||
+        entrega.certificacao === filtroCertificacao;
+      
+      return matchSearch && matchAgriculturaFamiliar && matchCertificacao;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'fornecedor') {
+        const compareResult = a.fornecedor.localeCompare(b.fornecedor);
+        return sortOrder === 'asc' ? compareResult : -compareResult;
+      }
+      return 0;
+    });
 
   const totalQuantidade = filteredEntregas.reduce((acc, e) => acc + e.quantidade_entregue, 0);
   const valorTotalGeral = filteredEntregas.reduce((acc, e) => acc + e.valor_total, 0);
 
-  const handleExportCSV = () => {
-    toast.success('Download do CSV iniciado');
+  const handleExportCSV = async () => {
+    try {
+      const ciclosData = ciclosIds.map((id) => ({
+        id: parseInt(id),
+        nome: `Ciclo ${id}`
+      }));
+      
+      const { exportFornecedoresCSV } = await import('@/utils/export');
+      exportFornecedoresCSV(filteredEntregas, ciclosData);
+      toast.success('Download do CSV concluído');
+    } catch (error) {
+      toast.error('Erro ao exportar CSV');
+    }
   };
 
-  const handleExportPDF = () => {
-    toast.success('Download do PDF iniciado');
+  const handleExportPDF = async () => {
+    try {
+      const ciclosData = ciclosIds.map((id) => ({
+        id: parseInt(id),
+        nome: `Ciclo ${id}`
+      }));
+      
+      const resumo = {
+        totalQuantidade,
+        valorTotal: valorTotalGeral
+      };
+      
+      const { exportFornecedoresPDF } = await import('@/utils/export');
+      exportFornecedoresPDF(filteredEntregas, ciclosData, resumo);
+      toast.success('Download do PDF concluído');
+    } catch (error) {
+      toast.error('Erro ao exportar PDF');
+    }
+  };
+
+  const handleSortByFornecedor = () => {
+    if (sortBy === 'fornecedor') {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy('fornecedor');
+      setSortOrder('asc');
+    }
   };
 
   return (
@@ -157,7 +230,7 @@ export default function AdminRelatorioFornecedoresResultado() {
         </Card>
 
         {/* Toolbar */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between">
+        <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -167,7 +240,37 @@ export default function AdminRelatorioFornecedoresResultado() {
               className="pl-10"
             />
           </div>
-          <div className="flex gap-2">
+          
+          <div className="flex flex-wrap gap-2 items-end">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-muted-foreground">Agricultura Familiar</label>
+              <Select value={filtroAgriculturaFamiliar} onValueChange={setFiltroAgriculturaFamiliar}>
+                <SelectTrigger className="w-[180px] bg-background">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="sim">Sim</SelectItem>
+                  <SelectItem value="nao">Não</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-muted-foreground">Certificação</label>
+              <Select value={filtroCertificacao} onValueChange={setFiltroCertificacao}>
+                <SelectTrigger className="w-[180px] bg-background">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="organico">Orgânico</SelectItem>
+                  <SelectItem value="transicao">Transição</SelectItem>
+                  <SelectItem value="convencional">Convencional</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <Button 
               variant="outline" 
               onClick={handleExportCSV}
@@ -191,7 +294,20 @@ export default function AdminRelatorioFornecedoresResultado() {
             <TableHeader>
               <TableRow>
                 <TableHead>Ciclo</TableHead>
-                <TableHead>Fornecedor</TableHead>
+                <TableHead 
+                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={handleSortByFornecedor}
+                >
+                  <div className="flex items-center gap-2">
+                    Fornecedor
+                    <ArrowUpDown className="h-4 w-4" />
+                    {sortBy === 'fornecedor' && (
+                      <span className="text-xs text-muted-foreground">
+                        ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
+                      </span>
+                    )}
+                  </div>
+                </TableHead>
                 <TableHead>Produto</TableHead>
                 <TableHead>Unidade</TableHead>
                 <TableHead className="text-right">Valor Unit.</TableHead>
@@ -213,7 +329,30 @@ export default function AdminRelatorioFornecedoresResultado() {
                   <TableRow key={entrega.id}>
                     <TableCell className="font-medium">{entrega.ciclo}</TableCell>
                     <TableCell>{entrega.fornecedor}</TableCell>
-                    <TableCell>{entrega.produto}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        <span>{entrega.produto}</span>
+                        <div className="flex gap-1">
+                          {entrega.agricultura_familiar && (
+                            <Badge variant="secondary" className="text-xs">
+                              Agricultura Familiar
+                            </Badge>
+                          )}
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${
+                              entrega.certificacao === 'organico' ? 'border-green-600 text-green-600' :
+                              entrega.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
+                              'border-gray-400 text-gray-600'
+                            }`}
+                          >
+                            {entrega.certificacao === 'organico' ? 'Orgânico' :
+                             entrega.certificacao === 'transicao' ? 'Transição' :
+                             'Convencional'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell>{entrega.unidade_medida}</TableCell>
                     <TableCell className="text-right">
                       R$ {entrega.valor_unitario.toFixed(2).replace('.', ',')}

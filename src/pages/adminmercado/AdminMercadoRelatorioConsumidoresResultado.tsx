@@ -1,106 +1,83 @@
 import { useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Search, Download, FileText, ArrowUpDown } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { toast } from '@/hooks/use-toast';
+import { ArrowLeft, Search, Download, FileText, ArrowUpDown } from 'lucide-react';
+import { toast } from 'sonner';
 
-interface EntregaFornecedor {
+interface PedidoConsumidor {
   id: string;
-  fornecedor: string;
+  consumidor: string;
   produto: string;
-  unidade_medida: string;
+  fornecedor: string;
+  medida: string;
   valor_unitario: number;
-  quantidade_entregue: number;
-  valor_total: number;
+  quantidade: number;
+  total: number;
+  ciclo: string;
   agricultura_familiar: boolean;
   certificacao: 'organico' | 'transicao' | 'convencional';
 }
 
-export default function AdminMercadoRelatorioFornecedores() {
+export default function AdminMercadoRelatorioConsumidoresResultado() {
   const navigate = useNavigate();
-  const { cicloId } = useParams();
   const [searchParams] = useSearchParams();
-  const mercadoId = searchParams.get('mercado');
+  const ciclosIds = searchParams.get('ciclos')?.split(',') || [];
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'fornecedor' | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [filtroAgriculturaFamiliar, setFiltroAgriculturaFamiliar] = useState<string>('todos');
   const [filtroCertificacao, setFiltroCertificacao] = useState<string>('todos');
 
-  // Mock data - filtrado para o mercado do admin
-  const entregas: EntregaFornecedor[] = [
+  // Mock data
+  const pedidos: PedidoConsumidor[] = [
     {
       id: '1',
-      fornecedor: 'Fazenda Verde',
+      consumidor: 'Maria Silva',
       produto: 'Tomate',
-      unidade_medida: 'kg',
+      fornecedor: 'Sítio Verde',
+      medida: 'kg',
       valor_unitario: 5.50,
-      quantidade_entregue: 120,
-      valor_total: 660.00,
+      quantidade: 3,
+      total: 16.50,
+      ciclo: '1º Ciclo de Outubro',
       agricultura_familiar: true,
       certificacao: 'organico'
     },
     {
       id: '2',
-      fornecedor: 'Fazenda Verde',
+      consumidor: 'João Santos',
       produto: 'Alface',
-      unidade_medida: 'unidade',
+      fornecedor: 'Maria Horta',
+      medida: 'unidade',
       valor_unitario: 2.00,
-      quantidade_entregue: 200,
-      valor_total: 400.00,
+      quantidade: 5,
+      total: 10.00,
+      ciclo: '1º Ciclo de Outubro',
       agricultura_familiar: true,
       certificacao: 'transicao'
-    },
-    {
-      id: '3',
-      fornecedor: 'Sítio do Sol',
-      produto: 'Cenoura',
-      unidade_medida: 'kg',
-      valor_unitario: 4.00,
-      quantidade_entregue: 80,
-      valor_total: 320.00,
-      agricultura_familiar: false,
-      certificacao: 'convencional'
-    },
-    {
-      id: '4',
-      fornecedor: 'Horta Orgânica',
-      produto: 'Rúcula',
-      unidade_medida: 'maço',
-      valor_unitario: 3.50,
-      quantidade_entregue: 150,
-      valor_total: 525.00,
-      agricultura_familiar: true,
-      certificacao: 'organico'
     }
   ];
 
-  // Mock data - informações do mercado
-  const mercadoInfo = {
-    nome: 'Mercado Central',
-    pontoEntrega: 'Praça Central, 123',
-    dataEntrega: '25/11/2025',
-    horaEntrega: '08:00'
-  };
-
-  const filteredEntregas = entregas
-    .filter(entrega => {
-      const matchSearch = entrega.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        entrega.produto.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredPedidos = pedidos
+    .filter(pedido => {
+      const matchSearch = pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.ciclo.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchAgriculturaFamiliar = filtroAgriculturaFamiliar === 'todos' ||
-        (filtroAgriculturaFamiliar === 'sim' && entrega.agricultura_familiar) ||
-        (filtroAgriculturaFamiliar === 'nao' && !entrega.agricultura_familiar);
+        (filtroAgriculturaFamiliar === 'sim' && pedido.agricultura_familiar) ||
+        (filtroAgriculturaFamiliar === 'nao' && !pedido.agricultura_familiar);
       
       const matchCertificacao = filtroCertificacao === 'todos' ||
-        entrega.certificacao === filtroCertificacao;
+        pedido.certificacao === filtroCertificacao;
       
       return matchSearch && matchAgriculturaFamiliar && matchCertificacao;
     })
@@ -112,29 +89,30 @@ export default function AdminMercadoRelatorioFornecedores() {
       return 0;
     });
 
-  const totalQuantidade = filteredEntregas.reduce((acc, e) => acc + e.quantidade_entregue, 0);
-  const valorTotalGeral = filteredEntregas.reduce((acc, e) => acc + e.valor_total, 0);
+  const totalConsumidores = new Set(filteredPedidos.map(p => p.consumidor)).size;
+  const totalKg = filteredPedidos.filter(p => p.medida === 'kg').reduce((acc, p) => acc + p.quantidade, 0);
+  const valorTotalGeral = filteredPedidos.reduce((acc, p) => acc + p.total, 0);
 
   const handleExportCSV = async () => {
     try {
-      const ciclosData = [{ id: parseInt(cicloId || '1'), nome: `Ciclo ${cicloId}` }];
-      const { exportFornecedoresCSV } = await import('@/utils/export');
-      exportFornecedoresCSV(filteredEntregas, ciclosData);
-      toast({ title: "Sucesso", description: "Download do CSV concluído" });
+      const ciclosData = ciclosIds.map((id) => ({ id: parseInt(id), nome: `Ciclo ${id}` }));
+      const { exportConsumidoresCSV } = await import('@/utils/export');
+      exportConsumidoresCSV(filteredPedidos, ciclosData);
+      toast.success('Download do CSV concluído');
     } catch (error) {
-      toast({ title: "Erro", description: "Erro ao exportar CSV" });
+      toast.error('Erro ao exportar CSV');
     }
   };
 
   const handleExportPDF = async () => {
     try {
-      const ciclosData = [{ id: parseInt(cicloId || '1'), nome: `Ciclo ${cicloId}` }];
-      const resumo = { totalQuantidade, valorTotal: valorTotalGeral };
-      const { exportFornecedoresPDF } = await import('@/utils/export');
-      exportFornecedoresPDF(filteredEntregas, ciclosData, resumo);
-      toast({ title: "Sucesso", description: "Download do PDF concluído" });
+      const ciclosData = ciclosIds.map((id) => ({ id: parseInt(id), nome: `Ciclo ${id}` }));
+      const resumo = { totalConsumidores, totalKg, valorTotal: valorTotalGeral };
+      const { exportConsumidoresPDF } = await import('@/utils/export');
+      exportConsumidoresPDF(filteredPedidos, ciclosData, resumo);
+      toast.success('Download do PDF concluído');
     } catch (error) {
-      toast({ title: "Erro", description: "Erro ao exportar PDF" });
+      toast.error('Erro ao exportar PDF');
     }
   };
 
@@ -150,66 +128,55 @@ export default function AdminMercadoRelatorioFornecedores() {
   return (
     <ResponsiveLayout 
       leftHeaderContent={
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => navigate('/adminmercado/ciclo-index')} 
-          className="text-white hover:bg-white/20"
+        <button
+          onClick={() => navigate('/adminmercado/relatorios/consumidores-ciclo')}
+          className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
+          aria-label="Voltar"
         >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+          <ArrowLeft className="w-5 h-5" />
+        </button>
       }
       headerContent={<UserMenuLarge />}
     >
       <div className="space-y-6">
-        {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Administrador de mercado - Relatório de Entregas dos Fornecedores
+          <h1 className="text-3xl font-bold text-gradient-primary">
+            Administrador de mercado - Relatório de Pedidos dos Consumidores
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Visualize e exporte as entregas realizadas para seu mercado neste ciclo
+          <p className="text-muted-foreground mt-2">
+            Consulte e exporte os pedidos consolidados dos ciclos selecionados
           </p>
         </div>
 
-        {/* Resumo Card */}
         <Card className="border-2 border-primary/20">
           <CardHeader>
-            <CardTitle className="text-lg text-primary">Resumo do Ciclo</CardTitle>
+            <CardTitle className="text-lg">Resumo Consolidado</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Quantidade de Registros</p>
-                <p className="text-2xl font-bold text-primary">{filteredEntregas.length}</p>
+                <p className="text-sm text-muted-foreground">Total de Consumidores</p>
+                <p className="text-2xl font-bold">{totalConsumidores}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Quantidade Total Entregue</p>
-                <p className="text-2xl font-bold text-primary">{totalQuantidade}</p>
+                <p className="text-sm text-muted-foreground">Total de Kg de Alimento</p>
+                <p className="text-2xl font-bold">{totalKg.toFixed(2).replace('.', ',')} kg</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Valor Total Consolidado</p>
-                <p className="text-2xl font-bold text-success">
+                <p className="text-sm text-muted-foreground">Valor Total Comercializado</p>
+                <p className="text-2xl font-bold text-green-600">
                   R$ {valorTotalGeral.toFixed(2).replace('.', ',')}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Local / Data / Horário</p>
-                <p className="text-base font-semibold">{mercadoInfo.pontoEntrega}</p>
-                <p className="text-sm text-muted-foreground">
-                  {mercadoInfo.dataEntrega} às {mercadoInfo.horaEntrega}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Toolbar */}
         <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar fornecedor ou produto"
+              placeholder="Filtrar por consumidor, produto, fornecedor ou ciclo"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -246,30 +213,24 @@ export default function AdminMercadoRelatorioFornecedores() {
               </Select>
             </div>
 
-            <Button 
-              variant="outline" 
-              onClick={handleExportCSV}
-              className="border-primary text-primary hover:bg-primary/10"
-            >
+            <Button variant="outline" onClick={handleExportCSV}>
               <Download className="h-4 w-4 mr-2" />
               Exportar CSV
             </Button>
-            <Button 
-              variant="outline" 
-              onClick={handleExportPDF}
-              className="border-primary text-primary hover:bg-primary/10"
-            >
+            <Button variant="outline" onClick={handleExportPDF}>
               <FileText className="h-4 w-4 mr-2" />
               Exportar PDF
             </Button>
           </div>
         </div>
 
-        {/* Table */}
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Ciclo</TableHead>
+                <TableHead>Consumidor</TableHead>
+                <TableHead>Produto</TableHead>
                 <TableHead 
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={handleSortByFornecedor}
@@ -284,31 +245,31 @@ export default function AdminMercadoRelatorioFornecedores() {
                     )}
                   </div>
                 </TableHead>
-                <TableHead>Produto</TableHead>
-                <TableHead>Unidade de Medida</TableHead>
-                <TableHead className="text-right">Valor Unitário</TableHead>
-                <TableHead className="text-right">Quantidade Entregue</TableHead>
-                <TableHead className="text-right">Valor Total</TableHead>
+                <TableHead>Medida</TableHead>
+                <TableHead className="text-right">Valor Unit.</TableHead>
+                <TableHead className="text-right">Quantidade</TableHead>
+                <TableHead className="text-right">Total</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredEntregas.length === 0 ? (
+              {filteredPedidos.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
+                  <TableCell colSpan={8} className="text-center py-8">
                     <p className="text-muted-foreground">
-                      {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhuma entrega registrada.'}
+                      {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhum pedido registrado.'}
                     </p>
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredEntregas.map((entrega) => (
-                  <TableRow key={entrega.id}>
-                    <TableCell className="font-medium">{entrega.fornecedor}</TableCell>
+                filteredPedidos.map((pedido) => (
+                  <TableRow key={pedido.id}>
+                    <TableCell className="font-medium">{pedido.ciclo}</TableCell>
+                    <TableCell>{pedido.consumidor}</TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-1">
-                        <span>{entrega.produto}</span>
+                        <span>{pedido.produto}</span>
                         <div className="flex gap-1">
-                          {entrega.agricultura_familiar && (
+                          {pedido.agricultura_familiar && (
                             <Badge variant="secondary" className="text-xs">
                               Agricultura Familiar
                             </Badge>
@@ -316,25 +277,26 @@ export default function AdminMercadoRelatorioFornecedores() {
                           <Badge 
                             variant="outline" 
                             className={`text-xs ${
-                              entrega.certificacao === 'organico' ? 'border-green-600 text-green-600' :
-                              entrega.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
+                              pedido.certificacao === 'organico' ? 'border-green-600 text-green-600' :
+                              pedido.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
                               'border-gray-400 text-gray-600'
                             }`}
                           >
-                            {entrega.certificacao === 'organico' ? 'Orgânico' :
-                             entrega.certificacao === 'transicao' ? 'Transição' :
+                            {pedido.certificacao === 'organico' ? 'Orgânico' :
+                             pedido.certificacao === 'transicao' ? 'Transição' :
                              'Convencional'}
                           </Badge>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>{entrega.unidade_medida}</TableCell>
+                    <TableCell>{pedido.fornecedor}</TableCell>
+                    <TableCell>{pedido.medida}</TableCell>
                     <TableCell className="text-right">
-                      R$ {entrega.valor_unitario.toFixed(2).replace('.', ',')}
+                      R$ {pedido.valor_unitario.toFixed(2).replace('.', ',')}
                     </TableCell>
-                    <TableCell className="text-right">{entrega.quantidade_entregue}</TableCell>
-                    <TableCell className="text-right font-semibold text-success">
-                      R$ {entrega.valor_total.toFixed(2).replace('.', ',')}
+                    <TableCell className="text-right">{pedido.quantidade}</TableCell>
+                    <TableCell className="text-right font-semibold text-green-600">
+                      R$ {pedido.total.toFixed(2).replace('.', ',')}
                     </TableCell>
                   </TableRow>
                 ))
@@ -343,12 +305,10 @@ export default function AdminMercadoRelatorioFornecedores() {
           </Table>
         </Card>
 
-        {/* Footer Button */}
         <div className="flex justify-start">
           <Button
             variant="outline"
-            onClick={() => navigate('/adminmercado/ciclo-index')}
-            className="border-primary text-primary hover:bg-primary/10"
+            onClick={() => navigate('/adminmercado/relatorios/consumidores-ciclo')}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar

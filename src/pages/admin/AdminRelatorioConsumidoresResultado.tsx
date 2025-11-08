@@ -170,12 +170,40 @@ export default function AdminRelatorioConsumidoresResultado() {
     setModalOpen(true);
   };
 
-  const handleExportCSV = () => {
-    toast.success('Download do CSV iniciado');
+  const handleExportCSV = async () => {
+    try {
+      const ciclosData = ciclosIds.map((id, index) => ({
+        id: parseInt(id),
+        nome: `Ciclo ${id}`
+      }));
+      
+      const { exportConsumidoresCSV } = await import('@/utils/export');
+      exportConsumidoresCSV(filteredPedidos, ciclosData);
+      toast.success('Download do CSV concluído');
+    } catch (error) {
+      toast.error('Erro ao exportar CSV');
+    }
   };
 
-  const handleExportPDF = () => {
-    toast.success('Download do PDF iniciado');
+  const handleExportPDF = async () => {
+    try {
+      const ciclosData = ciclosIds.map((id, index) => ({
+        id: parseInt(id),
+        nome: `Ciclo ${id}`
+      }));
+      
+      const resumo = {
+        totalConsumidores,
+        totalKg,
+        valorTotal: valorTotalGeral
+      };
+      
+      const { exportConsumidoresPDF } = await import('@/utils/export');
+      exportConsumidoresPDF(filteredPedidos, ciclosData, resumo);
+      toast.success('Download do PDF concluído');
+    } catch (error) {
+      toast.error('Erro ao exportar PDF');
+    }
   };
 
   const handleSortByFornecedor = () => {

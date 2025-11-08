@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ArrowLeft, Search, Download, FileText, Eye } from 'lucide-react';
+import { ArrowLeft, Search, Download, FileText, Eye, ArrowUpDown } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 
 interface PedidoConsumidor {
@@ -18,6 +20,9 @@ interface PedidoConsumidor {
   valor_unitario: number;
   quantidade: number;
   total: number;
+  fornecedor: string;
+  agricultura_familiar: boolean;
+  certificacao: 'organico' | 'transicao' | 'convencional';
 }
 
 interface PedidoDetalhado extends PedidoConsumidor {
@@ -32,6 +37,10 @@ export default function AdminPedidosConsumidores() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPedido, setSelectedPedido] = useState<PedidoDetalhado | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<'fornecedor' | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [filtroAgriculturaFamiliar, setFiltroAgriculturaFamiliar] = useState<string>('todos');
+  const [filtroCertificacao, setFiltroCertificacao] = useState<string>('todos');
 
   // Mock data - in production this would come from API
   const pedidos: PedidoConsumidor[] = [
@@ -42,7 +51,10 @@ export default function AdminPedidosConsumidores() {
       medida: 'kg',
       valor_unitario: 5.50,
       quantidade: 3,
-      total: 16.50
+      total: 16.50,
+      fornecedor: 'Sítio Verde',
+      agricultura_familiar: true,
+      certificacao: 'organico'
     },
     {
       id: '2',
@@ -51,7 +63,10 @@ export default function AdminPedidosConsumidores() {
       medida: 'unidade',
       valor_unitario: 2.00,
       quantidade: 5,
-      total: 10.00
+      total: 10.00,
+      fornecedor: 'Maria Horta',
+      agricultura_familiar: true,
+      certificacao: 'transicao'
     },
     {
       id: '3',
@@ -60,7 +75,10 @@ export default function AdminPedidosConsumidores() {
       medida: 'kg',
       valor_unitario: 4.00,
       quantidade: 2,
-      total: 8.00
+      total: 8.00,
+      fornecedor: 'Fazenda Santa Clara',
+      agricultura_familiar: false,
+      certificacao: 'convencional'
     },
     {
       id: '4',
@@ -69,14 +87,35 @@ export default function AdminPedidosConsumidores() {
       medida: 'maço',
       valor_unitario: 3.50,
       quantidade: 4,
-      total: 14.00
+      total: 14.00,
+      fornecedor: 'João Produtor',
+      agricultura_familiar: true,
+      certificacao: 'organico'
     }
   ];
 
-  const filteredPedidos = pedidos.filter(pedido =>
-    pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    pedido.produto.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPedidos = pedidos
+    .filter(pedido => {
+      const matchSearch = pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchAgriculturaFamiliar = filtroAgriculturaFamiliar === 'todos' ||
+        (filtroAgriculturaFamiliar === 'sim' && pedido.agricultura_familiar) ||
+        (filtroAgriculturaFamiliar === 'nao' && !pedido.agricultura_familiar);
+      
+      const matchCertificacao = filtroCertificacao === 'todos' ||
+        pedido.certificacao === filtroCertificacao;
+      
+      return matchSearch && matchAgriculturaFamiliar && matchCertificacao;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'fornecedor') {
+        const compareResult = a.fornecedor.localeCompare(b.fornecedor);
+        return sortOrder === 'asc' ? compareResult : -compareResult;
+      }
+      return 0;
+    });
 
   const totalQuantidade = filteredPedidos.reduce((acc, p) => acc + p.quantidade, 0);
   const valorTotalGeral = filteredPedidos.reduce((acc, p) => acc + p.total, 0);
@@ -93,20 +132,64 @@ export default function AdminPedidosConsumidores() {
     setModalOpen(true);
   };
 
-  const handleExportCSV = () => {
-    toast({
-      title: "Exportação iniciada",
-      description: "O relatório CSV está sendo gerado..."
-    });
-    // In production: generate and download CSV
+  const handleExportCSV = async () => {
+    try {
+      const ciclosData = [{ id: parseInt(id || '1'), nome: `Ciclo ${id}` }];
+      const pedidosExport = filteredPedidos.map(p => ({
+        ciclo: `Ciclo ${id}`,
+        consumidor: p.consumidor,
+        produto: p.produto,
+        fornecedor: p.fornecedor,
+        medida: p.medida,
+        valor_unitario: p.valor_unitario,
+        quantidade: p.quantidade,
+        total: p.total,
+        agricultura_familiar: p.agricultura_familiar,
+        certificacao: p.certificacao
+      }));
+      const { exportConsumidoresCSV } = await import('@/utils/export');
+      exportConsumidoresCSV(pedidosExport, ciclosData);
+      toast({ title: "Sucesso", description: "Download do CSV concluído" });
+    } catch (error) {
+      toast({ title: "Erro", description: "Erro ao exportar CSV", variant: "destructive" });
+    }
   };
 
-  const handleExportPDF = () => {
-    toast({
-      title: "Exportação iniciada",
-      description: "O relatório PDF está sendo gerado..."
-    });
-    // In production: generate and download PDF
+  const handleExportPDF = async () => {
+    try {
+      const ciclosData = [{ id: parseInt(id || '1'), nome: `Ciclo ${id}` }];
+      const pedidosExport = filteredPedidos.map(p => ({
+        ciclo: `Ciclo ${id}`,
+        consumidor: p.consumidor,
+        produto: p.produto,
+        fornecedor: p.fornecedor,
+        medida: p.medida,
+        valor_unitario: p.valor_unitario,
+        quantidade: p.quantidade,
+        total: p.total,
+        agricultura_familiar: p.agricultura_familiar,
+        certificacao: p.certificacao
+      }));
+      const resumo = {
+        totalConsumidores: new Set(filteredPedidos.map(p => p.consumidor)).size,
+        totalKg: filteredPedidos.filter(p => p.medida === 'kg').reduce((acc, p) => acc + p.quantidade, 0),
+        valorTotal: valorTotalGeral
+      };
+      const { exportConsumidoresPDF } = await import('@/utils/export');
+      exportConsumidoresPDF(pedidosExport, ciclosData, resumo);
+      toast({ title: "Sucesso", description: "Download do PDF concluído" });
+    } catch (error) {
+      toast({ title: "Erro", description: "Erro ao exportar PDF", variant: "destructive" });
+    }
+  };
+
+  const handleSortByFornecedor = () => {
+    if (sortBy === 'fornecedor') {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy('fornecedor');
+      setSortOrder('asc');
+    }
   };
 
   return (
@@ -160,7 +243,7 @@ export default function AdminPedidosConsumidores() {
         </Card>
 
         {/* Toolbar */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between">
+        <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -170,7 +253,37 @@ export default function AdminPedidosConsumidores() {
               className="pl-10"
             />
           </div>
-          <div className="flex gap-2">
+          
+          <div className="flex flex-wrap gap-2 items-end">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-muted-foreground">Agricultura Familiar</label>
+              <Select value={filtroAgriculturaFamiliar} onValueChange={setFiltroAgriculturaFamiliar}>
+                <SelectTrigger className="w-[180px] bg-background">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="sim">Sim</SelectItem>
+                  <SelectItem value="nao">Não</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-muted-foreground">Certificação</label>
+              <Select value={filtroCertificacao} onValueChange={setFiltroCertificacao}>
+                <SelectTrigger className="w-[180px] bg-background">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="organico">Orgânico</SelectItem>
+                  <SelectItem value="transicao">Transição</SelectItem>
+                  <SelectItem value="convencional">Convencional</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <Button 
               variant="outline" 
               onClick={handleExportCSV}
@@ -197,6 +310,20 @@ export default function AdminPedidosConsumidores() {
               <TableRow>
                 <TableHead>Consumidor</TableHead>
                 <TableHead>Produto</TableHead>
+                <TableHead 
+                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={handleSortByFornecedor}
+                >
+                  <div className="flex items-center gap-2">
+                    Fornecedor
+                    <ArrowUpDown className="h-4 w-4" />
+                    {sortBy === 'fornecedor' && (
+                      <span className="text-xs text-muted-foreground">
+                        ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
+                      </span>
+                    )}
+                  </div>
+                </TableHead>
                 <TableHead>Medida</TableHead>
                 <TableHead className="text-right">Valor Unitário</TableHead>
                 <TableHead className="text-right">Quantidade</TableHead>
@@ -217,7 +344,31 @@ export default function AdminPedidosConsumidores() {
                 filteredPedidos.map((pedido) => (
                   <TableRow key={pedido.id}>
                     <TableCell className="font-medium">{pedido.consumidor}</TableCell>
-                    <TableCell>{pedido.produto}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        <span>{pedido.produto}</span>
+                        <div className="flex gap-1">
+                          {pedido.agricultura_familiar && (
+                            <Badge variant="secondary" className="text-xs">
+                              Agricultura Familiar
+                            </Badge>
+                          )}
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${
+                              pedido.certificacao === 'organico' ? 'border-green-600 text-green-600' :
+                              pedido.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
+                              'border-gray-400 text-gray-600'
+                            }`}
+                          >
+                            {pedido.certificacao === 'organico' ? 'Orgânico' :
+                             pedido.certificacao === 'transicao' ? 'Transição' :
+                             'Convencional'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>{pedido.fornecedor}</TableCell>
                     <TableCell>{pedido.medida}</TableCell>
                     <TableCell className="text-right">
                       R$ {pedido.valor_unitario.toFixed(2).replace('.', ',')}
