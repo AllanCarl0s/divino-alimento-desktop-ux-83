@@ -51,7 +51,7 @@ const LojaProdutor = () => {
       title: 'Ofertar Alimento',
       description: 'Publique e edite seus alimentos nos ciclos ativos, dentro do período de oferta.',
       icon: ShoppingBag,
-      route: ciclos.find(c => c.dentroJanelaOferta) ? `/oferta/${ciclos.find(c => c.dentroJanelaOferta)?.id}` : '/oferta/1',
+      route: '/fornecedor/selecionar-ciclo',
       enabled: true
     },
     {

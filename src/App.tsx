@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 
 // Fornecedor pages
 import LojaProdutor from "./pages/fornecedor/LojaProdutor";
+import FornecedorSelecionarCiclo from "./pages/fornecedor/FornecedorSelecionarCiclo";
 import FornecedorPagamentos from "./pages/fornecedor/FornecedorPagamentos";
 import FornecedorEntregas from "./pages/fornecedor/FornecedorEntregas";
 
@@ -89,6 +90,7 @@ const App = () => (
           
           {/* Fornecedor Routes */}
           <Route path="/fornecedor/loja" element={<ProtectedRoute><LojaProdutor /></ProtectedRoute>} />
+          <Route path="/fornecedor/selecionar-ciclo" element={<ProtectedRoute><FornecedorSelecionarCiclo /></ProtectedRoute>} />
           <Route path="/fornecedor/entregas/:cicloId" element={<ProtectedRoute><FornecedorEntregas /></ProtectedRoute>} />
           <Route path="/fornecedor/pagamentos" element={<ProtectedRoute><FornecedorPagamentos /></ProtectedRoute>} />
           
