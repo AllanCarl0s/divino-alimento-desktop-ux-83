@@ -245,8 +245,8 @@ export default function AdminComposicaoVendaDireta() {
       setIsLoading(false);
       
       toast({
-        title: "Composição de Vendas consolidada com sucesso",
-        description: `Valor total: ${formatBRL(totais.valorTotalVendido)} • ${totais.quantidadeTotalVendida} unidades vendidas`,
+        title: "✅ Composição de vendas salva com sucesso!",
+        description: `O ciclo foi consolidado e encerrado. Valor total: ${formatBRL(totais.valorTotalVendido)} • ${totais.quantidadeTotalVendida} unidades vendidas`,
         className: "bg-green-600 text-white border-green-700",
         duration: 5000,
       });
@@ -291,7 +291,10 @@ export default function AdminComposicaoVendaDireta() {
             </h1>
           </div>
           <p className="text-lg text-muted-foreground">
-            Fechamento do {ciclo.nome} • {ciclo.mercado}
+            Fechamento do ciclo – consolidação das vendas realizadas
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {ciclo.nome} • {ciclo.mercado}
           </p>
         </div>
 
@@ -399,6 +402,15 @@ export default function AdminComposicaoVendaDireta() {
                   Menos Vendidos
                 </Button>
 
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {/* TODO: filtrar apenas produtos com saldo */}}
+                >
+                  <Package className="h-4 w-4 mr-2" />
+                  Com Estoque
+                </Button>
+
                 {temFiltrosAtivos && (
                   <Button
                     variant="ghost"
@@ -436,9 +448,9 @@ export default function AdminComposicaoVendaDireta() {
                       <TableHead className="min-w-[150px]">Fornecedor</TableHead>
                       <TableHead className="text-right min-w-[120px]">Valor Unitário</TableHead>
                       <TableHead className="text-center min-w-[120px]">Qtd. Ofertada</TableHead>
-                      <TableHead className="text-center min-w-[140px]">Qtd. Vendida</TableHead>
+                      <TableHead className="text-center min-w-[140px]">Vendidos</TableHead>
                       <TableHead className="text-right min-w-[140px]">Valor Final</TableHead>
-                      <TableHead className="text-center min-w-[100px]">Disponível</TableHead>
+                      <TableHead className="text-center min-w-[100px]">Saldo Restante</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -457,15 +469,8 @@ export default function AdminComposicaoVendaDireta() {
                             <TableCell className="text-sm">{variant.fornecedor}</TableCell>
                             <TableCell className="text-right tabular-nums">{formatBRL(variant.valor)}</TableCell>
                             <TableCell className="text-center tabular-nums">{variant.quantidadeOfertada}</TableCell>
-                            <TableCell className="text-center">
-                              <Input
-                                type="number"
-                                min={0}
-                                max={variant.quantidadeOfertada}
-                                value={qtdVendida}
-                                onChange={(e) => handleQuantidadeVendidaChange(variant.id, Number(e.target.value))}
-                                className="w-[90px] text-center tabular-nums mx-auto"
-                              />
+                            <TableCell className="text-center tabular-nums font-semibold">
+                              {qtdVendida}
                             </TableCell>
                             <TableCell className="text-right font-semibold tabular-nums text-green-600">
                               {formatBRL(valorFinal)}
@@ -531,11 +536,11 @@ export default function AdminComposicaoVendaDireta() {
               Confirmar Consolidação de Vendas
             </AlertDialogTitle>
             <AlertDialogDescription className="space-y-3 pt-2">
-              <p>
-                Esta ação consolidará o resultado final deste ciclo de Venda Direta.
-              </p>
               <p className="font-semibold text-amber-600">
-                Após confirmação, os valores e saldos não poderão ser alterados.
+                Ao confirmar, os dados serão consolidados e o mercado será encerrado.
+              </p>
+              <p>
+                Essa ação não poderá ser desfeita.
               </p>
               <div className="bg-muted p-4 rounded-lg mt-4 space-y-2">
                 <p className="text-sm"><span className="font-semibold">Valor Total Vendido:</span> {formatBRL(totais.valorTotalVendido)}</p>
