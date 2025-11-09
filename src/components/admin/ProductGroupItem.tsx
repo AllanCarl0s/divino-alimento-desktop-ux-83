@@ -11,6 +11,7 @@ import { FilterDropdown, FilterOption } from './FilterDropdown';
 import { MobileFiltersSheet, FilterSection } from './MobileFiltersSheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { formatBRL } from '@/utils/currency';
+import { useCompositionStore } from '@/stores/compositionStore';
 
 interface ProductGroupItemProps {
   group: ProductGroup;
@@ -47,6 +48,7 @@ export function ProductGroupItem({
   const isMobile = useIsMobile();
   const [certificacaoFilter, setCertificacaoFilter] = useState<Set<string>>(new Set());
   const [agriculturaFilter, setAgriculturaFilter] = useState<Set<string>>(new Set());
+  const { getVariantComputed, setDraft } = useCompositionStore();
 
   const toggleCertificacao = (value: string) => {
     const newSet = new Set(certificacaoFilter);
@@ -230,10 +232,9 @@ export function ProductGroupItem({
               ) : (
                 filteredVariantes.map((variante) => {
                 const isSelected = selectedVariantIds.has(variante.id);
-                const pedidos = quantidades.get(variante.id) || 0;
-                const pedidosAcumulados = variante.pedidosAcumulados || 0;
-                const disponivel = Math.max(0, variante.quantidadeOfertada - pedidosAcumulados);
-                const valorAcumulado = variante.valor * pedidosAcumulados;
+                const computed = getVariantComputed(variante.id);
+                const { draft, disponivel, valorAcum } = computed;
+                const maxAllowed = Math.max(0, variante.quantidadeOfertada - computed.prev);
 
                 return (
                   <>
@@ -288,19 +289,23 @@ export function ProductGroupItem({
                         {isSelected ? (
                           <Input
                             type="number"
-                            value={pedidos}
-                            onChange={(e) => onQuantidadeChange(variante.id, parseInt(e.target.value) || 0)}
+                            value={draft}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value) || 0;
+                              setDraft(variante.id, value);
+                              onQuantidadeChange(variante.id, value);
+                            }}
                             className="w-full"
                             min="0"
-                            max={variante.quantidadeOfertada}
+                            max={maxAllowed}
                           />
                         ) : (
                           <span className="text-sm text-muted-foreground">-</span>
                         )}
                       </div>
                       <div className="col-span-2 text-right" title="Soma dos valores já alocados neste ciclo para esta variante.">
-                        <span className={`text-sm ${valorAcumulado > 0 ? 'font-medium' : ''}`}>
-                          {formatBRL(valorAcumulado)}
+                        <span className={`text-sm ${valorAcum > 0 ? 'font-medium' : ''}`}>
+                          {formatBRL(valorAcum)}
                         </span>
                       </div>
                     </div>
@@ -369,11 +374,15 @@ export function ProductGroupItem({
                           {isSelected ? (
                             <Input
                               type="number"
-                              value={pedidos}
-                              onChange={(e) => onQuantidadeChange(variante.id, parseInt(e.target.value) || 0)}
+                              value={draft}
+                              onChange={(e) => {
+                                const value = parseInt(e.target.value) || 0;
+                                setDraft(variante.id, value);
+                                onQuantidadeChange(variante.id, value);
+                              }}
                               className="w-full mt-1"
                               min="0"
-                              max={variante.quantidadeOfertada}
+                              max={maxAllowed}
                             />
                           ) : (
                             <div className="text-muted-foreground">-</div>
@@ -381,8 +390,8 @@ export function ProductGroupItem({
                         </div>
                         <div>
                           <span className="text-muted-foreground text-xs">Valor acumulado</span>
-                          <div className={`font-medium ${valorAcumulado > 0 ? 'font-semibold' : ''}`}>
-                            {formatBRL(valorAcumulado)}
+                          <div className={`font-medium ${valorAcum > 0 ? 'font-semibold' : ''}`}>
+                            {formatBRL(valorAcum)}
                           </div>
                         </div>
                       </div>

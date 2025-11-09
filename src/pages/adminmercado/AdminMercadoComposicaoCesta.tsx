@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
@@ -15,6 +15,7 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
+import { useCompositionStore } from '@/stores/compositionStore';
 
 export default function AdminMercadoComposicaoCesta() {
   const { id } = useParams();
@@ -25,6 +26,7 @@ export default function AdminMercadoComposicaoCesta() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const { initialize, getVariantComputed } = useCompositionStore();
   
   // selectedByGroup: groupKey -> Set of variantIds
   const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
@@ -115,36 +117,42 @@ export default function AdminMercadoComposicaoCesta() {
     tipo: 'Cesta'
   };
 
+  // Initialize store on mount
+  useEffect(() => {
+    initialize(ofertas);
+  }, [ofertas, initialize]);
+
   // Agrupar e filtrar produtos
   const productGroups = useMemo(() => {
     const groups = groupAndSortProducts(ofertas);
     return filterProducts(groups, busca);
   }, [ofertas, busca]);
 
-  // Calcular itens selecionados
+  // Calcular itens selecionados usando o store
   const selectedItems = useMemo(() => {
-    const items: Array<{ id: string; valor: number; quantidade: number }> = [];
+    const items: Array<{ id: string; valor: number; quantidade: number; prev: number }> = [];
     selectedByGroup.forEach((variantIds) => {
       variantIds.forEach(variantId => {
-        const quantidade = composicao.get(variantId) || 0;
-        if (quantidade > 0) {
+        const computed = getVariantComputed(variantId);
+        if (computed.draft > 0 || computed.prev > 0) {
           const oferta = ofertas.find(o => o.id === variantId);
           if (oferta) {
             items.push({
               id: variantId,
               valor: oferta.valor,
-              quantidade,
+              quantidade: computed.draft,
+              prev: computed.prev,
             });
           }
         }
       });
     });
     return items;
-  }, [selectedByGroup, composicao, ofertas]);
+  }, [selectedByGroup, ofertas, getVariantComputed]);
 
-  // Cálculos reativos
+  // Cálculos reativos usando os dados do store
   const valorAtual = selectedItems.reduce((acc, item) => {
-    return acc + (item.valor * item.quantidade);
+    return acc + (item.valor * (item.prev + item.quantidade));
   }, 0);
   
   const saldo = ciclo.valorMaximo - valorAtual;
@@ -359,8 +367,9 @@ export default function AdminMercadoComposicaoCesta() {
                     const oferta = ofertas.find(o => o.id === item.id);
                     if (!oferta) return null;
                     
-                    const valorAcumulado = item.valor * item.quantidade;
-                    const disponiveis = oferta.quantidadeOfertada - item.quantidade;
+                    const computed = getVariantComputed(item.id);
+                    const valorAcumulado = oferta.valor * (computed.prev + computed.draft);
+                    const disponiveis = computed.disponivel;
                     
                     return (
                       <TableRow key={item.id}>
@@ -370,14 +379,7 @@ export default function AdminMercadoComposicaoCesta() {
                         <TableCell className="td-texto">{oferta.fornecedor}</TableCell>
                         <TableCell className="td-numero">{oferta.quantidadeOfertada}</TableCell>
                         <TableCell className="td-numero">
-                          <Input
-                            type="number"
-                            min={0}
-                            max={oferta.quantidadeOfertada}
-                            value={item.quantidade}
-                            onChange={(e) => handleQuantidadeChange(item.id, Number(e.target.value))}
-                            className="w-[60px] text-center tabular-nums mx-auto"
-                          />
+                          <span className="font-medium">{computed.draft}</span>
                         </TableCell>
                         <TableCell className="td-valor font-medium">
                           {formatBRL(valorAcumulado)}
