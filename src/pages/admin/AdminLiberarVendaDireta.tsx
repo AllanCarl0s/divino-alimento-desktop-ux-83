@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { toast } from '@/hooks/use-toast';
-import { Search, ArrowLeft, Trash2, ChevronDown, ChevronUp, Megaphone } from 'lucide-react';
+import { Search, ArrowLeft, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
@@ -286,25 +286,16 @@ export default function AdminLiberarVendaDireta() {
         {/* Resumo fixo (sticky) */}
         <Card className="sticky top-16 z-40 shadow-lg">
           <CardHeader>
-            <div className="flex items-center gap-3 mb-2">
-              <Megaphone className="h-6 w-6 text-[#009436]" />
-              <CardTitle className="text-2xl">Liberação de Produtos para Venda Direta</CardTitle>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Ciclo: {ciclo.nome} • Tipo: {ciclo.tipo} – {ciclo.mercado}
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <p className="text-sm text-muted-foreground">Produtos selecionados</p>
-                <p className="text-2xl font-bold">{selectedItems.length}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-2xl">{ciclo.nome}</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Tipo: {ciclo.tipo} • {ciclo.mercado}
+                </p>
               </div>
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <p className="text-sm text-muted-foreground">Valor total estimado</p>
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground">Valor Total</p>
                 <p className="text-2xl font-bold">{formatBRL(valorTotal)}</p>
-              </div>
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <p className="text-sm text-muted-foreground">Quantidade total liberada</p>
-                <p className="text-2xl font-bold">{quantidadeTotal}</p>
               </div>
             </div>
           </CardHeader>
