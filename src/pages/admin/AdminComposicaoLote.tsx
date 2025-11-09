@@ -388,23 +388,6 @@ export default function AdminComposicaoLote() {
             </div>
           </CardHeader>
         </Card>
-
-        {/* Banner de alerta fixo quando excede valor máximo */}
-        {excedeuValor && (
-          <div className="sticky top-40 z-30">
-            <Alert 
-              variant="destructive" 
-              className="border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]"
-              role="alert"
-            >
-              <AlertTriangle className="h-4 w-4" aria-label="Aviso" />
-              <AlertDescription className="text-sm font-medium">
-                ⚠️ Valor atual excede o valor máximo permitido para este mercado.
-              </AlertDescription>
-            </Alert>
-          </div>
-        )}
-
         {/* Produtos Selecionados */}
         {selectedItems.length > 0 && (
           <Card>
