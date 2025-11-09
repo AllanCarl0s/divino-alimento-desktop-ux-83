@@ -370,21 +370,7 @@ export default function AdminComposicaoLote() {
                   Tipo: {ciclo.tipo}
                 </p>
               </div>
-              <div className="flex gap-6">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Valor Máximo</p>
-                        <p className="text-2xl font-bold">{formatBRL(ciclo.valorMaximo)}</p>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Orçamento máximo aprovado para este mercado</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                
+              <div>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -395,22 +381,6 @@ export default function AdminComposicaoLote() {
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Soma dos produtos × quantidades selecionadas</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Saldo</p>
-                        <p className={`text-2xl font-bold ${saldo >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {formatBRL(saldo)}
-                        </p>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Valor Máximo – Valor Atual</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
