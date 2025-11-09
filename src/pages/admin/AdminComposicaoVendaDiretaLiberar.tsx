@@ -257,7 +257,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
       const totalItens = selectedItems.reduce((acc, item) => acc + item.quantidade, 0);
       
       toast({
-        title: "Venda direta publicada com sucesso",
+        title: "Composição salva com sucesso",
         description: `${selectedItems.length} produto(s), ${totalItens} itens, ${formatBRL(valorTotal)}`,
         className: "bg-green-600 text-white border-green-700",
         duration: 5000,
