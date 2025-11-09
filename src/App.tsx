@@ -12,6 +12,7 @@ import MinhaCesta from "./pages/MinhaCesta";
 import PedidoConsumidores from "./pages/PedidoConsumidores";
 import ConsumidorPagamentos from "./pages/consumidor/ConsumidorPagamentos";
 import ConsumidorSelecionarCiclo from "./pages/consumidor/ConsumidorSelecionarCiclo";
+import ConsumidorSelecionarCicloRelatorio from "./pages/consumidor/ConsumidorSelecionarCicloRelatorio";
 import NotFound from "./pages/NotFound";
 
 // Fornecedor pages
@@ -89,6 +90,7 @@ const App = () => (
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/minhaCesta/:id" element={<ProtectedRoute><MinhaCesta /></ProtectedRoute>} />
           <Route path="/consumidor/selecionar-ciclo" element={<ProtectedRoute><ConsumidorSelecionarCiclo /></ProtectedRoute>} />
+          <Route path="/consumidor/selecionar-ciclo-relatorio" element={<ProtectedRoute><ConsumidorSelecionarCicloRelatorio /></ProtectedRoute>} />
           <Route path="/pedidoConsumidores/:id" element={<ProtectedRoute><PedidoConsumidores /></ProtectedRoute>} />
           <Route path="/consumidor/pagamentos" element={<ProtectedRoute><ConsumidorPagamentos /></ProtectedRoute>} />
           
