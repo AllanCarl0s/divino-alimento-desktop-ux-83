@@ -42,7 +42,7 @@ const AdminProdutoNovo = () => {
 
     toast({
       title: "Alimento criado",
-      description: "O alimento foi cadastrado com sucesso.",
+        description: "O alimento foi cadastrado com sucesso.",
     });
     
     navigate('/admin/alimentos');

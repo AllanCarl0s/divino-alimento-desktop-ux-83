@@ -95,7 +95,7 @@ const AdminCategoriaDados = () => {
       <div className="max-w-4xl mx-auto space-y-6 pb-20">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-            Administrador - Editar Categoria de Produto
+            Administrador - Editar Categoria de Alimento
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Atualize as informações da categoria
@@ -109,7 +109,7 @@ const AdminCategoriaDados = () => {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="nome">
-                Nome da Categoria de Produto <span className="text-destructive">*</span>
+                Nome da Categoria de Alimento <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="nome"

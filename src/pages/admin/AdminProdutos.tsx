@@ -98,7 +98,7 @@ const AdminProdutos = () => {
     setProdutos(prev => prev.filter(p => p.id !== id));
     toast({
       title: "Alimento excluído",
-      description: "O alimento foi removido com sucesso.",
+        description: "O alimento foi removido com sucesso.",
     });
   };
 
@@ -233,7 +233,7 @@ const AdminProdutos = () => {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
                                    <AlertDialogDescription>
-                                     Deseja realmente excluir este alimento? Esta ação não pode ser desfeita.
+                      Deseja realmente excluir este alimento? Esta ação não pode ser desfeita.
                                    </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>

@@ -253,7 +253,7 @@ export default function AdminLiberarVendaDireta() {
       
       toast({
         title: "Venda Direta publicada com sucesso!",
-        description: `Os consumidores já podem visualizar os produtos liberados. ${selectedItems.length} produto(s), ${quantidadeTotal} unidades, ${formatBRL(valorTotal)}`,
+        description: `Os consumidores já podem visualizar os alimentos liberados. ${selectedItems.length} alimento(s), ${quantidadeTotal} unidades, ${formatBRL(valorTotal)}`,
         className: "bg-green-600 text-white border-green-700",
         duration: 5000,
       });
@@ -306,9 +306,9 @@ export default function AdminLiberarVendaDireta() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Produtos Selecionados para Venda Direta</CardTitle>
+                <CardTitle>Alimentos Selecionados para Venda Direta</CardTitle>
                 <div className="text-sm text-muted-foreground">
-                  {selectedItems.length} produto(s)
+                  {selectedItems.length} alimento(s)
                 </div>
               </div>
             </CardHeader>
@@ -316,7 +316,7 @@ export default function AdminLiberarVendaDireta() {
               <Table className="tabela-produtos-selecionados">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="td-texto">Produto</TableHead>
+                    <TableHead className="td-texto">Alimento</TableHead>
                     <TableHead className="td-texto">Medida</TableHead>
                     <TableHead className="td-valor">Valor Unit.</TableHead>
                     <TableHead className="td-texto">Fornecedor</TableHead>
@@ -387,12 +387,12 @@ export default function AdminLiberarVendaDireta() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
-              <CardTitle>Selecionar Produtos para Liberação</CardTitle>
+              <CardTitle>Selecionar Alimentos para Liberação</CardTitle>
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="relative w-64">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Buscar produto, fornecedor ou unidade..."
+                    placeholder="Buscar alimento, fornecedor ou unidade..."
                     value={busca}
                     onChange={(e) => setBusca(e.target.value)}
                     className="pl-10"

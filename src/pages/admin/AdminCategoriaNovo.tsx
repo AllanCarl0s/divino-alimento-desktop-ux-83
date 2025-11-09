@@ -74,10 +74,10 @@ const AdminCategoriaNovo = () => {
       <div className="max-w-4xl mx-auto space-y-6 pb-20">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-            Administrador - Nova Categoria de Produto
+            Administrador - Nova Categoria de Alimento
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
-            Cadastre uma nova categoria para organizar seus produtos
+            Cadastre uma nova categoria para organizar seus alimentos
           </p>
         </div>
 
@@ -88,7 +88,7 @@ const AdminCategoriaNovo = () => {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="nome">
-                Nome da Categoria de Produto <span className="text-destructive">*</span>
+                Nome da Categoria de Alimento <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="nome"

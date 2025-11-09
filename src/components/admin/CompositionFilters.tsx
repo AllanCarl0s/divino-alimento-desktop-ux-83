@@ -15,9 +15,9 @@ interface CompositionFiltersProps {
 }
 
 const certificacaoLabels: Record<CertificationType, string> = {
-  organico: 'Produto orgânico',
-  transicao: 'Produto em transição agroecológica',
-  convencional: 'Produto convencional',
+  organico: 'Alimento orgânico',
+  transicao: 'Alimento em transição agroecológica',
+  convencional: 'Alimento convencional',
 };
 
 const agriculturaLabels: Record<AgricultureType, string> = {

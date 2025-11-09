@@ -309,7 +309,7 @@ export default function AdminComposicaoLote() {
       
       toast({
         title: 'Composição lote salva com sucesso',
-        description: `${selectedItems.length} produto(s), ${totalItens} itens, ${formatBRL(valorAtual)}`,
+        description: `${selectedItems.length} alimento(s), ${totalItens} itens, ${formatBRL(valorAtual)}`,
         className: 'bg-green-600 text-white border-green-700',
         duration: 5000,
       });
@@ -384,9 +384,9 @@ export default function AdminComposicaoLote() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Produtos Selecionados</CardTitle>
+                <CardTitle>Alimentos Selecionados</CardTitle>
                 <div className="text-sm text-muted-foreground">
-                  {selectedItems.length} produto(s) · {totalItens} itens
+                  {selectedItems.length} alimento(s) · {totalItens} itens
                 </div>
               </div>
             </CardHeader>
@@ -394,7 +394,7 @@ export default function AdminComposicaoLote() {
               <Table className="tabela-produtos-selecionados">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="td-texto">Produto</TableHead>
+                    <TableHead className="td-texto">Alimento</TableHead>
                     <TableHead className="td-texto">Medida</TableHead>
                     <TableHead className="td-valor">Valor Unit.</TableHead>
                     <TableHead className="td-texto">Fornecedor</TableHead>
@@ -466,7 +466,7 @@ export default function AdminComposicaoLote() {
         <Card>
           <CardHeader>
             <div className="space-y-4">
-              <CardTitle>Todos os Produtos Ofertados</CardTitle>
+              <CardTitle>Todos os Alimentos Ofertados</CardTitle>
               
               {/* Action Bar */}
               <div className="flex items-center justify-between flex-wrap gap-3">
@@ -475,11 +475,11 @@ export default function AdminComposicaoLote() {
                   <div className="relative flex-1 max-w-md">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Buscar produto, fornecedor ou unidade..."
+                      placeholder="Buscar alimento, fornecedor ou unidade..."
                       value={busca}
                       onChange={(e) => setBusca(e.target.value)}
                       className="pl-10"
-                      aria-label="Buscar produtos ofertados"
+                      aria-label="Buscar alimentos ofertados"
                     />
                   </div>
                   <Button

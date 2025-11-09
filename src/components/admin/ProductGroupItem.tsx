@@ -23,9 +23,9 @@ interface ProductGroupItemProps {
 }
 
 const certificacaoOptions: FilterOption[] = [
-  { value: 'organico', label: 'Produto orgânico' },
-  { value: 'transicao', label: 'Produto em transição agroecológica' },
-  { value: 'convencional', label: 'Produto convencional' },
+  { value: 'organico', label: 'Alimento orgânico' },
+  { value: 'transicao', label: 'Alimento em transição agroecológica' },
+  { value: 'convencional', label: 'Alimento convencional' },
 ];
 
 const agriculturaOptions: FilterOption[] = [

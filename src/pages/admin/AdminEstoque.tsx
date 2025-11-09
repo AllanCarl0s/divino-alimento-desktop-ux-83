@@ -86,7 +86,7 @@ const AdminEstoque = () => {
     
     toast({
       title: "Produto aprovado",
-      description: "Produto está agora disponível no estoque",
+      description: "Alimento aprovado com sucesso!",
     });
   };
 
@@ -95,7 +95,7 @@ const AdminEstoque = () => {
     
     toast({
       title: "Produto reprovado",
-      description: "Produto removido da lista",
+      description: "Alimento removido da lista",
       variant: "destructive"
     });
   };
@@ -150,9 +150,9 @@ const AdminEstoque = () => {
                 <CardContent className="space-y-4">
                   <Package className="w-12 h-12 mx-auto text-muted-foreground" />
                   <div>
-                    <h3 className="font-medium text-foreground">Nenhum produto encontrado</h3>
+                    <h3 className="font-medium text-foreground">Nenhum alimento encontrado</h3>
                     <p className="text-sm text-muted-foreground">
-                      Não há produtos {activeTab} no momento
+                      Não há alimentos {activeTab} no momento
                     </p>
                   </div>
                 </CardContent>

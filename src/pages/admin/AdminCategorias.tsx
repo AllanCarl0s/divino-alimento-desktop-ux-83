@@ -136,10 +136,10 @@ const AdminCategorias = () => {
         <div className="md:flex md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Administrador - Categorias de Produtos
+              Administrador - Categorias de Alimentos
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
-              Gerenciar categorias dos produtos comercializados
+              Gerenciar categorias dos alimentos comercializados
             </p>
           </div>
         </div>

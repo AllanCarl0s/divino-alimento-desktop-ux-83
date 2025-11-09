@@ -97,7 +97,7 @@ export default function OfertaCiclo() {
     
     toast({
       title: "Sucesso",
-      description: "Produto adicionado à oferta.",
+      description: "Alimento adicionado à oferta.",
     });
   };
 
@@ -105,7 +105,7 @@ export default function OfertaCiclo() {
     setProdutosOfertados(produtosOfertados.filter(p => p.id !== id));
     toast({
       title: "Produto removido",
-      description: "O produto foi removido da oferta.",
+      description: "O alimento foi removido da oferta.",
     });
   };
 
@@ -113,7 +113,7 @@ export default function OfertaCiclo() {
     if (produtosOfertados.length === 0) {
       toast({
         title: "Erro",
-        description: "Adicione pelo menos um produto antes de enviar.",
+        description: "Adicione pelo menos um alimento antes de enviar.",
         variant: "destructive"
       });
       return;
@@ -124,7 +124,7 @@ export default function OfertaCiclo() {
     
     toast({
       title: "Oferta salva!",
-      description: "Seus produtos foram adicionados à oferta.",
+      description: "Seus alimentos foram adicionados à oferta.",
     });
   };
 
@@ -173,7 +173,7 @@ export default function OfertaCiclo() {
             <div className={`w-8 h-8 rounded-full ${ofertaEnviada ? 'bg-primary' : 'bg-primary'} text-primary-foreground flex items-center justify-center font-semibold`}>
               2
             </div>
-            <span className="text-sm font-medium">Seleção de produtos</span>
+            <span className="text-sm font-medium">Seleção de alimentos</span>
           </div>
           <div className={`w-16 h-1 ${ofertaEnviada ? 'bg-primary' : 'bg-muted'}`}></div>
           <div className="flex items-center gap-2">
@@ -187,7 +187,7 @@ export default function OfertaCiclo() {
         {ofertaEnviada ? (
           <Card>
             <CardHeader>
-              <CardTitle>Produtos ofertados por você</CardTitle>
+              <CardTitle>Alimentos ofertados por você</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {isMobile ? (
@@ -198,7 +198,7 @@ export default function OfertaCiclo() {
                       className="bg-white border border-border rounded-xl p-4 space-y-2"
                     >
                       <div className="font-bold text-base text-primary">
-                        Produto: {produto.nome}
+                        Alimento: {produto.nome}
                       </div>
                       <div className="text-sm text-foreground">
                         <span className="text-muted-foreground">Unidade:</span> {produto.unidade}
@@ -313,16 +313,16 @@ export default function OfertaCiclo() {
             {/* Formulário de adição */}
             <Card>
               <CardHeader>
-                <CardTitle>Adicionar Produto à Oferta</CardTitle>
+                <CardTitle>Adicionar Alimento à Oferta</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="md:col-span-2">
-                    <Label>Produto *</Label>
+                    <Label>Alimento *</Label>
                     <div className="relative">
                       <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        placeholder="Digite o nome do produto..."
+                        placeholder="Digite o nome do alimento..."
                         value={busca}
                         onChange={(e) => setBusca(e.target.value)}
                         className="pl-10"
@@ -333,7 +333,7 @@ export default function OfertaCiclo() {
                       onChange={(e) => setProdutoSelecionado(e.target.value)}
                       className="w-full mt-2 p-2 border rounded-md"
                     >
-                      <option value="">Selecione um produto</option>
+                      <option value="">Selecione um alimento</option>
                       {produtosDisponiveis
                         .filter(p => p.nome.toLowerCase().includes(busca.toLowerCase()))
                         .map(produto => (
@@ -369,9 +369,9 @@ export default function OfertaCiclo() {
                 {/* Certificações */}
                 <div className="space-y-4 pt-4 border-t">
                   <div>
-                    <Label className="text-base font-semibold mb-3 block">Tipo de Produto</Label>
+                    <Label className="text-base font-semibold mb-3 block">Tipo de Alimento</Label>
                     <div className="flex flex-wrap gap-3">
-                      {['Produto Orgânico', 'Produto em Transição Agroecológica', 'Produto Convencional'].map((tipo) => (
+                      {['Alimento Orgânico', 'Alimento em Transição Agroecológica', 'Alimento Convencional'].map((tipo) => (
                         <label
                           key={tipo}
                           className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 cursor-pointer transition-all ${
@@ -451,7 +451,7 @@ export default function OfertaCiclo() {
                           className="bg-white border border-border rounded-xl p-4 space-y-2"
                         >
                           <div className="font-bold text-base text-primary">
-                            Produto: {produto.nome}
+                            Alimento: {produto.nome}
                           </div>
                           <div className="text-sm text-foreground">
                             <span className="text-muted-foreground">Unidade:</span> {produto.unidade}

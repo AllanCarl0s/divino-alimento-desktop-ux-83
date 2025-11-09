@@ -58,7 +58,7 @@ const ProductAnalysisModal: React.FC<ProductAnalysisModalProps> = ({
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
-            <span>Análise do Produto</span>
+            <span>Análise do Alimento</span>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="w-4 h-4" />
             </Button>
@@ -106,7 +106,7 @@ const ProductAnalysisModal: React.FC<ProductAnalysisModalProps> = ({
 
           {/* Product Image */}
           <div className="space-y-3">
-            <Label className="text-base font-medium">Imagem do Produto</Label>
+            <Label className="text-base font-medium">Imagem do Alimento</Label>
             <div className="flex items-center space-x-4">
               <div className="w-20 h-20 border-2 border-dashed border-muted-foreground/30 rounded-lg flex items-center justify-center bg-muted/20">
                 {product.image ? (
@@ -148,7 +148,7 @@ const ProductAnalysisModal: React.FC<ProductAnalysisModalProps> = ({
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-base font-medium">Descrição do Produto</Label>
+            <Label htmlFor="description" className="text-base font-medium">Descrição do Alimento</Label>
             <Textarea
               id="description"
               placeholder="Tomate cereja orgânico cultivado sem agrotóxicos"
@@ -166,7 +166,7 @@ const ProductAnalysisModal: React.FC<ProductAnalysisModalProps> = ({
               </Label>
               <Textarea
                 id="rejection"
-                placeholder="Descreva o motivo caso vá reprovar o produto..."
+                placeholder="Descreva o motivo caso vá reprovar o alimento..."
                 className="min-h-[60px] border-red-200 focus:border-red-400"
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}

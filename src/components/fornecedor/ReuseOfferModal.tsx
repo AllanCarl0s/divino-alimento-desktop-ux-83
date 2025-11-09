@@ -40,14 +40,14 @@ const ReuseOfferModal: React.FC<ReuseOfferModalProps> = ({
                 {previousCycleData.totalProducts}
               </h3>
               <p className="text-sm text-muted-foreground">
-                produtos ofertados no ciclo anterior
+                alimentos ofertados no ciclo anterior
               </p>
             </div>
           </div>
 
           <div className="text-center space-y-2">
             <p className="text-base">
-              Encontramos <strong>{previousCycleData.totalProducts} produtos</strong> ofertados no ciclo anterior.
+              Encontramos <strong>{previousCycleData.totalProducts} alimentos</strong> ofertados no ciclo anterior.
             </p>
             <p className="text-sm text-muted-foreground">
               Deseja trazer esses itens para o ciclo atual?
@@ -56,7 +56,7 @@ const ReuseOfferModal: React.FC<ReuseOfferModalProps> = ({
 
           {previousCycleData.products.length > 0 && (
             <div className="space-y-2">
-              <h4 className="text-sm font-medium text-muted-foreground">Produtos do ciclo anterior:</h4>
+              <h4 className="text-sm font-medium text-muted-foreground">Alimentos do ciclo anterior:</h4>
               <div className="max-h-32 overflow-y-auto space-y-1">
                 {previousCycleData.products.slice(0, 5).map((product) => (
                   <div key={product.id} className="flex items-center justify-between p-2 bg-muted/30 rounded text-sm">
@@ -68,7 +68,7 @@ const ReuseOfferModal: React.FC<ReuseOfferModalProps> = ({
                 ))}
                 {previousCycleData.products.length > 5 && (
                   <p className="text-xs text-muted-foreground text-center py-1">
-                    e mais {previousCycleData.products.length - 5} produtos...
+                    e mais {previousCycleData.products.length - 5} alimentos...
                   </p>
                 )}
               </div>
@@ -95,7 +95,7 @@ const ReuseOfferModal: React.FC<ReuseOfferModalProps> = ({
           </div>
 
           <p className="text-xs text-muted-foreground text-center">
-            Os produtos reutilizados ficarão como <strong>rascunho</strong> para você revisar e aprovar.
+            Os alimentos reutilizados ficarão como <strong>rascunho</strong> para você revisar e aprovar.
           </p>
         </div>
       </DialogContent>

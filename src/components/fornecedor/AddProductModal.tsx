@@ -171,7 +171,7 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
     if (!validateForm()) {
       toast({
         title: "Validação falhou",
-        description: "Preço e validade são obrigatórios para aprovar produto.",
+        description: "Preço e validade são obrigatórios para aprovar alimento.",
         variant: "destructive"
       });
       return;
@@ -200,7 +200,7 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Adicionar Produto</DialogTitle>
+          <DialogTitle>Adicionar Alimento</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -269,7 +269,7 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
                   {filteredProducts.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                        Nenhum produto encontrado
+                        Nenhum alimento encontrado
                       </TableCell>
                     </TableRow>
                   )}
@@ -278,9 +278,9 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
             </div>
           </div>
 
-          {/* Formulário do Produto */}
+          {/* Formulário do Alimento */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Dados do Produto</h3>
+            <h3 className="text-lg font-semibold">Dados do Alimento</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -390,7 +390,7 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
-                placeholder="Descreva seu produto..."
+                placeholder="Descreva seu alimento..."
                 rows={3}
               />
             </div>
@@ -407,7 +407,7 @@ export default function AddProductModal({ isOpen, onClose, onSaveDraft, onApprov
             </Button>
             <Button onClick={handleApprove}>
               <CheckCircle className="w-4 h-4 mr-2" />
-              Aprovar Produto
+              Aprovar Alimento
             </Button>
           </div>
         </div>
