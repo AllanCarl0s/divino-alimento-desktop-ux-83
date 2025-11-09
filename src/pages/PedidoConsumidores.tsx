@@ -185,7 +185,7 @@ const PedidoConsumidores = () => {
       headerContent={<UserMenuLarge />}
       leftHeaderContent={
         <button
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/consumidor/selecionar-ciclo')}
           className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
           aria-label="Voltar"
         >
