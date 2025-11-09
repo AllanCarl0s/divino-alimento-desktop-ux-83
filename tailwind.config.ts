@@ -23,6 +23,9 @@ export default {
 		}
 		},
 		extend: {
+			gridTemplateColumns: {
+				'14': 'repeat(14, minmax(0, 1fr))',
+			},
 			fontFamily: {
 				'inter': ['Inter', 'system-ui', 'sans-serif'],
 				'poppins': ['Poppins', 'system-ui', 'sans-serif'],

@@ -210,13 +210,15 @@ export function ProductGroupItem({
           <div className="p-4 pt-0">
             <div className="space-y-2 mt-4">
               {/* Header */}
-              <div className="grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
+              <div className="grid grid-cols-14 gap-3 text-xs font-medium text-muted-foreground pb-2 border-b">
                 <div className="col-span-1">Sel.</div>
-                <div className="col-span-2">Unidade</div>
+                <div className="col-span-1">Unidade</div>
                 <div className="col-span-3">Fornecedor</div>
                 <div className="col-span-2">Preço Unit.</div>
-                <div className="col-span-2">Ofertados</div>
+                <div className="col-span-1">Ofertados</div>
+                <div className="col-span-1">Disponível</div>
                 <div className="col-span-2">Pedidos</div>
+                <div className="col-span-3">Valor acumulado</div>
               </div>
 
               {/* Variantes */}
@@ -228,11 +230,13 @@ export function ProductGroupItem({
                 filteredVariantes.map((variante) => {
                 const isSelected = selectedVariantIds.has(variante.id);
                 const pedidos = quantidades.get(variante.id) || 0;
+                const disponivel = variante.quantidadeOfertada - pedidos;
+                const valorAcumulado = pedidos * variante.valor;
 
                 return (
                   <div
                     key={variante.id}
-                    className={`grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
+                    className={`grid grid-cols-14 gap-3 items-center py-3 px-2 rounded transition-colors ${
                       isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
                     }`}
                   >
@@ -244,23 +248,26 @@ export function ProductGroupItem({
                         disabled={variante.quantidadeOfertada === 0}
                       />
                     </div>
-                    <div className="col-span-2">
-                      <Label htmlFor={variante.id} className="cursor-pointer">
+                    <div className="col-span-1">
+                      <Label htmlFor={variante.id} className="cursor-pointer text-sm">
                         {variante.unidade}
                       </Label>
                     </div>
                     <div className="col-span-3">
-                      <Label htmlFor={variante.id} className="cursor-pointer truncate block">
+                      <Label htmlFor={variante.id} className="cursor-pointer truncate block text-sm">
                         {variante.fornecedor}
                       </Label>
                     </div>
                     <div className="col-span-2">
-                      <Label htmlFor={variante.id} className="cursor-pointer">
+                      <Label htmlFor={variante.id} className="cursor-pointer text-sm">
                         R$ {variante.valor.toFixed(2).replace('.', ',')}
                       </Label>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1">
                       <span className="text-sm">{variante.quantidadeOfertada}</span>
+                    </div>
+                    <div className="col-span-1">
+                      <span className="text-sm font-medium">{disponivel}</span>
                     </div>
                     <div className="col-span-2">
                       {isSelected ? (
@@ -275,6 +282,11 @@ export function ProductGroupItem({
                       ) : (
                         <span className="text-sm text-muted-foreground">-</span>
                       )}
+                    </div>
+                    <div className="col-span-3">
+                      <span className="text-sm font-semibold">
+                        R$ {valorAcumulado.toFixed(2).replace('.', ',')}
+                      </span>
                     </div>
                   </div>
                 );
