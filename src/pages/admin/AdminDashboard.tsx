@@ -55,8 +55,8 @@ const AdminDashboard = () => {
       route: '/admin/produtos-comercializaveis'
     },
     {
-      title: 'Categorias de Produtos',
-      description: 'Gerenciar categorias dos produtos comercializados',
+      title: 'Categorias de Alimentos',
+      description: 'Gerenciar categorias dos alimentos comercializados',
       icon: FolderTree,
       route: '/admin/categorias'
     }
