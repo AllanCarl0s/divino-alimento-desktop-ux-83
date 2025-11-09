@@ -252,7 +252,7 @@ export default function AdminLiberarVendaDireta() {
       setIsLoading(false);
       
       toast({
-        title: "✅ Venda Direta publicada com sucesso!",
+        title: "Venda Direta publicada com sucesso!",
         description: `Os consumidores já podem visualizar os produtos liberados. ${selectedItems.length} produto(s), ${quantidadeTotal} unidades, ${formatBRL(valorTotal)}`,
         className: "bg-green-600 text-white border-green-700",
         duration: 5000,
