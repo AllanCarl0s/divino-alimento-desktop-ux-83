@@ -13,6 +13,7 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
+import { useCompositionStore } from '@/stores/compositionStore';
 
 export default function AdminMercadoComposicaoLote() {
   const { cicloId } = useParams();
@@ -25,31 +26,7 @@ export default function AdminMercadoComposicaoLote() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   
-  const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
-  const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
-
-  // Carregar composição do localStorage
-  useEffect(() => {
-    const storageKey = `composicao-lote-ciclo-${cicloId}-mercado-${mercadoId}`;
-    const savedData = localStorage.getItem(storageKey);
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData);
-        const selectedMap = new Map<string, Set<string>>(
-          parsed.selectedByGroup.map(([key, value]: [string, string[]]) => [key, new Set<string>(value)])
-        );
-        setSelectedByGroup(selectedMap);
-        setComposicao(new Map<string, number>(parsed.composicao));
-        toast({
-          title: 'Composição carregada',
-          description: 'Dados anteriores foram restaurados.',
-          duration: 3000,
-        });
-      } catch (e) {
-        console.error('Erro ao carregar composição:', e);
-      }
-    }
-  }, [cicloId, mercadoId]);
+  const { initialize, getVariantComputed, setDraft, clearDraft } = useCompositionStore();
 
   // Mock data - produtos ofertados para este mercado
   const [ofertas] = useState<Oferta[]>([
@@ -80,6 +57,18 @@ export default function AdminMercadoComposicaoLote() {
     {
       id: '4',
       produto_base: 'Alface Crespa',
+      nome: 'Alface Crespa (maço)',
+      unidade: 'maço',
+      valor: 2.00,
+      fornecedor: 'João Produtor',
+      quantidadeOfertada: 50,
+      certificacao: 'transicao',
+      tipo_agricultura: 'familiar',
+      pedidosAcumulados: 0,
+    },
+    {
+      id: '5',
+      produto_base: 'Alface Crespa',
       nome: 'Alface Crespa (kg)',
       unidade: 'kg',
       valor: 3.20,
@@ -103,6 +92,11 @@ export default function AdminMercadoComposicaoLote() {
     },
   ]);
 
+  // Initialize store when ofertas change
+  useEffect(() => {
+    initialize(ofertas);
+  }, [ofertas, initialize]);
+
   const ciclo = {
     nome: '1º Ciclo de Novembro 2025',
     valorMaximo: 500.00,
@@ -117,23 +111,18 @@ export default function AdminMercadoComposicaoLote() {
 
   const selectedItems = useMemo(() => {
     const items: Array<{ id: string; valor: number; quantidade: number }> = [];
-    selectedByGroup.forEach((variantIds) => {
-      variantIds.forEach(variantId => {
-        const quantidade = composicao.get(variantId) || 0;
-        if (quantidade > 0) {
-          const oferta = ofertas.find(o => o.id === variantId);
-          if (oferta) {
-            items.push({
-              id: variantId,
-              valor: oferta.valor,
-              quantidade,
-            });
-          }
-        }
-      });
+    ofertas.forEach(oferta => {
+      const computed = getVariantComputed(oferta.id);
+      if (computed.draft > 0) {
+        items.push({
+          id: oferta.id,
+          valor: oferta.valor,
+          quantidade: computed.draft,
+        });
+      }
     });
     return items;
-  }, [selectedByGroup, composicao, ofertas]);
+  }, [ofertas, getVariantComputed]);
 
   const valorAtual = selectedItems.reduce((acc, item) => {
     return acc + (item.valor * item.quantidade);
@@ -142,63 +131,12 @@ export default function AdminMercadoComposicaoLote() {
   const saldo = ciclo.valorMaximo - valorAtual;
   const totalItens = selectedItems.reduce((acc, item) => acc + item.quantidade, 0);
 
-  const handleToggleVariant = (groupKey: string, variantId: string) => {
-    setSelectedByGroup(prev => {
-      const newMap = new Map(prev);
-      const currentSet = newMap.get(groupKey) || new Set();
-      const newSet = new Set(currentSet);
-      
-      if (newSet.has(variantId)) {
-        newSet.delete(variantId);
-        setComposicao(prevComp => {
-          const newComp = new Map(prevComp);
-          newComp.delete(variantId);
-          return newComp;
-        });
-      } else {
-        newSet.add(variantId);
-      }
-      
-      if (newSet.size === 0) {
-        newMap.delete(groupKey);
-      } else {
-        newMap.set(groupKey, newSet);
-      }
-      return newMap;
-    });
-  };
-
-  const handleClearGroup = (groupKey: string) => {
-    const variantIds = selectedByGroup.get(groupKey);
-    if (variantIds) {
-      setSelectedByGroup(prev => {
-        const newMap = new Map(prev);
-        newMap.delete(groupKey);
-        return newMap;
-      });
-      setComposicao(prev => {
-        const newMap = new Map(prev);
-        variantIds.forEach(id => newMap.delete(id));
-        return newMap;
-      });
-    }
-  };
-
   const handleQuantidadeChange = (variantId: string, quantidade: number) => {
-    const oferta = ofertas.find(o => o.id === variantId);
-    if (!oferta) return;
-    
-    const validQuantity = Math.max(0, Math.min(quantidade, oferta.quantidadeOfertada));
-    
-    setComposicao(prev => {
-      const newMap = new Map(prev);
-      if (validQuantity === 0) {
-        newMap.delete(variantId);
-      } else {
-        newMap.set(variantId, validQuantity);
-      }
-      return newMap;
-    });
+    setDraft(variantId, quantidade);
+  };
+
+  const handleRemoveItem = (variantId: string) => {
+    setDraft(variantId, 0);
   };
 
   const toggleGroupExpansion = (groupKey: string) => {
@@ -250,13 +188,6 @@ export default function AdminMercadoComposicaoLote() {
     setShowConfirmModal(false);
     
     setTimeout(() => {
-      const storageKey = `composicao-lote-ciclo-${cicloId}-mercado-${mercadoId}`;
-      localStorage.setItem(storageKey, JSON.stringify({
-        selectedByGroup: Array.from(selectedByGroup.entries()),
-        composicao: Array.from(composicao.entries()),
-        timestamp: new Date().toISOString(),
-      }));
-
       setIsLoading(false);
       
       const mensagem = excedeuValor 
@@ -403,8 +334,9 @@ export default function AdminMercadoComposicaoLote() {
                     const oferta = ofertas.find(o => o.id === item.id);
                     if (!oferta) return null;
                     
-                    const valorAcumulado = item.valor * item.quantidade;
-                    const disponiveis = oferta.quantidadeOfertada - item.quantidade;
+                    const computed = getVariantComputed(item.id);
+                    const valorAcumulado = computed.valorAcum;
+                    const disponiveis = computed.disponivel;
                     
                     return (
                       <TableRow key={item.id}>
@@ -413,16 +345,7 @@ export default function AdminMercadoComposicaoLote() {
                         <TableCell className="text-right">{formatBRL(oferta.valor)}</TableCell>
                         <TableCell>{oferta.fornecedor}</TableCell>
                         <TableCell className="text-right">{oferta.quantidadeOfertada}</TableCell>
-                        <TableCell className="text-right">
-                          <Input
-                            type="number"
-                            min={0}
-                            max={oferta.quantidadeOfertada}
-                            value={item.quantidade}
-                            onChange={(e) => handleQuantidadeChange(item.id, Number(e.target.value))}
-                            className="w-[60px] text-center mx-auto"
-                          />
-                        </TableCell>
+                        <TableCell className="text-right">{item.quantidade}</TableCell>
                         <TableCell className="text-right font-medium">
                           {formatBRL(valorAcumulado)}
                         </TableCell>
@@ -435,14 +358,7 @@ export default function AdminMercadoComposicaoLote() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => {
-                              const group = productGroups.find(g => 
-                                g.variantes.some(v => v.id === item.id)
-                              );
-                              if (group) {
-                                handleToggleVariant(group.produto_base, item.id);
-                              }
-                            }}
+                            onClick={() => handleRemoveItem(item.id)}
                             className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             <Trash2 className="h-4 w-4" />
