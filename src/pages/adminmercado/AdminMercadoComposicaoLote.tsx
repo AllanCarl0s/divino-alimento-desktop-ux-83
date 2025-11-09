@@ -218,11 +218,7 @@ export default function AdminMercadoComposicaoLote() {
   };
 
   const handlePublicarClick = () => {
-    if (excedeuValor) {
-      setShowConfirmModal(true);
-    } else {
-      executarPublicacao();
-    }
+    executarPublicacao();
   };
 
   const executarPublicacao = () => {
@@ -255,14 +251,10 @@ export default function AdminMercadoComposicaoLote() {
 
       setIsLoading(false);
       
-      const mensagem = excedeuValor 
-        ? 'Composição lote salva (acima do valor máximo)'
-        : 'Composição lote salva com sucesso';
-      
       toast({
-        title: mensagem,
+        title: 'Composição lote salva com sucesso',
         description: `${selectedItems.length} produto(s), ${totalItens} itens, ${formatBRL(valorAtual)}`,
-        className: excedeuValor ? 'bg-yellow-600 text-white border-yellow-700' : 'bg-green-600 text-white border-green-700',
+        className: 'bg-green-600 text-white border-green-700',
         duration: 5000,
       });
 
@@ -309,21 +301,7 @@ export default function AdminMercadoComposicaoLote() {
                   Tipo: {ciclo.tipo} • Mercado: {ciclo.mercado}
                 </p>
               </div>
-              <div className="flex gap-6">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Valor Máximo</p>
-                        <p className="text-2xl font-bold">{formatBRL(ciclo.valorMaximo)}</p>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Orçamento máximo aprovado para este mercado</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                
+              <div>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -337,37 +315,10 @@ export default function AdminMercadoComposicaoLote() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Saldo</p>
-                        <p className={`text-2xl font-bold ${saldo >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {formatBRL(saldo)}
-                        </p>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Valor Máximo – Valor Atual</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
               </div>
             </div>
           </CardHeader>
         </Card>
-
-        {/* Alerta quando excede valor */}
-        {excedeuValor && (
-          <Alert variant="destructive" className="border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription className="text-sm font-medium">
-              ⚠️ Valor atual excede o valor máximo permitido para este mercado.
-            </AlertDescription>
-          </Alert>
-        )}
-
         {/* Produtos Selecionados */}
         {selectedItems.length > 0 && (
           <Card>
@@ -530,25 +481,6 @@ export default function AdminMercadoComposicaoLote() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Modal de Confirmação */}
-      <AlertDialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Valor acima do máximo permitido</AlertDialogTitle>
-            <AlertDialogDescription>
-              O valor atual ({formatBRL(valorAtual)}) excede o valor máximo ({formatBRL(ciclo.valorMaximo)}).
-              Deseja prosseguir mesmo assim?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={executarPublicacao}>
-              Continuar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </ResponsiveLayout>
   );
 }
