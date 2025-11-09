@@ -40,13 +40,26 @@ export function ProductGroupItem({
   const [agriculturaFilter, setAgriculturaFilter] = useState<Set<string>>(new Set());
   const { getVariantComputed, setDraft } = useCompositionStore();
   
-  // Calcular quantos estão selecionados (draft > 0)
-  const selectedCount = useMemo(() => {
-    return group.variantes.filter(v => {
-      const computed = getVariantComputed(v.id);
-      return computed.draft > 0;
-    }).length;
-  }, [group.variantes, getVariantComputed]);
+  // Estado local para controlar checkboxes
+  const [selectedVariants, setSelectedVariants] = useState<Set<string>>(new Set());
+  
+  // Calcular quantos estão selecionados
+  const selectedCount = selectedVariants.size;
+  
+  const handleToggleVariant = (variantId: string) => {
+    setSelectedVariants(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(variantId)) {
+        newSet.delete(variantId);
+        // Ao desmarcar, zera o draft
+        setDraft(variantId, 0);
+        onQuantidadeChange(variantId, 0);
+      } else {
+        newSet.add(variantId);
+      }
+      return newSet;
+    });
+  };
 
   const toggleCertificacao = (value: string) => {
     const newSet = new Set(certificacaoFilter);
@@ -75,10 +88,11 @@ export function ProductGroupItem({
 
   const handleClearAll = () => {
     clearFilters();
-    // Limpar todos os drafts do grupo
+    // Limpar todos os drafts e seleções do grupo
     group.variantes.forEach(v => {
       setDraft(v.id, 0);
     });
+    setSelectedVariants(new Set());
   };
 
   // Filter variants based on selected filters
@@ -216,15 +230,15 @@ export function ProductGroupItem({
           <div className="p-4 pt-0">
             <div className="space-y-2 mt-4">
               {/* Header - Desktop */}
-              <div className="hidden md:grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
-                <div className="col-span-1">Sel.</div>
-                <div className="col-span-2">Unidade</div>
-                <div className="col-span-2">Fornecedor</div>
-                <div className="col-span-1 text-right">Preço Unit.</div>
-                <div className="col-span-1 text-right" aria-label="Quantidade ofertada">Ofertados</div>
-                <div className="col-span-1 text-right" aria-label="Quantidade disponível">Disponível</div>
-                <div className="col-span-2">Pedidos</div>
-                <div className="col-span-2 text-right" aria-label="Valor acumulado">Valor acumulado</div>
+              <div className="hidden md:grid grid-cols-[auto_1fr_1fr_auto_auto_auto_1fr_auto] gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
+                <div className="w-10">Sel.</div>
+                <div>Unidade</div>
+                <div>Fornecedor</div>
+                <div className="text-right">Preço Unit.</div>
+                <div className="text-right w-24" aria-label="Quantidade ofertada">Ofertados</div>
+                <div className="text-right w-28" aria-label="Quantidade disponível">Disponível</div>
+                <div className="w-32">Pedidos</div>
+                <div className="text-right w-36" aria-label="Valor acumulado">Valor acumulado</div>
               </div>
 
               {/* Variantes */}
@@ -234,6 +248,7 @@ export function ProductGroupItem({
                 </div>
               ) : (
                 filteredVariantes.map((variante) => {
+                const isSelected = selectedVariants.has(variante.id);
                 const computed = getVariantComputed(variante.id);
                 const { draft, disponivel, valorAcum } = computed;
                 const maxAllowed = disponivel;
@@ -243,23 +258,32 @@ export function ProductGroupItem({
                     {/* Desktop View */}
                     <div
                       key={variante.id}
-                      className={`hidden md:grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
-                        draft > 0 ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
+                      className={`hidden md:grid grid-cols-[auto_1fr_1fr_auto_auto_auto_1fr_auto] gap-4 items-center py-3 px-2 rounded transition-colors ${
+                        isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
                       }`}
                     >
-                      <div className="col-span-2">
+                      <div className="w-10">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleToggleVariant(variante.id)}
+                          className="h-4 w-4 rounded border-gray-300 cursor-pointer"
+                          disabled={variante.quantidadeOfertada === 0}
+                        />
+                      </div>
+                      <div>
                         {variante.unidade}
                       </div>
-                      <div className="col-span-2 truncate">
+                      <div className="truncate">
                         {variante.fornecedor}
                       </div>
-                      <div className="col-span-1 text-right">
+                      <div className="text-right">
                         {formatBRL(variante.valor)}
                       </div>
-                      <div className="col-span-1 text-right">
+                      <div className="text-right w-24">
                         <span className="text-sm">{variante.quantidadeOfertada}</span>
                       </div>
-                      <div className="col-span-1 text-right" title="Quantidade disponível considerando alocações anteriores deste ciclo.">
+                      <div className="text-right w-28" title="Quantidade disponível considerando alocações anteriores deste ciclo.">
                         <div className="flex items-center justify-end gap-2">
                           <span className="text-sm">{disponivel}</span>
                           {disponivel > 0 ? (
@@ -273,7 +297,7 @@ export function ProductGroupItem({
                           )}
                         </div>
                       </div>
-                      <div className="col-span-2">
+                      <div className="w-32">
                         <Input
                           type="number"
                           value={draft}
@@ -285,9 +309,10 @@ export function ProductGroupItem({
                           className="w-full"
                           min="0"
                           max={maxAllowed}
+                          disabled={!isSelected}
                         />
                       </div>
-                      <div className="col-span-2 text-right" title="Soma dos valores já alocados neste ciclo para esta variante.">
+                      <div className="text-right w-36" title="Soma dos valores já alocados neste ciclo para esta variante.">
                         <span className={`text-sm ${valorAcum > 0 ? 'font-medium' : ''}`}>
                           {formatBRL(valorAcum)}
                         </span>
@@ -298,7 +323,7 @@ export function ProductGroupItem({
                     <div
                       key={`${variante.id}-mobile`}
                       className={`md:hidden p-4 rounded-lg space-y-3 ${
-                        draft > 0 ? 'bg-primary/5 border border-primary/20' : 'bg-muted/30'
+                        isSelected ? 'bg-primary/5 border border-primary/20' : 'bg-muted/30'
                       }`}
                     >
                       {/* Linha 1: Produto • Fornecedor */}
@@ -308,6 +333,13 @@ export function ProductGroupItem({
                             {variante.unidade} • {variante.fornecedor}
                           </div>
                         </div>
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleToggleVariant(variante.id)}
+                          className="h-4 w-4 rounded border-gray-300 cursor-pointer"
+                          disabled={variante.quantidadeOfertada === 0}
+                        />
                       </div>
 
                       {/* Linha 2: Unidade | Preço Unit. */}
@@ -360,6 +392,7 @@ export function ProductGroupItem({
                             className="w-full mt-1"
                             min="0"
                             max={maxAllowed}
+                            disabled={!isSelected}
                           />
                         </div>
                         <div>
