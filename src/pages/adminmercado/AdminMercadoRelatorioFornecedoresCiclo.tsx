@@ -3,17 +3,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
-import { ArrowLeft, FileDown, Truck } from 'lucide-react';
+import { ArrowLeft, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Mock data - ciclos do administrador de mercado logado
 const ciclosDisponiveis = [
-  { id: 1, nome: "1º Ciclo de Outubro", status: "Finalizado", dataEntrega: "15/10/2024", horaEntrega: "08:00", localEntrega: "Mercado Central - Praça Central, 123" },
-  { id: 2, nome: "2º Ciclo de Outubro", status: "Finalizado", dataEntrega: "30/10/2024", horaEntrega: "08:00", localEntrega: "Mercado Central - Praça Central, 123" },
-  { id: 3, nome: "1º Ciclo de Novembro", status: "Ativo", dataEntrega: "15/11/2024", horaEntrega: "08:00", localEntrega: "Mercado Central - Praça Central, 123" },
+  { id: 1, nome: "1º Ciclo de Outubro", status: "Finalizado" as const, dataEntrega: "15/10/2024", mercado: "Mercado Central" },
+  { id: 2, nome: "2º Ciclo de Outubro", status: "Finalizado" as const, dataEntrega: "30/10/2024", mercado: "Mercado Central" },
+  { id: 3, nome: "1º Ciclo de Novembro", status: "Ativo" as const, dataEntrega: "15/11/2024", mercado: "Mercado Central" },
 ].sort((a, b) => {
   const [diaA, mesA, anoA] = a.dataEntrega.split('/').map(Number);
   const [diaB, mesB, anoB] = b.dataEntrega.split('/').map(Number);
@@ -24,6 +26,7 @@ const ciclosDisponiveis = [
 
 const AdminMercadoRelatorioFornecedoresCiclo = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [selectedCiclos, setSelectedCiclos] = useState<number[]>([]);
 
   const handleCicloToggle = (cicloId: number) => {
@@ -41,57 +44,6 @@ const AdminMercadoRelatorioFornecedoresCiclo = () => {
     }
     
     navigate(`/adminmercado/relatorio-fornecedores/resultado?ciclos=${selectedCiclos.join(',')}`);
-  };
-
-  const handleExportCSV = async () => {
-    if (selectedCiclos.length === 0) {
-      toast.error('Selecione pelo menos um ciclo');
-      return;
-    }
-    
-    try {
-      const selectedCiclosData = ciclosDisponiveis.filter(c => selectedCiclos.includes(c.id));
-      
-      // Mock data para export - em produção viria da API
-      const mockEntregas = [
-        { ciclo: '1º Ciclo de Outubro', fornecedor: 'Fazenda Verde', produto: 'Tomate', unidade_medida: 'kg', valor_unitario: 5.50, quantidade_entregue: 120, valor_total: 660.00 },
-        { ciclo: '1º Ciclo de Outubro', fornecedor: 'Sítio do Sol', produto: 'Alface', unidade_medida: 'unidade', valor_unitario: 2.00, quantidade_entregue: 200, valor_total: 400.00 }
-      ];
-      
-      const { exportFornecedoresCSV } = await import('@/utils/export');
-      exportFornecedoresCSV(mockEntregas, selectedCiclosData);
-      toast.success('Download do CSV concluído');
-    } catch (error) {
-      toast.error('Erro ao exportar CSV');
-    }
-  };
-
-  const handleExportPDF = async () => {
-    if (selectedCiclos.length === 0) {
-      toast.error('Selecione pelo menos um ciclo');
-      return;
-    }
-    
-    try {
-      const selectedCiclosData = ciclosDisponiveis.filter(c => selectedCiclos.includes(c.id));
-      
-      // Mock data para export - em produção viria da API
-      const mockEntregas = [
-        { ciclo: '1º Ciclo de Outubro', fornecedor: 'Fazenda Verde', produto: 'Tomate', unidade_medida: 'kg', valor_unitario: 5.50, quantidade_entregue: 120, valor_total: 660.00 },
-        { ciclo: '1º Ciclo de Outubro', fornecedor: 'Sítio do Sol', produto: 'Alface', unidade_medida: 'unidade', valor_unitario: 2.00, quantidade_entregue: 200, valor_total: 400.00 }
-      ];
-      
-      const resumo = {
-        totalQuantidade: 320,
-        valorTotal: 1060.00
-      };
-      
-      const { exportFornecedoresPDF } = await import('@/utils/export');
-      exportFornecedoresPDF(mockEntregas, selectedCiclosData, resumo);
-      toast.success('Download do PDF concluído');
-    } catch (error) {
-      toast.error('Erro ao exportar PDF');
-    }
   };
 
   return (
@@ -125,52 +77,93 @@ const AdminMercadoRelatorioFornecedoresCiclo = () => {
             <CardDescription>Marque os ciclos que deseja incluir no relatório</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {ciclosDisponiveis.map(ciclo => (
-                <div key={ciclo.id} className="flex items-center gap-4 p-4 border rounded-lg hover:bg-accent/50 transition-colors">
-                  <Checkbox
-                    id={`ciclo-${ciclo.id}`}
-                    checked={selectedCiclos.includes(ciclo.id)}
-                    onCheckedChange={() => handleCicloToggle(ciclo.id)}
-                  />
-                  <label
-                    htmlFor={`ciclo-${ciclo.id}`}
-                    className="flex-1 cursor-pointer flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="font-medium">{ciclo.nome}</span>
-                      <Badge variant={ciclo.status === 'Ativo' ? 'success' : 'secondary'}>
-                        {ciclo.status}
-                      </Badge>
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Entrega: {ciclo.dataEntrega}
-                    </div>
-                  </label>
-                </div>
-              ))}
-            </div>
+            {!isMobile ? (
+              /* Visualização em Tabela para Desktop */
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12"></TableHead>
+                      <TableHead>Ciclo</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Mercado</TableHead>
+                      <TableHead>Data de Entrega</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {ciclosDisponiveis.map(ciclo => (
+                      <TableRow key={ciclo.id} className="cursor-pointer hover:bg-accent/50" onClick={() => handleCicloToggle(ciclo.id)}>
+                        <TableCell>
+                          <Checkbox
+                            id={`ciclo-${ciclo.id}`}
+                            checked={selectedCiclos.includes(ciclo.id)}
+                            onCheckedChange={() => handleCicloToggle(ciclo.id)}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">{ciclo.nome}</TableCell>
+                        <TableCell>
+                          <Badge variant={ciclo.status === 'Ativo' ? 'default' : 'secondary'}>
+                            {ciclo.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{ciclo.mercado}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-muted-foreground" />
+                            {ciclo.dataEntrega}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              /* Visualização em Cards para Mobile */
+              <div className="space-y-3">
+                {ciclosDisponiveis.map(ciclo => (
+                  <Card key={ciclo.id} className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => handleCicloToggle(ciclo.id)}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          id={`ciclo-mobile-${ciclo.id}`}
+                          checked={selectedCiclos.includes(ciclo.id)}
+                          onCheckedChange={() => handleCicloToggle(ciclo.id)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="mt-1"
+                        />
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <span className="font-medium">{ciclo.nome}</span>
+                            <Badge variant={ciclo.status === 'Ativo' ? 'default' : 'secondary'} className="shrink-0">
+                              {ciclo.status}
+                            </Badge>
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">Mercado:</span>
+                              <span>{ciclo.mercado}</span>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Calendar className="w-4 h-4" />
+                              <span>Entrega: {ciclo.dataEntrega}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
 
-            <div className="flex flex-wrap gap-3 mt-6">
+            <div className="mt-6">
               <Button 
                 onClick={handleMostrarRelatorio}
-                className="bg-primary hover:bg-primary/90"
+                className="w-full sm:w-auto"
               >
                 Mostrar Relatório
-              </Button>
-              <Button 
-                onClick={handleExportCSV}
-                variant="outline"
-              >
-                <FileDown className="w-4 h-4 mr-2" />
-                Baixar CSV
-              </Button>
-              <Button 
-                onClick={handleExportPDF}
-                variant="outline"
-              >
-                <FileDown className="w-4 h-4 mr-2" />
-                Baixar PDF
               </Button>
             </div>
           </CardContent>
