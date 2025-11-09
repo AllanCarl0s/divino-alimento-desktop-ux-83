@@ -493,7 +493,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                         onClick={handlePublicarClick}
                         disabled={!podePublicar || isLoading}
                       >
-                        {isLoading ? 'Publicando...' : 'Publicar Venda Direta'}
+                        {isLoading ? 'Salvando...' : 'Salvar Composição'}
                       </Button>
                     </span>
                   </TooltipTrigger>
