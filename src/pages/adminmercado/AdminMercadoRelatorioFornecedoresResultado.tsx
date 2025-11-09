@@ -126,7 +126,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
     <ResponsiveLayout 
       leftHeaderContent={
         <button
-          onClick={() => navigate('/adminmercado/relatorios/fornecedores-ciclo')}
+          onClick={() => navigate('/adminmercado/relatorios/fornecedores-ciclo', { replace: true })}
           className="flex items-center text-primary-foreground hover:opacity-80 transition-opacity focus-ring p-2 -ml-2"
           aria-label="Voltar"
         >
@@ -379,7 +379,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
         <div className="flex justify-start">
           <Button
             variant="outline"
-            onClick={() => navigate('/adminmercado/relatorios/fornecedores-ciclo')}
+            onClick={() => navigate('/adminmercado/relatorios/fornecedores-ciclo', { replace: true })}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar

@@ -131,7 +131,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={() => navigate('/adminmercado/relatorios/consumidores-ciclo')} 
+          onClick={() => navigate('/adminmercado/relatorios/consumidores-ciclo', { replace: true })} 
           className="text-white hover:bg-white/20"
         >
           <ArrowLeft className="h-5 w-5" />
