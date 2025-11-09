@@ -504,10 +504,6 @@ export default function AdminMercadoComposicaoLote() {
                   group={group}
                   isExpanded={expandedGroups.has(group.produto_base)}
                   onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
-                  selectedVariantIds={selectedByGroup.get(group.produto_base) || new Set()}
-                  onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
-                  onClear={() => handleClearGroup(group.produto_base)}
-                  quantidades={composicao}
                   onQuantidadeChange={handleQuantidadeChange}
                 />
               ))}

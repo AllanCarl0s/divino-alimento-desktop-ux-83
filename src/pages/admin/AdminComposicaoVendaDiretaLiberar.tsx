@@ -503,23 +503,15 @@ export default function AdminComposicaoVendaDiretaLiberar() {
               </div>
             ) : (
               <div className="space-y-3">
-                {productGroups.map((group) => {
-                  const selectedVariantIds = selectedByGroup.get(group.produto_base) || new Set();
-
-                  return (
-                    <ProductGroupItem
-                      key={group.produto_base}
-                      group={group}
-                      selectedVariantIds={selectedVariantIds}
-                      quantidades={composicao}
-                      onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
-                      onQuantidadeChange={handleQuantidadeChange}
-                      onClear={() => handleClearGroup(group.produto_base)}
-                      isExpanded={expandedGroups.has(group.produto_base)}
-                      onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
-                    />
-                  );
-                })}
+                {productGroups.map((group) => (
+                  <ProductGroupItem
+                    key={group.produto_base}
+                    group={group}
+                    onQuantidadeChange={handleQuantidadeChange}
+                    isExpanded={expandedGroups.has(group.produto_base)}
+                    onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
+                  />
+                ))}
               </div>
             )}
 

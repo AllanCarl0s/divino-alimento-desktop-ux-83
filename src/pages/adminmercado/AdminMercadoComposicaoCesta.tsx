@@ -26,7 +26,7 @@ export default function AdminMercadoComposicaoCesta() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
-  const { initialize, getVariantComputed } = useCompositionStore();
+  const { initialize, setDraft, getVariantComputed, clearDraft } = useCompositionStore();
   
   // selectedByGroup: groupKey -> Set of variantIds
   const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
@@ -128,93 +128,35 @@ export default function AdminMercadoComposicaoCesta() {
     return filterProducts(groups, busca);
   }, [ofertas, busca]);
 
-  // Calcular itens selecionados usando o store
+  // Calcular itens selecionados usando o store - apenas draft > 0
   const selectedItems = useMemo(() => {
-    const items: Array<{ id: string; valor: number; quantidade: number; prev: number }> = [];
-    selectedByGroup.forEach((variantIds) => {
-      variantIds.forEach(variantId => {
-        const computed = getVariantComputed(variantId);
-        if (computed.draft > 0 || computed.prev > 0) {
-          const oferta = ofertas.find(o => o.id === variantId);
-          if (oferta) {
-            items.push({
-              id: variantId,
-              valor: oferta.valor,
-              quantidade: computed.draft,
-              prev: computed.prev,
-            });
-          }
-        }
-      });
+    const items: Array<{ id: string; valor: number; quantidade: number }> = [];
+    ofertas.forEach(oferta => {
+      const computed = getVariantComputed(oferta.id);
+      if (computed.draft > 0) {
+        items.push({
+          id: oferta.id,
+          valor: oferta.valor,
+          quantidade: computed.draft,
+        });
+      }
     });
     return items;
-  }, [selectedByGroup, ofertas, getVariantComputed]);
+  }, [ofertas, getVariantComputed]);
 
   // Cálculos reativos usando os dados do store
   const valorAtual = selectedItems.reduce((acc, item) => {
-    return acc + (item.valor * (item.prev + item.quantidade));
+    return acc + (item.valor * item.quantidade);
   }, 0);
   
   const saldo = ciclo.valorMaximo - valorAtual;
 
-  const handleToggleVariant = (groupKey: string, variantId: string) => {
-    setSelectedByGroup(prev => {
-      const newMap = new Map(prev);
-      const currentSet = newMap.get(groupKey) || new Set();
-      const newSet = new Set(currentSet);
-      
-      if (newSet.has(variantId)) {
-        newSet.delete(variantId);
-        // Remove quantidade também
-        setComposicao(prevComp => {
-          const newComp = new Map(prevComp);
-          newComp.delete(variantId);
-          return newComp;
-        });
-      } else {
-        newSet.add(variantId);
-      }
-      
-      if (newSet.size === 0) {
-        newMap.delete(groupKey);
-      } else {
-        newMap.set(groupKey, newSet);
-      }
-      return newMap;
-    });
-  };
-
-  const handleClearGroup = (groupKey: string) => {
-    const variantIds = selectedByGroup.get(groupKey);
-    if (variantIds) {
-      setSelectedByGroup(prev => {
-        const newMap = new Map(prev);
-        newMap.delete(groupKey);
-        return newMap;
-      });
-      setComposicao(prev => {
-        const newMap = new Map(prev);
-        variantIds.forEach(id => newMap.delete(id));
-        return newMap;
-      });
-    }
-  };
-
   const handleQuantidadeChange = (variantId: string, quantidade: number) => {
-    const oferta = ofertas.find(o => o.id === variantId);
-    if (!oferta) return;
-    
-    const validQuantity = Math.max(0, Math.min(quantidade, oferta.quantidadeOfertada));
-    
-    setComposicao(prev => {
-      const newMap = new Map(prev);
-      if (validQuantity === 0) {
-        newMap.delete(variantId);
-      } else {
-        newMap.set(variantId, validQuantity);
-      }
-      return newMap;
-    });
+    setDraft(variantId, quantidade);
+  };
+
+  const handleRemoveItem = (variantId: string) => {
+    setDraft(variantId, 0);
   };
 
   const toggleGroupExpansion = (groupKey: string) => {
@@ -393,10 +335,7 @@ export default function AdminMercadoComposicaoCesta() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => {
-                              const groupKey = oferta.produto_base;
-                              handleClearGroup(groupKey);
-                            }}
+                            onClick={() => handleRemoveItem(item.id)}
                             className="h-8 w-8 mx-auto transition-opacity hover:opacity-70"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -458,23 +397,15 @@ export default function AdminMercadoComposicaoCesta() {
               </div>
             ) : (
               <div className="space-y-3">
-                {productGroups.map((group) => {
-                  const selectedVariantIds = selectedByGroup.get(group.produto_base) || new Set();
-
-                  return (
-                    <ProductGroupItem
-                      key={group.produto_base}
-                      group={group}
-                      selectedVariantIds={selectedVariantIds}
-                      quantidades={composicao}
-                      onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
-                      onQuantidadeChange={handleQuantidadeChange}
-                      onClear={() => handleClearGroup(group.produto_base)}
-                      isExpanded={expandedGroups.has(group.produto_base)}
-                      onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
-                    />
-                  );
-                })}
+                {productGroups.map((group) => (
+                  <ProductGroupItem
+                    key={group.produto_base}
+                    group={group}
+                    onQuantidadeChange={handleQuantidadeChange}
+                    isExpanded={expandedGroups.has(group.produto_base)}
+                    onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
+                  />
+                ))}
               </div>
             )}
 

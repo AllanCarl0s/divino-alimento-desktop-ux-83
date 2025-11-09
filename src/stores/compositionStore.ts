@@ -42,18 +42,16 @@ export const useCompositionStore = create<CompositionState>((set, get) => ({
   initialize: (variants) => {
     const offered: Record<string, number> = {};
     const price: Record<string, number> = {};
-    const committed: Record<string, number> = {};
     
     variants.forEach(v => {
       offered[v.id] = v.quantidadeOfertada;
       price[v.id] = v.valor;
-      committed[v.id] = v.pedidosAcumulados || 0;
     });
     
     set({
       offeredByVariantId: offered,
       priceByVariantId: price,
-      committedPrevByVariantId: committed,
+      committedPrevByVariantId: {}, // Sempre inicia vazio
       currentDraftByVariantId: {},
     });
   },

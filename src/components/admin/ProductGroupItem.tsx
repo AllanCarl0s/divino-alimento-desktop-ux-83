@@ -2,8 +2,6 @@ import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ProductGroup, Oferta } from '@/utils/product-grouping';
@@ -15,11 +13,7 @@ import { useCompositionStore } from '@/stores/compositionStore';
 
 interface ProductGroupItemProps {
   group: ProductGroup;
-  selectedVariantIds: Set<string>;
-  quantidades: Map<string, number>;
-  onToggleVariant: (variantId: string) => void;
   onQuantidadeChange: (variantId: string, quantidade: number) => void;
-  onClear: () => void;
   isExpanded: boolean;
   onToggleExpand: () => void;
 }
@@ -37,11 +31,7 @@ const agriculturaOptions: FilterOption[] = [
 
 export function ProductGroupItem({
   group,
-  selectedVariantIds,
-  quantidades,
-  onToggleVariant,
   onQuantidadeChange,
-  onClear,
   isExpanded,
   onToggleExpand,
 }: ProductGroupItemProps) {
@@ -49,6 +39,14 @@ export function ProductGroupItem({
   const [certificacaoFilter, setCertificacaoFilter] = useState<Set<string>>(new Set());
   const [agriculturaFilter, setAgriculturaFilter] = useState<Set<string>>(new Set());
   const { getVariantComputed, setDraft } = useCompositionStore();
+  
+  // Calcular quantos estão selecionados (draft > 0)
+  const selectedCount = useMemo(() => {
+    return group.variantes.filter(v => {
+      const computed = getVariantComputed(v.id);
+      return computed.draft > 0;
+    }).length;
+  }, [group.variantes, getVariantComputed]);
 
   const toggleCertificacao = (value: string) => {
     const newSet = new Set(certificacaoFilter);
@@ -77,7 +75,10 @@ export function ProductGroupItem({
 
   const handleClearAll = () => {
     clearFilters();
-    onClear();
+    // Limpar todos os drafts do grupo
+    group.variantes.forEach(v => {
+      setDraft(v.id, 0);
+    });
   };
 
   // Filter variants based on selected filters
@@ -108,7 +109,9 @@ export function ProductGroupItem({
     const maisBarato = filteredVariantes.reduce((prev, current) => 
       current.valor < prev.valor ? current : prev
     );
-    onToggleVariant(maisBarato.id);
+    // Define quantidade padrão de 1
+    setDraft(maisBarato.id, 1);
+    onQuantidadeChange(maisBarato.id, 1);
   };
 
   const totalActiveFilters = certificacaoFilter.size + agriculturaFilter.size;
@@ -200,7 +203,7 @@ export function ProductGroupItem({
               variant="outline"
               size="sm"
               onClick={handleClearAll}
-              disabled={selectedVariantIds.size === 0 && totalActiveFilters === 0}
+              disabled={selectedCount === 0 && totalActiveFilters === 0}
               className="h-9 text-xs"
             >
               Limpar
@@ -231,10 +234,9 @@ export function ProductGroupItem({
                 </div>
               ) : (
                 filteredVariantes.map((variante) => {
-                const isSelected = selectedVariantIds.has(variante.id);
                 const computed = getVariantComputed(variante.id);
                 const { draft, disponivel, valorAcum } = computed;
-                const maxAllowed = Math.max(0, variante.quantidadeOfertada - computed.prev);
+                const maxAllowed = disponivel;
 
                 return (
                   <>
@@ -242,31 +244,17 @@ export function ProductGroupItem({
                     <div
                       key={variante.id}
                       className={`hidden md:grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
-                        isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
+                        draft > 0 ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
                       }`}
                     >
-                      <div className="col-span-1">
-                        <Checkbox
-                          id={variante.id}
-                          checked={isSelected}
-                          onCheckedChange={() => onToggleVariant(variante.id)}
-                          disabled={variante.quantidadeOfertada === 0}
-                        />
-                      </div>
                       <div className="col-span-2">
-                        <Label htmlFor={variante.id} className="cursor-pointer">
-                          {variante.unidade}
-                        </Label>
+                        {variante.unidade}
                       </div>
-                      <div className="col-span-2">
-                        <Label htmlFor={variante.id} className="cursor-pointer truncate block">
-                          {variante.fornecedor}
-                        </Label>
+                      <div className="col-span-2 truncate">
+                        {variante.fornecedor}
                       </div>
                       <div className="col-span-1 text-right">
-                        <Label htmlFor={variante.id} className="cursor-pointer">
-                          {formatBRL(variante.valor)}
-                        </Label>
+                        {formatBRL(variante.valor)}
                       </div>
                       <div className="col-span-1 text-right">
                         <span className="text-sm">{variante.quantidadeOfertada}</span>
@@ -286,22 +274,18 @@ export function ProductGroupItem({
                         </div>
                       </div>
                       <div className="col-span-2">
-                        {isSelected ? (
-                          <Input
-                            type="number"
-                            value={draft}
-                            onChange={(e) => {
-                              const value = parseInt(e.target.value) || 0;
-                              setDraft(variante.id, value);
-                              onQuantidadeChange(variante.id, value);
-                            }}
-                            className="w-full"
-                            min="0"
-                            max={maxAllowed}
-                          />
-                        ) : (
-                          <span className="text-sm text-muted-foreground">-</span>
-                        )}
+                        <Input
+                          type="number"
+                          value={draft}
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value) || 0;
+                            setDraft(variante.id, value);
+                            onQuantidadeChange(variante.id, value);
+                          }}
+                          className="w-full"
+                          min="0"
+                          max={maxAllowed}
+                        />
                       </div>
                       <div className="col-span-2 text-right" title="Soma dos valores já alocados neste ciclo para esta variante.">
                         <span className={`text-sm ${valorAcum > 0 ? 'font-medium' : ''}`}>
@@ -314,7 +298,7 @@ export function ProductGroupItem({
                     <div
                       key={`${variante.id}-mobile`}
                       className={`md:hidden p-4 rounded-lg space-y-3 ${
-                        isSelected ? 'bg-primary/5 border border-primary/20' : 'bg-muted/30'
+                        draft > 0 ? 'bg-primary/5 border border-primary/20' : 'bg-muted/30'
                       }`}
                     >
                       {/* Linha 1: Produto • Fornecedor */}
@@ -324,12 +308,6 @@ export function ProductGroupItem({
                             {variante.unidade} • {variante.fornecedor}
                           </div>
                         </div>
-                        <Checkbox
-                          id={`${variante.id}-mobile`}
-                          checked={isSelected}
-                          onCheckedChange={() => onToggleVariant(variante.id)}
-                          disabled={variante.quantidadeOfertada === 0}
-                        />
                       </div>
 
                       {/* Linha 2: Unidade | Preço Unit. */}
@@ -371,22 +349,18 @@ export function ProductGroupItem({
                       <div className="grid grid-cols-2 gap-3 text-sm">
                         <div>
                           <span className="text-muted-foreground text-xs">Pedidos</span>
-                          {isSelected ? (
-                            <Input
-                              type="number"
-                              value={draft}
-                              onChange={(e) => {
-                                const value = parseInt(e.target.value) || 0;
-                                setDraft(variante.id, value);
-                                onQuantidadeChange(variante.id, value);
-                              }}
-                              className="w-full mt-1"
-                              min="0"
-                              max={maxAllowed}
-                            />
-                          ) : (
-                            <div className="text-muted-foreground">-</div>
-                          )}
+                          <Input
+                            type="number"
+                            value={draft}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value) || 0;
+                              setDraft(variante.id, value);
+                              onQuantidadeChange(variante.id, value);
+                            }}
+                            className="w-full mt-1"
+                            min="0"
+                            max={maxAllowed}
+                          />
                         </div>
                         <div>
                           <span className="text-muted-foreground text-xs">Valor acumulado</span>
