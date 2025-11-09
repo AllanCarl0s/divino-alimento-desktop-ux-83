@@ -238,11 +238,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
   };
 
   const handlePublicarClick = () => {
-    if (excedeuValor) {
-      setShowConfirmModal(true);
-    } else {
-      executarPublicacao();
-    }
+    executarPublicacao();
   };
 
   const executarPublicacao = () => {
@@ -258,9 +254,13 @@ export default function AdminComposicaoVendaDiretaLiberar() {
     setTimeout(() => {
       setIsLoading(false);
       
+      const totalItens = selectedItems.reduce((acc, item) => acc + item.quantidade, 0);
+      
       toast({
-        title: "Venda direta publicada com sucesso.",
+        title: "Venda direta publicada com sucesso",
+        description: `${selectedItems.length} produto(s), ${totalItens} itens, ${formatBRL(valorTotal)}`,
         className: "bg-green-600 text-white border-green-700",
+        duration: 5000,
       });
       
       // Telemetria: logar se publicou acima do limite
@@ -303,21 +303,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                   Tipo: {ciclo.tipo} • {ciclo.mercado}
                 </p>
               </div>
-              <div className="flex gap-6">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Valor Máximo</p>
-                        <p className="text-2xl font-bold">{formatBRL(ciclo.valorMaximo)}</p>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Orçamento máximo aprovado para este mercado</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                
+              <div>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -331,42 +317,10 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Saldo</p>
-                        <p className={`text-2xl font-bold ${saldo >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {formatBRL(saldo)}
-                        </p>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Valor Máximo – Valor Total</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
               </div>
             </div>
           </CardHeader>
         </Card>
-
-        {/* Banner de alerta fixo quando excede valor máximo */}
-        {excedeuValor && (
-          <div className="sticky top-40 z-30">
-            <Alert 
-              variant="destructive" 
-              className="border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]"
-              role="alert"
-            >
-              <AlertTriangle className="h-4 w-4" aria-label="Aviso" />
-              <AlertDescription className="text-sm font-medium">
-                ⚠️ Valor atual excede o valor máximo permitido para este mercado.
-              </AlertDescription>
-            </Alert>
-          </div>
-        )}
 
         {/* Produtos Selecionados */}
         {selectedItems.length > 0 && (
@@ -548,16 +502,6 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                       <p>Selecione pelo menos um produto para publicar</p>
                     </TooltipContent>
                   )}
-                  {podePublicar && excedeuValor && (
-                    <TooltipContent>
-                      <p>Acima do valor máximo — publicação permitida</p>
-                    </TooltipContent>
-                  )}
-                  {podePublicar && excedeuValor && (
-                    <TooltipContent>
-                      <p>Acima do valor máximo — publicação permitida</p>
-                    </TooltipContent>
-                  )}
                 </Tooltip>
               </TooltipProvider>
             </div>
@@ -565,37 +509,6 @@ export default function AdminComposicaoVendaDiretaLiberar() {
         </Card>
       </div>
 
-      {/* Modal de Confirmação */}
-      <AlertDialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar Publicação</AlertDialogTitle>
-            <AlertDialogDescription>
-              Deseja publicar esta venda direta para os consumidores?
-              <br />
-              <br />
-              <strong>Mercado:</strong> {ciclo.mercado}
-              <br />
-              <strong>Ciclo:</strong> {ciclo.nome}
-              <br />
-              <strong>Produtos:</strong> {selectedItems.length}
-              <br />
-              <strong>Valor Total:</strong> {formatBRL(valorTotal)}
-              {excedeuValor && (
-                <span className="block mt-3 text-[#B54708] font-semibold">
-                  ⚠️ O valor total excede o limite permitido de {formatBRL(ciclo.valorMaximo)}.
-                </span>
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={executarPublicacao}>
-              Publicar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </ResponsiveLayout>
   );
 }
