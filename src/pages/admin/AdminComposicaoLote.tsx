@@ -270,12 +270,7 @@ export default function AdminComposicaoLote() {
   };
 
   const handlePublicarClick = () => {
-    // Se valor atual excede o máximo, abrir modal de confirmação
-    if (excedeuValor) {
-      setShowConfirmModal(true);
-    } else {
-      executarPublicacao();
-    }
+    executarPublicacao();
   };
 
   const executarPublicacao = () => {
@@ -579,24 +574,6 @@ export default function AdminComposicaoLote() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Modal de Confirmação */}
-      <AlertDialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Valor acima do limite</AlertDialogTitle>
-            <AlertDialogDescription>
-              O valor atual do lote ({formatBRL(valorAtual)}) excede o valor máximo ({formatBRL(ciclo.valorMaximo)}) deste mercado. Deseja salvar assim mesmo?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={executarPublicacao} className="bg-green-600 hover:bg-green-700">
-              Salvar mesmo assim
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </ResponsiveLayout>
   );
 }
