@@ -202,7 +202,7 @@ export default function AdminCicloIndex() {
   };
 
   const handlePublishClick = (ciclo: Ciclo, mercado: CicloMercado) => {
-    navigate(`/admin/composicao-venda-direta-liberar/${ciclo.id}?mercado=${mercado.id}`);
+    navigate(`/admin/liberar-venda-direta/${ciclo.id}?mercado=${mercado.id}`);
   };
 
   return (
