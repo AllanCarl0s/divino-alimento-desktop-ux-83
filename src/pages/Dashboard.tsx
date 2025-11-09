@@ -98,10 +98,10 @@ const Dashboard = () => {
 
           {/* Conteúdo - Duas Colunas */}
           <div className="px-6 pb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Coluna Esquerda - Produtos da Cesta */}
+            {/* Coluna Esquerda - Alimentos da Cesta */}
             <div className="bg-[#E8F5E9] rounded-[10px] p-4">
               <h4 className="text-[#2C3E50] text-base font-bold mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
-                Produtos da Cesta:
+                Alimentos da Cesta:
               </h4>
               <ul className="space-y-2 text-[#333] text-sm mb-4">
                 <li>- Tomate (3 kg) — Fornecedor: Sítio Bela Vista</li>
