@@ -307,14 +307,10 @@ export default function AdminComposicaoLote() {
 
       setIsLoading(false);
       
-      const mensagem = excedeuValor 
-        ? 'Composição lote salva (acima do valor máximo)'
-        : 'Composição lote salva com sucesso';
-      
       toast({
-        title: mensagem,
+        title: 'Composição lote salva com sucesso',
         description: `${selectedItems.length} produto(s), ${totalItens} itens, ${formatBRL(valorAtual)}`,
-        className: excedeuValor ? 'bg-yellow-600 text-white border-yellow-700' : 'bg-green-600 text-white border-green-700',
+        className: 'bg-green-600 text-white border-green-700',
         duration: 5000,
       });
       
@@ -561,11 +557,6 @@ export default function AdminComposicaoLote() {
                   {!podePublicar && (
                     <TooltipContent>
                       <p>Selecione pelo menos um produto com quantidade maior que zero.</p>
-                    </TooltipContent>
-                  )}
-                  {podePublicar && excedeuValor && (
-                    <TooltipContent>
-                      <p>Acima do valor máximo — publicação permitida</p>
                     </TooltipContent>
                   )}
                 </Tooltip>
