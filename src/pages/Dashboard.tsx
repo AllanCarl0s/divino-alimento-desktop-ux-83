@@ -25,7 +25,7 @@ const Dashboard = () => {
     },
     {
       titulo: 'Pedido em Varejo',
-      descricao: 'Comprar produtos da feira direta',
+      descricao: 'Comprar alimentos da feira direta',
       icone: ShoppingCart,
       rota: '/pedidoConsumidores/1',
       habilitado: true
