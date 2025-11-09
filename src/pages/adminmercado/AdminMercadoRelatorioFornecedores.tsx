@@ -10,6 +10,7 @@ import { ArrowLeft, Search, Download, FileText, ArrowUpDown } from 'lucide-react
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface EntregaFornecedor {
   id: string;
@@ -25,6 +26,7 @@ interface EntregaFornecedor {
 
 export default function AdminMercadoRelatorioFornecedores() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { cicloId } = useParams();
   const [searchParams] = useSearchParams();
   const mercadoId = searchParams.get('mercado');
@@ -265,83 +267,158 @@ export default function AdminMercadoRelatorioFornecedores() {
           </div>
         </div>
 
-        {/* Table */}
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={handleSortByFornecedor}
-                >
-                  <div className="flex items-center gap-2">
-                    Fornecedor
-                    <ArrowUpDown className="h-4 w-4" />
-                    {sortBy === 'fornecedor' && (
-                      <span className="text-xs text-muted-foreground">
-                        ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
-                      </span>
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead>Produto</TableHead>
-                <TableHead>Unidade de Medida</TableHead>
-                <TableHead className="text-right">Valor Unitário</TableHead>
-                <TableHead className="text-right">Quantidade Entregue</TableHead>
-                <TableHead className="text-right">Valor Total</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredEntregas.length === 0 ? (
+        {/* Table / Cards */}
+        {!isMobile ? (
+          <Card>
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhuma entrega registrada.'}
-                    </p>
-                  </TableCell>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={handleSortByFornecedor}
+                  >
+                    <div className="flex items-center gap-2">
+                      Fornecedor
+                      <ArrowUpDown className="h-4 w-4" />
+                      {sortBy === 'fornecedor' && (
+                        <span className="text-xs text-muted-foreground">
+                          ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
+                        </span>
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead>Produto</TableHead>
+                  <TableHead>Unidade de Medida</TableHead>
+                  <TableHead className="text-right">Valor Unitário</TableHead>
+                  <TableHead className="text-right">Quantidade Entregue</TableHead>
+                  <TableHead className="text-right">Valor Total</TableHead>
                 </TableRow>
-              ) : (
-                filteredEntregas.map((entrega) => (
-                  <TableRow key={entrega.id}>
-                    <TableCell className="font-medium">{entrega.fornecedor}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        <span>{entrega.produto}</span>
-                        <div className="flex gap-1">
-                          {entrega.agricultura_familiar && (
-                            <Badge variant="secondary" className="text-xs">
-                              Agricultura Familiar
-                            </Badge>
-                          )}
-                          <Badge 
-                            variant="outline" 
-                            className={`text-xs ${
-                              entrega.certificacao === 'organico' ? 'border-green-600 text-green-600' :
-                              entrega.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
-                              'border-gray-400 text-gray-600'
-                            }`}
-                          >
-                            {entrega.certificacao === 'organico' ? 'Orgânico' :
-                             entrega.certificacao === 'transicao' ? 'Transição' :
-                             'Convencional'}
-                          </Badge>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{entrega.unidade_medida}</TableCell>
-                    <TableCell className="text-right">
-                      R$ {entrega.valor_unitario.toFixed(2).replace('.', ',')}
-                    </TableCell>
-                    <TableCell className="text-right">{entrega.quantidade_entregue}</TableCell>
-                    <TableCell className="text-right font-semibold text-success">
-                      R$ {entrega.valor_total.toFixed(2).replace('.', ',')}
+              </TableHeader>
+              <TableBody>
+                {filteredEntregas.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhuma entrega registrada.'}
+                      </p>
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                ) : (
+                  filteredEntregas.map((entrega) => (
+                    <TableRow key={entrega.id}>
+                      <TableCell className="font-medium">{entrega.fornecedor}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          <span>{entrega.produto}</span>
+                          <div className="flex gap-1">
+                            {entrega.agricultura_familiar && (
+                              <Badge variant="secondary" className="text-xs">
+                                Agricultura Familiar
+                              </Badge>
+                            )}
+                            <Badge 
+                              variant="outline" 
+                              className={`text-xs ${
+                                entrega.certificacao === 'organico' ? 'border-green-600 text-green-600' :
+                                entrega.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
+                                'border-gray-400 text-gray-600'
+                              }`}
+                            >
+                              {entrega.certificacao === 'organico' ? 'Orgânico' :
+                               entrega.certificacao === 'transicao' ? 'Transição' :
+                               'Convencional'}
+                            </Badge>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{entrega.unidade_medida}</TableCell>
+                      <TableCell className="text-right">
+                        R$ {entrega.valor_unitario.toFixed(2).replace('.', ',')}
+                      </TableCell>
+                      <TableCell className="text-right">{entrega.quantidade_entregue}</TableCell>
+                      <TableCell className="text-right font-semibold text-success">
+                        R$ {entrega.valor_total.toFixed(2).replace('.', ',')}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        ) : (
+          /* Visualização em Cards para Mobile */
+          <div className="space-y-3">
+            {filteredEntregas.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center">
+                  <p className="text-muted-foreground">
+                    {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhuma entrega registrada.'}
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              filteredEntregas.map((entrega) => (
+                <Card key={entrega.id}>
+                  <CardContent className="p-4 space-y-3">
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="space-y-1 flex-1">
+                        <p className="font-bold text-lg">{entrega.fornecedor}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-muted-foreground">Valor Total</p>
+                        <p className="text-lg font-bold text-green-600">
+                          R$ {entrega.valor_total.toFixed(2).replace('.', ',')}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-3 space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <p className="font-medium">{entrega.produto}</p>
+                          <div className="flex flex-wrap gap-1">
+                            {entrega.agricultura_familiar && (
+                              <Badge variant="secondary" className="text-xs">
+                                Agricultura Familiar
+                              </Badge>
+                            )}
+                            <Badge 
+                              variant="outline" 
+                              className={`text-xs ${
+                                entrega.certificacao === 'organico' ? 'border-green-600 text-green-600' :
+                                entrega.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
+                                'border-gray-400 text-gray-600'
+                              }`}
+                            >
+                              {entrega.certificacao === 'organico' ? 'Orgânico' :
+                               entrega.certificacao === 'transicao' ? 'Transição' :
+                               'Convencional'}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 text-sm">
+                        <div>
+                          <p className="text-muted-foreground text-xs">Unidade</p>
+                          <p className="font-medium">{entrega.unidade_medida}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Valor Unit.</p>
+                          <p className="font-medium">R$ {entrega.valor_unitario.toFixed(2).replace('.', ',')}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Qtd. Entregue</p>
+                          <p className="font-medium">{entrega.quantidade_entregue}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        )}
 
         {/* Footer Button */}
         <div className="flex justify-start">

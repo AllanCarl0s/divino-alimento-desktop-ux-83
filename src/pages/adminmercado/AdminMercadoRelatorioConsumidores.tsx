@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ArrowLeft, Search, Download, FileText, Eye, ArrowUpDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PedidoConsumidor {
   id: string;
@@ -33,6 +34,7 @@ interface PedidoDetalhado extends PedidoConsumidor {
 
 export default function AdminMercadoRelatorioConsumidores() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { cicloId } = useParams();
   const [searchParams] = useSearchParams();
   const mercadoId = searchParams.get('mercado');
@@ -279,97 +281,183 @@ export default function AdminMercadoRelatorioConsumidores() {
           </div>
         </div>
 
-        {/* Table */}
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Consumidor</TableHead>
-                <TableHead>Produto</TableHead>
-                <TableHead 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
-                  onClick={handleSortByFornecedor}
-                >
-                  <div className="flex items-center gap-2">
-                    Fornecedor
-                    <ArrowUpDown className="h-4 w-4" />
-                    {sortBy === 'fornecedor' && (
-                      <span className="text-xs text-muted-foreground">
-                        ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
-                      </span>
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead>Medida</TableHead>
-                <TableHead className="text-right">Valor Unitário</TableHead>
-                <TableHead className="text-right">Quantidade</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-                <TableHead className="text-center">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPedidos.length === 0 ? (
+        {/* Table / Cards */}
+        {!isMobile ? (
+          <Card>
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhum pedido registrado.'}
-                    </p>
-                  </TableCell>
+                  <TableHead>Consumidor</TableHead>
+                  <TableHead>Produto</TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={handleSortByFornecedor}
+                  >
+                    <div className="flex items-center gap-2">
+                      Fornecedor
+                      <ArrowUpDown className="h-4 w-4" />
+                      {sortBy === 'fornecedor' && (
+                        <span className="text-xs text-muted-foreground">
+                          ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
+                        </span>
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead>Medida</TableHead>
+                  <TableHead className="text-right">Valor Unitário</TableHead>
+                  <TableHead className="text-right">Quantidade</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="text-center">Ações</TableHead>
                 </TableRow>
-              ) : (
-                filteredPedidos.map((pedido) => (
-                  <TableRow key={pedido.id}>
-                    <TableCell className="font-medium">{pedido.consumidor}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        <span>{pedido.produto}</span>
-                        <div className="flex gap-1">
-                          {pedido.agricultura_familiar && (
-                            <Badge variant="secondary" className="text-xs">
-                              Agricultura Familiar
+              </TableHeader>
+              <TableBody>
+                {filteredPedidos.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhum pedido registrado.'}
+                      </p>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredPedidos.map((pedido) => (
+                    <TableRow key={pedido.id}>
+                      <TableCell className="font-medium">{pedido.consumidor}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          <span>{pedido.produto}</span>
+                          <div className="flex gap-1">
+                            {pedido.agricultura_familiar && (
+                              <Badge variant="secondary" className="text-xs">
+                                Agricultura Familiar
+                              </Badge>
+                            )}
+                            <Badge 
+                              variant="outline" 
+                              className={`text-xs ${
+                                pedido.certificacao === 'organico' ? 'border-green-600 text-green-600' :
+                                pedido.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
+                                'border-gray-400 text-gray-600'
+                              }`}
+                            >
+                              {pedido.certificacao === 'organico' ? 'Orgânico' :
+                               pedido.certificacao === 'transicao' ? 'Transição' :
+                               'Convencional'}
                             </Badge>
-                          )}
-                          <Badge 
-                            variant="outline" 
-                            className={`text-xs ${
-                              pedido.certificacao === 'organico' ? 'border-green-600 text-green-600' :
-                              pedido.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
-                              'border-gray-400 text-gray-600'
-                            }`}
-                          >
-                            {pedido.certificacao === 'organico' ? 'Orgânico' :
-                             pedido.certificacao === 'transicao' ? 'Transição' :
-                             'Convencional'}
-                          </Badge>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{pedido.fornecedor}</TableCell>
+                      <TableCell>{pedido.medida}</TableCell>
+                      <TableCell className="text-right">
+                        R$ {pedido.valor_unitario.toFixed(2).replace('.', ',')}
+                      </TableCell>
+                      <TableCell className="text-right">{pedido.quantidade}</TableCell>
+                      <TableCell className="text-right font-semibold text-success">
+                        R$ {pedido.total.toFixed(2).replace('.', ',')}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleVerPedido(pedido)}
+                          className="border-primary text-primary hover:bg-primary/10"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          Ver Pedido
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        ) : (
+          /* Visualização em Cards para Mobile */
+          <div className="space-y-3">
+            {filteredPedidos.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center">
+                  <p className="text-muted-foreground">
+                    {searchTerm ? 'Nenhum resultado encontrado.' : 'Nenhum pedido registrado.'}
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              filteredPedidos.map((pedido) => (
+                <Card key={pedido.id}>
+                  <CardContent className="p-4 space-y-3">
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="space-y-1 flex-1">
+                        <p className="font-bold text-lg">{pedido.consumidor}</p>
+                        <p className="text-sm text-muted-foreground">Fornecedor: {pedido.fornecedor}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-muted-foreground">Total</p>
+                        <p className="text-lg font-bold text-green-600">
+                          R$ {pedido.total.toFixed(2).replace('.', ',')}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-3 space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <p className="font-medium">{pedido.produto}</p>
+                          <div className="flex flex-wrap gap-1">
+                            {pedido.agricultura_familiar && (
+                              <Badge variant="secondary" className="text-xs">
+                                Agricultura Familiar
+                              </Badge>
+                            )}
+                            <Badge 
+                              variant="outline" 
+                              className={`text-xs ${
+                                pedido.certificacao === 'organico' ? 'border-green-600 text-green-600' :
+                                pedido.certificacao === 'transicao' ? 'border-yellow-600 text-yellow-600' :
+                                'border-gray-400 text-gray-600'
+                              }`}
+                            >
+                              {pedido.certificacao === 'organico' ? 'Orgânico' :
+                               pedido.certificacao === 'transicao' ? 'Transição' :
+                               'Convencional'}
+                            </Badge>
+                          </div>
                         </div>
                       </div>
-                    </TableCell>
-                    <TableCell>{pedido.fornecedor}</TableCell>
-                    <TableCell>{pedido.medida}</TableCell>
-                    <TableCell className="text-right">
-                      R$ {pedido.valor_unitario.toFixed(2).replace('.', ',')}
-                    </TableCell>
-                    <TableCell className="text-right">{pedido.quantidade}</TableCell>
-                    <TableCell className="text-right font-semibold text-success">
-                      R$ {pedido.total.toFixed(2).replace('.', ',')}
-                    </TableCell>
-                    <TableCell className="text-center">
+
+                      <div className="grid grid-cols-3 gap-2 text-sm">
+                        <div>
+                          <p className="text-muted-foreground text-xs">Medida</p>
+                          <p className="font-medium">{pedido.medida}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Valor Unit.</p>
+                          <p className="font-medium">R$ {pedido.valor_unitario.toFixed(2).replace('.', ',')}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Quantidade</p>
+                          <p className="font-medium">{pedido.quantidade}</p>
+                        </div>
+                      </div>
+
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleVerPedido(pedido)}
-                        className="border-primary text-primary hover:bg-primary/10"
+                        className="w-full border-primary text-primary hover:bg-primary/10"
                       >
                         <Eye className="h-4 w-4 mr-2" />
-                        Ver Pedido
+                        Ver Detalhes do Pedido
                       </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        )}
 
         {/* Footer Button */}
         <div className="flex justify-start">
