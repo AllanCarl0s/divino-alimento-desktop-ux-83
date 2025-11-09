@@ -68,7 +68,6 @@ export default function AdminComposicaoLote() {
       quantidadeOfertada: 50,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 12,
     },
     {
       id: '2',
@@ -80,7 +79,6 @@ export default function AdminComposicaoLote() {
       quantidadeOfertada: 15,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 3,
     },
     {
       id: '3',
@@ -92,7 +90,6 @@ export default function AdminComposicaoLote() {
       quantidadeOfertada: 30,
       certificacao: 'transicao',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 8,
     },
     {
       id: '4',
@@ -104,7 +101,6 @@ export default function AdminComposicaoLote() {
       quantidadeOfertada: 30,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 5,
     },
     {
       id: '5',
@@ -116,7 +112,6 @@ export default function AdminComposicaoLote() {
       quantidadeOfertada: 50,
       certificacao: 'convencional',
       tipo_agricultura: 'nao_familiar',
-      pedidosAcumulados: 15,
     },
     {
       id: '6',
@@ -128,7 +123,6 @@ export default function AdminComposicaoLote() {
       quantidadeOfertada: 100,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 25,
     },
     {
       id: '7',
@@ -140,7 +134,6 @@ export default function AdminComposicaoLote() {
       quantidadeOfertada: 40,
       certificacao: 'organico',
       tipo_agricultura: 'nao_familiar',
-      pedidosAcumulados: 10,
     },
     {
       id: '8',
@@ -152,7 +145,6 @@ export default function AdminComposicaoLote() {
       quantidadeOfertada: 35,
       certificacao: 'transicao',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 7,
     },
   ]);
 
@@ -581,15 +573,23 @@ export default function AdminComposicaoLote() {
               </div>
             ) : (
               <div className="space-y-3">
-                {productGroups.map((group) => (
-                  <ProductGroupItem
-                    key={group.produto_base}
-                    group={group}
-                    onQuantidadeChange={handleQuantidadeChange}
-                    isExpanded={expandedGroups.has(group.produto_base)}
-                    onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
-                  />
-                ))}
+                {productGroups.map((group) => {
+                  const selectedVariantIds = selectedByGroup.get(group.produto_base) || new Set();
+
+                  return (
+                    <ProductGroupItem
+                      key={group.produto_base}
+                      group={group}
+                      selectedVariantIds={selectedVariantIds}
+                      quantidades={composicao}
+                      onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
+                      onQuantidadeChange={handleQuantidadeChange}
+                      onClear={() => handleClearGroup(group.produto_base)}
+                      isExpanded={expandedGroups.has(group.produto_base)}
+                      onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
+                    />
+                  );
+                })}
               </div>
             )}
 

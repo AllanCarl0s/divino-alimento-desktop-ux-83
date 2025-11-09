@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
@@ -15,7 +15,6 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
-import { useCompositionStore } from '@/stores/compositionStore';
 
 export default function AdminComposicaoCesta() {
   const { id } = useParams();
@@ -24,7 +23,11 @@ export default function AdminComposicaoCesta() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
-  const { initialize, setDraft, getVariantComputed, clearDraft } = useCompositionStore();
+  
+  // selectedByGroup: groupKey -> Set of variantIds
+  const [selectedByGroup, setSelectedByGroup] = useState<Map<string, Set<string>>>(new Map());
+  // composicao: variantId -> quantidade
+  const [composicao, setComposicao] = useState<Map<string, number>>(new Map());
 
   // Dados mock - agora com produto_base
   const [ofertas] = useState<Oferta[]>([
@@ -38,7 +41,6 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 50,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 15,
     },
     {
       id: '2',
@@ -50,7 +52,6 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 15,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 5,
     },
     {
       id: '3',
@@ -62,7 +63,6 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 30,
       certificacao: 'transicao',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 10,
     },
     {
       id: '4',
@@ -74,7 +74,6 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 30,
       certificacao: 'organico',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 8,
     },
     {
       id: '5',
@@ -86,7 +85,6 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 50,
       certificacao: 'convencional',
       tipo_agricultura: 'nao_familiar',
-      pedidosAcumulados: 20,
     },
     {
       id: '6',
@@ -98,7 +96,6 @@ export default function AdminComposicaoCesta() {
       quantidadeOfertada: 100,
       certificacao: 'convencional',
       tipo_agricultura: 'familiar',
-      pedidosAcumulados: 0,
     },
   ]);
 
@@ -109,46 +106,98 @@ export default function AdminComposicaoCesta() {
     tipo: 'Cesta'
   };
 
-  // Initialize store on mount
-  useEffect(() => {
-    initialize(ofertas);
-  }, [ofertas, initialize]);
-
   // Agrupar e filtrar produtos
   const productGroups = useMemo(() => {
     const groups = groupAndSortProducts(ofertas);
     return filterProducts(groups, busca);
   }, [ofertas, busca]);
 
-  // Calcular itens selecionados usando o store - apenas draft > 0
+  // Calcular itens selecionados
   const selectedItems = useMemo(() => {
     const items: Array<{ id: string; valor: number; quantidade: number }> = [];
-    ofertas.forEach(oferta => {
-      const computed = getVariantComputed(oferta.id);
-      if (computed.draft > 0) {
-        items.push({
-          id: oferta.id,
-          valor: oferta.valor,
-          quantidade: computed.draft,
-        });
-      }
+    selectedByGroup.forEach((variantIds) => {
+      variantIds.forEach(variantId => {
+        const quantidade = composicao.get(variantId) || 0;
+        if (quantidade > 0) {
+          const oferta = ofertas.find(o => o.id === variantId);
+          if (oferta) {
+            items.push({
+              id: variantId,
+              valor: oferta.valor,
+              quantidade,
+            });
+          }
+        }
+      });
     });
     return items;
-  }, [ofertas, getVariantComputed]);
+  }, [selectedByGroup, composicao, ofertas]);
 
-  // Cálculos reativos usando os dados do store
+  // Cálculos reativos
   const valorAtual = selectedItems.reduce((acc, item) => {
     return acc + (item.valor * item.quantidade);
   }, 0);
   
   const saldo = ciclo.valorMaximo - valorAtual;
 
-  const handleQuantidadeChange = (variantId: string, quantidade: number) => {
-    setDraft(variantId, quantidade);
+  const handleToggleVariant = (groupKey: string, variantId: string) => {
+    setSelectedByGroup(prev => {
+      const newMap = new Map(prev);
+      const currentSet = newMap.get(groupKey) || new Set();
+      const newSet = new Set(currentSet);
+      
+      if (newSet.has(variantId)) {
+        newSet.delete(variantId);
+        // Remove quantidade também
+        setComposicao(prevComp => {
+          const newComp = new Map(prevComp);
+          newComp.delete(variantId);
+          return newComp;
+        });
+      } else {
+        newSet.add(variantId);
+      }
+      
+      if (newSet.size === 0) {
+        newMap.delete(groupKey);
+      } else {
+        newMap.set(groupKey, newSet);
+      }
+      return newMap;
+    });
   };
 
-  const handleRemoveItem = (variantId: string) => {
-    setDraft(variantId, 0);
+  const handleClearGroup = (groupKey: string) => {
+    const variantIds = selectedByGroup.get(groupKey);
+    if (variantIds) {
+      setSelectedByGroup(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(groupKey);
+        return newMap;
+      });
+      setComposicao(prev => {
+        const newMap = new Map(prev);
+        variantIds.forEach(id => newMap.delete(id));
+        return newMap;
+      });
+    }
+  };
+
+  const handleQuantidadeChange = (variantId: string, quantidade: number) => {
+    const oferta = ofertas.find(o => o.id === variantId);
+    if (!oferta) return;
+    
+    const validQuantity = Math.max(0, Math.min(quantidade, oferta.quantidadeOfertada));
+    
+    setComposicao(prev => {
+      const newMap = new Map(prev);
+      if (validQuantity === 0) {
+        newMap.delete(variantId);
+      } else {
+        newMap.set(variantId, validQuantity);
+      }
+      return newMap;
+    });
   };
 
   const toggleGroupExpansion = (groupKey: string) => {
@@ -301,9 +350,8 @@ export default function AdminComposicaoCesta() {
                     const oferta = ofertas.find(o => o.id === item.id);
                     if (!oferta) return null;
                     
-                    const computed = getVariantComputed(item.id);
-                    const valorAcumulado = oferta.valor * (computed.prev + computed.draft);
-                    const disponiveis = computed.disponivel;
+                    const valorAcumulado = item.valor * item.quantidade;
+                    const disponiveis = oferta.quantidadeOfertada - item.quantidade;
                     
                     return (
                       <TableRow key={item.id}>
@@ -313,7 +361,14 @@ export default function AdminComposicaoCesta() {
                         <TableCell className="td-texto">{oferta.fornecedor}</TableCell>
                         <TableCell className="td-numero">{oferta.quantidadeOfertada}</TableCell>
                         <TableCell className="td-numero">
-                          <span className="font-medium">{computed.draft}</span>
+                          <Input
+                            type="number"
+                            min={0}
+                            max={oferta.quantidadeOfertada}
+                            value={item.quantidade}
+                            onChange={(e) => handleQuantidadeChange(item.id, Number(e.target.value))}
+                            className="w-[60px] text-center tabular-nums mx-auto"
+                          />
                         </TableCell>
                         <TableCell className="td-valor font-medium">
                           {formatBRL(valorAcumulado)}
@@ -327,7 +382,10 @@ export default function AdminComposicaoCesta() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleRemoveItem(item.id)}
+                            onClick={() => {
+                              const groupKey = oferta.produto_base;
+                              handleClearGroup(groupKey);
+                            }}
                             className="h-8 w-8 mx-auto transition-opacity hover:opacity-70"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -389,15 +447,23 @@ export default function AdminComposicaoCesta() {
               </div>
             ) : (
               <div className="space-y-3">
-                {productGroups.map((group) => (
-                  <ProductGroupItem
-                    key={group.produto_base}
-                    group={group}
-                    onQuantidadeChange={handleQuantidadeChange}
-                    isExpanded={expandedGroups.has(group.produto_base)}
-                    onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
-                  />
-                ))}
+                {productGroups.map((group) => {
+                  const selectedVariantIds = selectedByGroup.get(group.produto_base) || new Set();
+
+                  return (
+                    <ProductGroupItem
+                      key={group.produto_base}
+                      group={group}
+                      selectedVariantIds={selectedVariantIds}
+                      quantidades={composicao}
+                      onToggleVariant={(variantId) => handleToggleVariant(group.produto_base, variantId)}
+                      onQuantidadeChange={handleQuantidadeChange}
+                      onClear={() => handleClearGroup(group.produto_base)}
+                      isExpanded={expandedGroups.has(group.produto_base)}
+                      onToggleExpand={() => toggleGroupExpansion(group.produto_base)}
+                    />
+                  );
+                })}
               </div>
             )}
 

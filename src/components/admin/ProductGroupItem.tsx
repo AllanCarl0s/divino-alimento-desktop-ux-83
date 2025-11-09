@@ -2,18 +2,22 @@ import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ProductGroup, Oferta } from '@/utils/product-grouping';
 import { FilterDropdown, FilterOption } from './FilterDropdown';
 import { MobileFiltersSheet, FilterSection } from './MobileFiltersSheet';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { formatBRL } from '@/utils/currency';
-import { useCompositionStore } from '@/stores/compositionStore';
 
 interface ProductGroupItemProps {
   group: ProductGroup;
+  selectedVariantIds: Set<string>;
+  quantidades: Map<string, number>;
+  onToggleVariant: (variantId: string) => void;
   onQuantidadeChange: (variantId: string, quantidade: number) => void;
+  onClear: () => void;
   isExpanded: boolean;
   onToggleExpand: () => void;
 }
@@ -31,35 +35,17 @@ const agriculturaOptions: FilterOption[] = [
 
 export function ProductGroupItem({
   group,
+  selectedVariantIds,
+  quantidades,
+  onToggleVariant,
   onQuantidadeChange,
+  onClear,
   isExpanded,
   onToggleExpand,
 }: ProductGroupItemProps) {
   const isMobile = useIsMobile();
   const [certificacaoFilter, setCertificacaoFilter] = useState<Set<string>>(new Set());
   const [agriculturaFilter, setAgriculturaFilter] = useState<Set<string>>(new Set());
-  const { getVariantComputed, setDraft } = useCompositionStore();
-  
-  // Estado local para controlar checkboxes
-  const [selectedVariants, setSelectedVariants] = useState<Set<string>>(new Set());
-  
-  // Calcular quantos estão selecionados
-  const selectedCount = selectedVariants.size;
-  
-  const handleToggleVariant = (variantId: string) => {
-    setSelectedVariants(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(variantId)) {
-        newSet.delete(variantId);
-        // Ao desmarcar, zera o draft
-        setDraft(variantId, 0);
-        onQuantidadeChange(variantId, 0);
-      } else {
-        newSet.add(variantId);
-      }
-      return newSet;
-    });
-  };
 
   const toggleCertificacao = (value: string) => {
     const newSet = new Set(certificacaoFilter);
@@ -88,11 +74,7 @@ export function ProductGroupItem({
 
   const handleClearAll = () => {
     clearFilters();
-    // Limpar todos os drafts e seleções do grupo
-    group.variantes.forEach(v => {
-      setDraft(v.id, 0);
-    });
-    setSelectedVariants(new Set());
+    onClear();
   };
 
   // Filter variants based on selected filters
@@ -123,9 +105,7 @@ export function ProductGroupItem({
     const maisBarato = filteredVariantes.reduce((prev, current) => 
       current.valor < prev.valor ? current : prev
     );
-    // Define quantidade padrão de 1
-    setDraft(maisBarato.id, 1);
-    onQuantidadeChange(maisBarato.id, 1);
+    onToggleVariant(maisBarato.id);
   };
 
   const totalActiveFilters = certificacaoFilter.size + agriculturaFilter.size;
@@ -217,7 +197,7 @@ export function ProductGroupItem({
               variant="outline"
               size="sm"
               onClick={handleClearAll}
-              disabled={selectedCount === 0 && totalActiveFilters === 0}
+              disabled={selectedVariantIds.size === 0 && totalActiveFilters === 0}
               className="h-9 text-xs"
             >
               Limpar
@@ -229,16 +209,14 @@ export function ProductGroupItem({
         <CollapsibleContent>
           <div className="p-4 pt-0">
             <div className="space-y-2 mt-4">
-              {/* Header - Desktop */}
-              <div className="hidden md:grid grid-cols-[auto_1fr_1fr_auto_auto_auto_1fr_auto] gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
-                <div className="w-10">Sel.</div>
-                <div>Unidade</div>
-                <div>Fornecedor</div>
-                <div className="text-right">Preço Unit.</div>
-                <div className="text-right w-24" aria-label="Quantidade ofertada">Ofertados</div>
-                <div className="text-right w-28" aria-label="Quantidade disponível">Disponível</div>
-                <div className="w-32">Pedidos</div>
-                <div className="text-right w-36" aria-label="Valor acumulado">Valor acumulado</div>
+              {/* Header */}
+              <div className="grid grid-cols-12 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
+                <div className="col-span-1">Sel.</div>
+                <div className="col-span-2">Unidade</div>
+                <div className="col-span-3">Fornecedor</div>
+                <div className="col-span-2">Preço Unit.</div>
+                <div className="col-span-2">Ofertados</div>
+                <div className="col-span-2">Pedidos</div>
               </div>
 
               {/* Variantes */}
@@ -248,162 +226,57 @@ export function ProductGroupItem({
                 </div>
               ) : (
                 filteredVariantes.map((variante) => {
-                const isSelected = selectedVariants.has(variante.id);
-                const computed = getVariantComputed(variante.id);
-                const { draft, disponivel, valorAcum } = computed;
-                const maxAllowed = disponivel;
+                const isSelected = selectedVariantIds.has(variante.id);
+                const pedidos = quantidades.get(variante.id) || 0;
 
                 return (
-                  <>
-                    {/* Desktop View */}
-                    <div
-                      key={variante.id}
-                      className={`hidden md:grid grid-cols-[auto_1fr_1fr_auto_auto_auto_1fr_auto] gap-4 items-center py-3 px-2 rounded transition-colors ${
-                        isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
-                      }`}
-                    >
-                      <div className="w-10">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => handleToggleVariant(variante.id)}
-                          className="h-4 w-4 rounded border-gray-300 cursor-pointer"
-                          disabled={variante.quantidadeOfertada === 0}
-                        />
-                      </div>
-                      <div>
+                  <div
+                    key={variante.id}
+                    className={`grid grid-cols-12 gap-4 items-center py-3 px-2 rounded transition-colors ${
+                      isSelected ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'
+                    }`}
+                  >
+                    <div className="col-span-1">
+                      <Checkbox
+                        id={variante.id}
+                        checked={isSelected}
+                        onCheckedChange={() => onToggleVariant(variante.id)}
+                        disabled={variante.quantidadeOfertada === 0}
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <Label htmlFor={variante.id} className="cursor-pointer">
                         {variante.unidade}
-                      </div>
-                      <div className="truncate">
+                      </Label>
+                    </div>
+                    <div className="col-span-3">
+                      <Label htmlFor={variante.id} className="cursor-pointer truncate block">
                         {variante.fornecedor}
-                      </div>
-                      <div className="text-right">
-                        {formatBRL(variante.valor)}
-                      </div>
-                      <div className="text-right w-24">
-                        <span className="text-sm">{variante.quantidadeOfertada}</span>
-                      </div>
-                      <div className="text-right w-28" title="Quantidade disponível considerando alocações anteriores deste ciclo.">
-                        <div className="flex items-center justify-end gap-2">
-                          <span className="text-sm">{disponivel}</span>
-                          {disponivel > 0 ? (
-                            <Badge className="bg-[#E6F7EC] text-[#1E8E3E] hover:bg-[#E6F7EC] text-xs px-2 py-0">
-                              OK
-                            </Badge>
-                          ) : (
-                            <Badge variant="secondary" className="bg-[#F1F3F4] text-[#5F6368] hover:bg-[#F1F3F4] text-xs px-2 py-0">
-                              Esgotado
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                      <div className="w-32">
+                      </Label>
+                    </div>
+                    <div className="col-span-2">
+                      <Label htmlFor={variante.id} className="cursor-pointer">
+                        R$ {variante.valor.toFixed(2).replace('.', ',')}
+                      </Label>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-sm">{variante.quantidadeOfertada}</span>
+                    </div>
+                    <div className="col-span-2">
+                      {isSelected ? (
                         <Input
                           type="number"
-                          value={draft}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value) || 0;
-                            setDraft(variante.id, value);
-                            onQuantidadeChange(variante.id, value);
-                          }}
+                          value={pedidos}
+                          onChange={(e) => onQuantidadeChange(variante.id, parseInt(e.target.value) || 0)}
                           className="w-full"
                           min="0"
-                          max={maxAllowed}
-                          disabled={!isSelected}
+                          max={variante.quantidadeOfertada}
                         />
-                      </div>
-                      <div className="text-right w-36" title="Soma dos valores já alocados neste ciclo para esta variante.">
-                        <span className={`text-sm ${valorAcum > 0 ? 'font-medium' : ''}`}>
-                          {formatBRL(valorAcum)}
-                        </span>
-                      </div>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">-</span>
+                      )}
                     </div>
-
-                    {/* Mobile View */}
-                    <div
-                      key={`${variante.id}-mobile`}
-                      className={`md:hidden p-4 rounded-lg space-y-3 ${
-                        isSelected ? 'bg-primary/5 border border-primary/20' : 'bg-muted/30'
-                      }`}
-                    >
-                      {/* Linha 1: Produto • Fornecedor */}
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm truncate">
-                            {variante.unidade} • {variante.fornecedor}
-                          </div>
-                        </div>
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => handleToggleVariant(variante.id)}
-                          className="h-4 w-4 rounded border-gray-300 cursor-pointer"
-                          disabled={variante.quantidadeOfertada === 0}
-                        />
-                      </div>
-
-                      {/* Linha 2: Unidade | Preço Unit. */}
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <span className="text-muted-foreground text-xs">Unidade</span>
-                          <div className="font-medium">{variante.unidade}</div>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground text-xs">Preço Unit.</span>
-                          <div className="font-medium">{formatBRL(variante.valor)}</div>
-                        </div>
-                      </div>
-
-                      {/* Linha 3: Ofertados | Disponível */}
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <span className="text-muted-foreground text-xs">Ofertados</span>
-                          <div className="font-medium">{variante.quantidadeOfertada}</div>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground text-xs">Disponível</span>
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">{disponivel}</span>
-                            {disponivel > 0 ? (
-                              <Badge className="bg-[#E6F7EC] text-[#1E8E3E] hover:bg-[#E6F7EC] text-xs px-2 py-0">
-                                OK
-                              </Badge>
-                            ) : (
-                              <Badge variant="secondary" className="bg-[#F1F3F4] text-[#5F6368] hover:bg-[#F1F3F4] text-xs px-2 py-0">
-                                Esgotado
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Linha 4: Pedidos | Valor acumulado */}
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <span className="text-muted-foreground text-xs">Pedidos</span>
-                          <Input
-                            type="number"
-                            value={draft}
-                            onChange={(e) => {
-                              const value = parseInt(e.target.value) || 0;
-                              setDraft(variante.id, value);
-                              onQuantidadeChange(variante.id, value);
-                            }}
-                            className="w-full mt-1"
-                            min="0"
-                            max={maxAllowed}
-                            disabled={!isSelected}
-                          />
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground text-xs">Valor acumulado</span>
-                          <div className={`font-medium ${valorAcum > 0 ? 'font-semibold' : ''}`}>
-                            {formatBRL(valorAcum)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
+                  </div>
                 );
               })
               )}
