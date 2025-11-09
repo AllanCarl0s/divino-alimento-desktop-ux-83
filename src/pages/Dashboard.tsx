@@ -15,14 +15,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { currentCycle } = useCycle();
 
-  const acoes: Array<{
-    titulo: string;
-    descricao: string;
-    icone: any;
-    rota: string;
-    habilitado: boolean;
-    badge?: string;
-  }> = [
+  const acoes = [
     {
       titulo: 'Minha Cesta',
       descricao: 'Ver itens da sua cesta no ciclo atual',
@@ -38,11 +31,12 @@ const Dashboard = () => {
       habilitado: true
     },
     {
-      titulo: 'Relatório de Pedidos',
-      descricao: 'Visualize seus pedidos diretos por ciclo',
-      icone: FileText,
-      rota: '/consumidor/selecionar-ciclo-relatorio',
-      habilitado: true
+      titulo: 'Meus Pagamentos',
+      descricao: 'Acompanhe seus pagamentos (em aberto e quitados)',
+      icone: Wallet,
+      rota: '/consumidor/pagamentos',
+      habilitado: true,
+      badge: 'Pendente'
     },
     {
       titulo: 'Dados Pessoais',
