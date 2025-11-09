@@ -27,7 +27,7 @@ const Dashboard = () => {
       titulo: 'Pedido em Varejo',
       descricao: 'Comprar alimentos da venda direta',
       icone: ShoppingCart,
-      rota: '/pedidoConsumidores/1',
+      rota: '/consumidor/selecionar-ciclo',
       habilitado: true
     },
     {
