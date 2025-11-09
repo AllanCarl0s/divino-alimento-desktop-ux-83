@@ -508,7 +508,7 @@ export default function AdminLiberarVendaDireta() {
               onClick={executarPublicacao}
               className="bg-[#009436] hover:bg-[#007a2d]"
             >
-              Confirmar Publicação ✅
+              Confirmar Publicação
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
