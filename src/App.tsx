@@ -39,6 +39,7 @@ import AdminOferta from "./pages/admin/AdminOferta";
 import AdminComposicaoCesta from "./pages/admin/AdminComposicaoCesta";
 import AdminComposicaoLote from "./pages/admin/AdminComposicaoLote";
 import AdminComposicaoVendaDiretaLiberar from "./pages/admin/AdminComposicaoVendaDiretaLiberar";
+import AdminLiberarVendaDireta from "./pages/admin/AdminLiberarVendaDireta";
 import AdminEntregasFornecedores from "./pages/admin/AdminEntregasFornecedores";
 import AdminPedidosConsumidores from "./pages/admin/AdminPedidosConsumidores";
 import AdminRelatorioFornecedores from "./pages/admin/AdminRelatorioFornecedores";
@@ -138,6 +139,7 @@ const App = () => (
           <Route path="/admin/composicao-lote/:id" element={<ProtectedRoute><AdminComposicaoLote /></ProtectedRoute>} />
           <Route path="/admin/composicao-venda-direta/:id" element={<ProtectedRoute><AdminComposicaoVendaDiretaLiberar /></ProtectedRoute>} />
           <Route path="/admin/composicao-venda-direta-liberar/:id" element={<ProtectedRoute><AdminComposicaoVendaDiretaLiberar /></ProtectedRoute>} />
+          <Route path="/admin/liberar-venda-direta/:id" element={<ProtectedRoute><AdminLiberarVendaDireta /></ProtectedRoute>} />
           <Route path="/admin/entregas-fornecedores/:id" element={<ProtectedRoute><AdminEntregasFornecedores /></ProtectedRoute>} />
           <Route path="/admin/pedidos-consumidores/:id" element={<ProtectedRoute><AdminPedidosConsumidores /></ProtectedRoute>} />
           <Route path="/admin/relatorio-fornecedores" element={<ProtectedRoute><AdminRelatorioFornecedores /></ProtectedRoute>} />
