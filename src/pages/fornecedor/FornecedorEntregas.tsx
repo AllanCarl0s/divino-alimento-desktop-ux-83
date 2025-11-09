@@ -141,7 +141,7 @@ export default function FornecedorEntregas() {
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={() => navigate('/fornecedor/loja')} 
+          onClick={() => navigate('/fornecedor/selecionar-ciclo-entregas')} 
           className="text-white hover:text-primary transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
