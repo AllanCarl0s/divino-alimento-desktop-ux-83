@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -220,12 +221,10 @@ const AdminPagamentosGerar = () => {
                   key={ciclo.id}
                   className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors"
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     id={`ciclo-${ciclo.id}`}
                     checked={ciclosSelecionados.includes(ciclo.id)}
-                    onChange={() => handleToggleCiclo(ciclo.id)}
-                    className="h-4 w-4 rounded border-primary"
+                    onCheckedChange={() => handleToggleCiclo(ciclo.id)}
                   />
                   <label
                     htmlFor={`ciclo-${ciclo.id}`}
