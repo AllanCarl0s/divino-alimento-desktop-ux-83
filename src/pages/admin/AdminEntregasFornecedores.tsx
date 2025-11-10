@@ -267,7 +267,7 @@ export default function AdminEntregasFornecedores() {
                     )}
                   </div>
                 </TableHead>
-                <TableHead>Produto</TableHead>
+                <TableHead>Alimento</TableHead>
                 <TableHead>Unidade de Medida</TableHead>
                 <TableHead className="text-right">Valor Unitário</TableHead>
                 <TableHead className="text-right">Quantidade Entregue</TableHead>
