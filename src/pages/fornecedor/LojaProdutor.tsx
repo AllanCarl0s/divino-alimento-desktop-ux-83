@@ -65,13 +65,6 @@ const LojaProdutor = () => {
 
   const acoesAdministracao = [
     {
-      title: 'Pedidos e Gestão de Pagamentos',
-      description: 'Acompanhe pedidos recebidos e controle os pagamentos efetuados e pendentes.',
-      icon: Wallet,
-      route: '/fornecedor/pagamentos',
-      enabled: true
-    },
-    {
       title: 'Dados Pessoais',
       description: 'Atualize suas informações de perfil e contato.',
       icon: UserCircle,

@@ -30,7 +30,6 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
     '/fornecedor/selecionar-ciclo-entregas',
     '/oferta/*',
     '/fornecedor/entregas/*',
-    '/fornecedor/pagamentos',
     '/usuario/1',
   ],
   admin: [
