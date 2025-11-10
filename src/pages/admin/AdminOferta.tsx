@@ -420,18 +420,18 @@ export default function AdminOferta() {
         {/* Formulário inline - Adicionar Produto à Oferta */}
         <Card>
           <CardHeader>
-            <CardTitle>{editingOferta ? 'Editar Produto' : 'Adicionar Produto à Oferta'}</CardTitle>
+            <CardTitle>{editingOferta ? 'Editar Alimento' : 'Adicionar Alimento à Oferta'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {/* Busca de produto */}
               <div>
-                <Label htmlFor="search">Buscar Produto</Label>
+                <Label htmlFor="search">Buscar alimento</Label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="search"
-                    placeholder="Digite o nome do produto..."
+                    placeholder="Digite o nome do alimento..."
                     value={searchProduto}
                     onChange={(e) => setSearchProduto(e.target.value)}
                     className="pl-9"
@@ -441,10 +441,10 @@ export default function AdminOferta() {
 
               {/* Seleção de produto */}
               <div>
-                <Label htmlFor="produto">Produto *</Label>
+                <Label htmlFor="produto">Alimento *</Label>
                 <Select value={selectedProdutoId} onValueChange={setSelectedProdutoId}>
                   <SelectTrigger id="produto">
-                    <SelectValue placeholder="Selecione o produto e variação" />
+                    <SelectValue placeholder="Selecione o alimento e variação" />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px] bg-background z-50">
                     {produtosFiltrados.map((produto) => (
@@ -455,7 +455,7 @@ export default function AdminOferta() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Todas as variações do mesmo produto base estão disponíveis
+                  Todas as variações do mesmo alimento base estão disponíveis
                 </p>
               </div>
 
@@ -510,20 +510,20 @@ export default function AdminOferta() {
                   <Card>
                     <CardContent className="pt-6">
                       <fieldset>
-                        <legend className="text-sm font-medium mb-3">Certificação do produto *</legend>
+                        <legend className="text-sm font-medium mb-3">Certificação do alimento *</legend>
                         <RadioGroup value={certificacao} onValueChange={(value) => setCertificacao(value as CertificacaoType)}>
                           <div className="space-y-2">
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="organico" id="cert-organico" />
-                              <Label htmlFor="cert-organico" className="font-normal cursor-pointer">Produto orgânico</Label>
+                              <Label htmlFor="cert-organico" className="font-normal cursor-pointer">Alimento orgânico</Label>
                             </div>
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="transicao" id="cert-transicao" />
-                              <Label htmlFor="cert-transicao" className="font-normal cursor-pointer">Produto em transição agroecológica</Label>
+                              <Label htmlFor="cert-transicao" className="font-normal cursor-pointer">Alimento em transição</Label>
                             </div>
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="convencional" id="cert-convencional" />
-                              <Label htmlFor="cert-convencional" className="font-normal cursor-pointer">Produto convencional</Label>
+                              <Label htmlFor="cert-convencional" className="font-normal cursor-pointer">Alimento convencional</Label>
                             </div>
                           </div>
                         </RadioGroup>
