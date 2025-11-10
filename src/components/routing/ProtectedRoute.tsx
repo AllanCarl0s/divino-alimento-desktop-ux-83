@@ -20,6 +20,8 @@ const ROUTE_PERMISSIONS: Record<string, string[]> = {
     '/consumidor/selecionar-ciclo',
     '/pedidoConsumidores/*',
     '/consumidor/pagamentos',
+    '/consumidor/relatorio-pedidos',
+    '/consumidor/relatorio-pedidos-resultado/*',
     '/usuario/1',
   ],
   fornecedor: [
