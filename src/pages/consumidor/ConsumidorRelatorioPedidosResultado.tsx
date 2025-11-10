@@ -200,7 +200,7 @@ export default function ConsumidorRelatorioPedidosResultado() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Valor Varejo</p>
-                <p className="text-2xl font-bold text-orange-600">{formatBRL(resumo.valorTotalVarejo)}</p>
+                <p className="text-2xl font-bold text-secondary">{formatBRL(resumo.valorTotalVarejo)}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Valor Total</p>
