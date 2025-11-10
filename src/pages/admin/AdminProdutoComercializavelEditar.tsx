@@ -119,8 +119,8 @@ const AdminProdutoComercializavelEditar = () => {
                 onSelect={(productName) => 
                   setFormData({ ...formData, produto_base: productName })
                 }
-                label="Buscar produto base *"
-                placeholder="Digite para buscar produto base..."
+                label="Buscar alimento base *"
+                placeholder="Digite para buscar alimento base..."
               />
 
               <div className="space-y-2">
