@@ -228,18 +228,18 @@ export default function ConsumidorRelatorioPedidosResultado() {
                 <Button 
                   onClick={handleExportCSV}
                   variant="outline"
-                  className="flex-1 md:flex-initial"
+                  className="flex-1 md:flex-initial border-primary text-primary hover:bg-primary/10"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  CSV
+                  Exportar CSV
                 </Button>
                 <Button 
                   onClick={handleExportPDF}
                   variant="outline"
-                  className="flex-1 md:flex-initial"
+                  className="flex-1 md:flex-initial border-primary text-primary hover:bg-primary/10"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  PDF
+                  Exportar PDF
                 </Button>
               </div>
             </div>
