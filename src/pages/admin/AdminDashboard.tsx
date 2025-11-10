@@ -259,7 +259,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
-                      Editar Lista de Pagamentos
+                      Administrar Pagamentos
                     </h3>
                     <p className="text-sm text-muted-foreground">
                       Acompanhe, edite e registre os pagamentos pendentes e realizados
