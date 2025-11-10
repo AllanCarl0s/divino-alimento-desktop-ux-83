@@ -410,7 +410,7 @@ const AdminMigrarOfertas = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-12">Sel.</TableHead>
-                      <TableHead>Produto</TableHead>
+                      <TableHead>Alimento</TableHead>
                       <TableHead>Fornecedor</TableHead>
                       <TableHead>Medida</TableHead>
                       <TableHead className="text-right">Ofertados</TableHead>
