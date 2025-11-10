@@ -68,8 +68,6 @@ import AdminMercadoRelatorioFornecedores from './pages/adminmercado/AdminMercado
 import AdminMercadoRelatorioConsumidores from './pages/adminmercado/AdminMercadoRelatorioConsumidores';
 import AdminMercadoRelatorioFornecedoresCiclo from './pages/adminmercado/AdminMercadoRelatorioFornecedoresCiclo';
 import AdminMercadoRelatorioConsumidoresCiclo from './pages/adminmercado/AdminMercadoRelatorioConsumidoresCiclo';
-import AdminMercadoPagamentosGerar from './pages/adminmercado/AdminMercadoPagamentosGerar';
-import AdminMercadoPagamentosGerir from './pages/adminmercado/AdminMercadoPagamentosGerir';
 
 const queryClient = new QueryClient();
 
@@ -117,8 +115,6 @@ const App = () => (
           <Route path="/adminmercado/relatorio-consumidores/:cicloId" element={<ProtectedRoute><AdminMercadoRelatorioConsumidores /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorios/fornecedores-ciclo" element={<ProtectedRoute><AdminMercadoRelatorioFornecedoresCiclo /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorios/consumidores-ciclo" element={<ProtectedRoute><AdminMercadoRelatorioConsumidoresCiclo /></ProtectedRoute>} />
-          <Route path="/adminmercado/pagamentos/gerar" element={<ProtectedRoute><AdminMercadoPagamentosGerar /></ProtectedRoute>} />
-          <Route path="/adminmercado/pagamentos/gerir" element={<ProtectedRoute><AdminMercadoPagamentosGerir /></ProtectedRoute>} />
           
           <Route path="/admin/mercados" element={<ProtectedRoute><AdminMercados /></ProtectedRoute>} />
           <Route path="/admin/precos" element={<ProtectedRoute><AdminPrecosLista /></ProtectedRoute>} />
