@@ -15,7 +15,7 @@ import { toast } from '@/hooks/use-toast';
 interface PedidoConsumidor {
   id: string;
   consumidor: string;
-  produto: string;
+  alimento: string;
   medida: string;
   valor_unitario: number;
   quantidade: number;
@@ -47,7 +47,7 @@ export default function AdminPedidosConsumidores() {
     {
       id: '1',
       consumidor: 'Maria Silva',
-      produto: 'Tomate',
+      alimento: 'Tomate',
       medida: 'kg',
       valor_unitario: 5.50,
       quantidade: 3,
@@ -59,7 +59,7 @@ export default function AdminPedidosConsumidores() {
     {
       id: '2',
       consumidor: 'Maria Silva',
-      produto: 'Alface',
+      alimento: 'Alface',
       medida: 'unidade',
       valor_unitario: 2.00,
       quantidade: 5,
@@ -71,7 +71,7 @@ export default function AdminPedidosConsumidores() {
     {
       id: '3',
       consumidor: 'João Santos',
-      produto: 'Cenoura',
+      alimento: 'Cenoura',
       medida: 'kg',
       valor_unitario: 4.00,
       quantidade: 2,
@@ -83,7 +83,7 @@ export default function AdminPedidosConsumidores() {
     {
       id: '4',
       consumidor: 'Ana Costa',
-      produto: 'Rúcula',
+      alimento: 'Rúcula',
       medida: 'maço',
       valor_unitario: 3.50,
       quantidade: 4,
@@ -97,7 +97,7 @@ export default function AdminPedidosConsumidores() {
   const filteredPedidos = pedidos
     .filter(pedido => {
       const matchSearch = pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.alimento.toLowerCase().includes(searchTerm.toLowerCase()) ||
         pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchAgriculturaFamiliar = filtroAgriculturaFamiliar === 'todos' ||
@@ -138,7 +138,7 @@ export default function AdminPedidosConsumidores() {
       const pedidosExport = filteredPedidos.map(p => ({
         ciclo: `Ciclo ${id}`,
         consumidor: p.consumidor,
-        produto: p.produto,
+        alimento: p.alimento,
         fornecedor: p.fornecedor,
         medida: p.medida,
         valor_unitario: p.valor_unitario,
@@ -161,7 +161,7 @@ export default function AdminPedidosConsumidores() {
       const pedidosExport = filteredPedidos.map(p => ({
         ciclo: `Ciclo ${id}`,
         consumidor: p.consumidor,
-        produto: p.produto,
+        alimento: p.alimento,
         fornecedor: p.fornecedor,
         medida: p.medida,
         valor_unitario: p.valor_unitario,
@@ -247,7 +247,7 @@ export default function AdminPedidosConsumidores() {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Filtrar por consumidor ou produto"
+              placeholder="Filtrar por consumidor ou alimento"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -309,7 +309,7 @@ export default function AdminPedidosConsumidores() {
             <TableHeader>
               <TableRow>
                 <TableHead>Consumidor</TableHead>
-                <TableHead>Produto</TableHead>
+                <TableHead>Alimento</TableHead>
                 <TableHead 
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={handleSortByFornecedor}
@@ -346,7 +346,7 @@ export default function AdminPedidosConsumidores() {
                     <TableCell className="font-medium">{pedido.consumidor}</TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-1">
-                        <span>{pedido.produto}</span>
+                        <span>{pedido.alimento}</span>
                         <div className="flex gap-1">
                           {pedido.agricultura_familiar && (
                             <Badge variant="secondary" className="text-xs">
@@ -441,7 +441,7 @@ export default function AdminPedidosConsumidores() {
                 <h4 className="font-semibold mb-2">Itens do Pedido</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center p-2 bg-muted rounded">
-                    <span className="font-medium">{selectedPedido.produto}</span>
+                    <span className="font-medium">{selectedPedido.alimento}</span>
                     <span className="text-sm text-muted-foreground">
                       {selectedPedido.quantidade} {selectedPedido.medida}
                     </span>
