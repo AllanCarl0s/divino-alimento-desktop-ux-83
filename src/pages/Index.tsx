@@ -18,8 +18,10 @@ const Index = () => {
       {/* Header laranja com logo sobreposto */}
       <header className="relative h-20 lg:h-28 bg-[#F29B2C] flex items-center justify-center">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14">
-          <button 
-            onClick={() => navigate('/')}
+          <a 
+            href="https://github.com/AssociacaoAkarui/DivinoAlimento"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hover:opacity-90 transition-opacity"
             style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
           >
@@ -28,7 +30,7 @@ const Index = () => {
               alt="Divino Alimento"
               className="w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] lg:w-[200px] lg:h-[200px] object-contain"
             />
-          </button>
+          </a>
         </div>
       </header>
 
