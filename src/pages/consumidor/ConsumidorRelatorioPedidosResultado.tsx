@@ -9,6 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ArrowLeft, Download, Search } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
 import { useIsMobile } from '@/hooks/use-mobile';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface PedidoItem {
   id: string;
@@ -156,9 +158,63 @@ export default function ConsumidorRelatorioPedidosResultado() {
   };
 
   const handleExportPDF = () => {
-    // Implementação simplificada - em produção, usar jsPDF
-    console.log('Exportar PDF - Em desenvolvimento');
-    alert('Funcionalidade de exportação PDF será implementada em breve');
+    const doc = new jsPDF();
+    
+    // Título
+    doc.setFontSize(18);
+    doc.setTextColor(0, 148, 54); // Verde primary
+    doc.text('Relatório de Pedidos', 14, 20);
+    
+    // Informações do ciclo
+    doc.setFontSize(11);
+    doc.setTextColor(100, 100, 100);
+    doc.text(cicloId === '1' ? '1º Ciclo de Novembro 2025' : `Ciclo ${cicloId}`, 14, 28);
+    
+    // Resumo
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Resumo do Pedido', 14, 40);
+    
+    doc.setFontSize(10);
+    doc.text(`Total de Itens: ${resumo.totalItens}`, 14, 48);
+    doc.text(`Valor Cesta: ${formatBRL(resumo.valorTotalCesta)}`, 14, 54);
+    doc.text(`Valor Varejo: ${formatBRL(resumo.valorTotalVarejo)}`, 14, 60);
+    doc.setFont(undefined, 'bold');
+    doc.text(`Valor Total: ${formatBRL(resumo.valorTotal)}`, 14, 66);
+    doc.setFont(undefined, 'normal');
+    
+    // Tabela de pedidos
+    autoTable(doc, {
+      startY: 75,
+      head: [['Alimento', 'Fornecedor', 'Medida', 'Qtd', 'Valor Unit.', 'Valor Total', 'Tipo']],
+      body: pedidosFiltrados.map(p => [
+        p.alimento,
+        p.fornecedor,
+        p.medida,
+        p.quantidade.toString(),
+        formatBRL(p.valorUnitario),
+        formatBRL(p.valorTotal),
+        p.tipo
+      ]),
+      theme: 'grid',
+      headStyles: { 
+        fillColor: [0, 148, 54],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      styles: {
+        fontSize: 9,
+        cellPadding: 3
+      },
+      columnStyles: {
+        3: { halign: 'right' },
+        4: { halign: 'right' },
+        5: { halign: 'right' }
+      }
+    });
+    
+    // Salvar PDF
+    doc.save(`relatorio_pedidos_ciclo_${cicloId}.pdf`);
   };
 
   return (
