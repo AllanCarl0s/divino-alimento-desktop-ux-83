@@ -104,7 +104,7 @@ export default function OfertaCiclo() {
   const handleRemoverProduto = (id: string) => {
     setProdutosOfertados(produtosOfertados.filter(p => p.id !== id));
     toast({
-      title: "Produto removido",
+      title: "Alimento removido",
       description: "O alimento foi removido da oferta.",
     });
   };
