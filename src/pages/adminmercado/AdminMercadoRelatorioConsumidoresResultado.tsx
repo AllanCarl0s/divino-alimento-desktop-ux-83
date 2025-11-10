@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 interface PedidoConsumidor {
   id: string;
   consumidor: string;
-  produto: string;
+  alimento: string;
   fornecedor: string;
   medida: string;
   valor_unitario: number;
@@ -40,7 +40,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
     {
       id: '1',
       consumidor: 'Maria Silva',
-      produto: 'Tomate',
+      alimento: 'Tomate',
       fornecedor: 'Sítio Verde',
       medida: 'kg',
       valor_unitario: 5.50,
@@ -53,7 +53,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
     {
       id: '2',
       consumidor: 'João Santos',
-      produto: 'Alface',
+      alimento: 'Alface',
       fornecedor: 'Maria Horta',
       medida: 'unidade',
       valor_unitario: 2.00,
@@ -68,7 +68,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
   const filteredPedidos = pedidos
     .filter(pedido => {
       const matchSearch = pedido.consumidor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pedido.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.alimento.toLowerCase().includes(searchTerm.toLowerCase()) ||
         pedido.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
         pedido.ciclo.toLowerCase().includes(searchTerm.toLowerCase());
       
@@ -177,7 +177,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Filtrar por consumidor, produto, fornecedor ou ciclo"
+              placeholder="Filtrar por consumidor, alimento, fornecedor ou ciclo"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -231,7 +231,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
               <TableRow>
                 <TableHead>Ciclo</TableHead>
                 <TableHead>Consumidor</TableHead>
-                <TableHead>Produto</TableHead>
+                <TableHead>Alimento</TableHead>
                 <TableHead 
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={handleSortByFornecedor}
@@ -268,7 +268,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
                     <TableCell>{pedido.consumidor}</TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-1">
-                        <span>{pedido.produto}</span>
+                        <span>{pedido.alimento}</span>
                         <div className="flex gap-1">
                           {pedido.agricultura_familiar && (
                             <Badge variant="secondary" className="text-xs">

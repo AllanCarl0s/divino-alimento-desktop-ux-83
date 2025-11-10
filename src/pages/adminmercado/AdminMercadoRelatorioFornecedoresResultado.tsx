@@ -15,7 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 interface EntregaFornecedor {
   id: string;
   fornecedor: string;
-  produto: string;
+  alimento: string;
   unidade_medida: string;
   valor_unitario: number;
   quantidade_entregue: number;
@@ -41,7 +41,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
     {
       id: '1',
       fornecedor: 'Fazenda Verde',
-      produto: 'Tomate',
+      alimento: 'Tomate',
       unidade_medida: 'kg',
       valor_unitario: 5.50,
       quantidade_entregue: 120,
@@ -53,7 +53,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
     {
       id: '2',
       fornecedor: 'Sítio do Sol',
-      produto: 'Alface',
+      alimento: 'Alface',
       unidade_medida: 'unidade',
       valor_unitario: 2.00,
       quantidade_entregue: 200,
@@ -67,7 +67,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
   const filteredEntregas = entregas
     .filter(entrega => {
       const matchSearch = entrega.fornecedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        entrega.produto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        entrega.alimento.toLowerCase().includes(searchTerm.toLowerCase()) ||
         entrega.ciclo.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchAgriculturaFamiliar = filtroAgriculturaFamiliar === 'todos' ||
@@ -173,7 +173,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar fornecedor, produto ou ciclo"
+              placeholder="Buscar fornecedor, alimento ou ciclo"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -241,7 +241,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
                       )}
                     </div>
                   </TableHead>
-                  <TableHead>Produto</TableHead>
+                  <TableHead>Alimento</TableHead>
                   <TableHead>Unidade</TableHead>
                   <TableHead className="text-right">Valor Unit.</TableHead>
                   <TableHead className="text-right">Qtd. Entregue</TableHead>
@@ -264,7 +264,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
                       <TableCell>{entrega.fornecedor}</TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
-                          <span>{entrega.produto}</span>
+                          <span>{entrega.alimento}</span>
                           <div className="flex gap-1">
                             {entrega.agricultura_familiar && (
                               <Badge variant="secondary" className="text-xs">
@@ -331,7 +331,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
                     <div className="border-t pt-3 space-y-2">
                       <div className="flex justify-between items-start">
                         <div className="space-y-1">
-                          <p className="font-medium">{entrega.produto}</p>
+                          <p className="font-medium">{entrega.alimento}</p>
                           <div className="flex flex-wrap gap-1">
                             {entrega.agricultura_familiar && (
                               <Badge variant="secondary" className="text-xs">
