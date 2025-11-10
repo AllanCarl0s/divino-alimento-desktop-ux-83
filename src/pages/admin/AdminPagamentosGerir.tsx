@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, Edit2, Check } from "lucide-react";
+import { ArrowLeft, Search, Edit2, Check, Trash2 } from "lucide-react";
 import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { UserMenuLarge } from "@/components/layout/UserMenuLarge";
@@ -36,6 +37,7 @@ const AdminPagamentosGerir = () => {
   const [novaDataPagamento, setNovaDataPagamento] = useState<string>("");
   const [novaObservacao, setNovaObservacao] = useState<string>("");
   const [dialogAberto, setDialogAberto] = useState(false);
+  const [pagamentoParaExcluir, setPagamentoParaExcluir] = useState<string | null>(null);
 
   useEffect(() => {
     // Carregar dados do localStorage
@@ -129,6 +131,17 @@ const AdminPagamentosGerir = () => {
       });
       setDialogAberto(false);
       setEditandoPagamento(null);
+    }
+  };
+
+  const handleExcluirPagamento = () => {
+    if (pagamentoParaExcluir) {
+      setPagamentos(prev => prev.filter(p => p.id !== pagamentoParaExcluir));
+      toast({
+        title: "Pagamento excluído",
+        description: "O registro de pagamento foi removido com sucesso.",
+      });
+      setPagamentoParaExcluir(null);
     }
   };
 
@@ -311,6 +324,15 @@ const AdminPagamentosGerir = () => {
                           >
                             <Edit2 className="h-4 w-4" />
                           </Button>
+                          <Button
+                            variant="outline"
+                            size="icon-sm"
+                            onClick={() => setPagamentoParaExcluir(pagamento.id)}
+                            title="Excluir"
+                            className="border-green-500 text-green-600 hover:bg-green-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -419,6 +441,24 @@ const AdminPagamentosGerir = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* AlertDialog para Confirmar Exclusão */}
+        <AlertDialog open={!!pagamentoParaExcluir} onOpenChange={() => setPagamentoParaExcluir(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza que deseja excluir este registro de pagamento? Esta ação não pode ser desfeita.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleExcluirPagamento}>
+                Excluir
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </ResponsiveLayout>
   );
