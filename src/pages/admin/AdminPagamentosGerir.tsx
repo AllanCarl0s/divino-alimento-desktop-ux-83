@@ -329,7 +329,7 @@ const AdminPagamentosGerir = () => {
                             size="icon-sm"
                             onClick={() => setPagamentoParaExcluir(pagamento.id)}
                             title="Excluir"
-                            className="border-green-500 text-green-600 hover:bg-green-50"
+                            className="border-red-500 text-red-600 hover:bg-red-50"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
