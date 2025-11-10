@@ -368,11 +368,12 @@ const AdminPagamentosGerar = () => {
                               <Edit2 className="h-4 w-4" />
                             </Button>
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="icon-sm"
                               onClick={() => handleExcluirPagamento(pagamento.id)}
+                              className="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
                             >
-                              <Trash2 className="h-4 w-4 text-destructive" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
                         </td>
