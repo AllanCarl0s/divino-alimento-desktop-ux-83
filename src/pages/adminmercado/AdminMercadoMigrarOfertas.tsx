@@ -341,9 +341,9 @@ export default function AdminMercadoMigrarOfertas() {
             <CardHeader>
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <CardTitle className="text-primary">Produtos que sobraram</CardTitle>
+                  <CardTitle className="text-primary">Alimentos que sobraram</CardTitle>
                   <CardDescription>
-                    Selecione os produtos e quantidades que deseja migrar
+                    Selecione os alimentos e quantidades que deseja migrar
                   </CardDescription>
                 </div>
                 <div className="flex gap-2">
@@ -369,7 +369,7 @@ export default function AdminMercadoMigrarOfertas() {
             <CardContent>
               <div className="mb-4">
                 <Input
-                  placeholder="Buscar produto ou fornecedor..."
+                  placeholder="Buscar alimento ou fornecedor..."
                   value={busca}
                   onChange={(e) => setBusca(e.target.value)}
                 />
@@ -379,7 +379,7 @@ export default function AdminMercadoMigrarOfertas() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12">Sel.</TableHead>
-                    <TableHead>Produto</TableHead>
+                    <TableHead>Alimento</TableHead>
                     <TableHead>Fornecedor</TableHead>
                     <TableHead>Medida</TableHead>
                     <TableHead className="text-right">Ofertados</TableHead>
