@@ -293,19 +293,21 @@ const AdminPagamentosGerir = () => {
                         <div className="flex gap-2">
                           {pagamento.status === "Pendente" && (
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="icon-sm"
                               onClick={() => handleMarcarPago(pagamento.id)}
                               title="Marcar como pago"
+                              className="border-green-500 text-green-600 hover:bg-green-50"
                             >
-                              <Check className="h-4 w-4 text-success" />
+                              <Check className="h-4 w-4" />
                             </Button>
                           )}
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="icon-sm"
                             onClick={() => handleEditarPagamento(pagamento)}
-                            title="Editar valor"
+                            title="Editar"
+                            className="border-green-500 text-green-600 hover:bg-green-50"
                           >
                             <Edit2 className="h-4 w-4" />
                           </Button>
