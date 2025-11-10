@@ -360,18 +360,20 @@ const AdminPagamentosGerar = () => {
                         <td className="py-3 px-4">
                           <div className="flex gap-2">
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="icon-sm"
                               onClick={() => handleEditarPagamento(pagamento)}
+                              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                             >
                               <Edit2 className="h-4 w-4" />
                             </Button>
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="icon-sm"
                               onClick={() => handleExcluirPagamento(pagamento.id)}
+                              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                             >
-                              <Trash2 className="h-4 w-4 text-destructive" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
                         </td>
