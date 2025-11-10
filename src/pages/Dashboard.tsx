@@ -21,29 +21,32 @@ const Dashboard = () => {
       descricao: 'Ver itens da sua cesta no ciclo atual',
       icone: ShoppingBasket,
       rota: '/minhaCesta/1',
-      habilitado: true
+      habilitado: true,
+      badge: undefined
     },
     {
       titulo: 'Pedido em Varejo',
       descricao: 'Comprar alimentos da venda direta',
       icone: ShoppingCart,
       rota: '/consumidor/selecionar-ciclo',
-      habilitado: true
+      habilitado: true,
+      badge: undefined
     },
     {
-      titulo: 'Meus Pagamentos',
-      descricao: 'Acompanhe seus pagamentos (em aberto e quitados)',
-      icone: Wallet,
-      rota: '/consumidor/pagamentos',
+      titulo: 'Relatório de Pedidos',
+      descricao: 'Visualize e exporte relatórios dos seus pedidos',
+      icone: FileText,
+      rota: '/consumidor/relatorio-pedidos',
       habilitado: true,
-      badge: 'Pendente'
+      badge: undefined
     },
     {
       titulo: 'Dados Pessoais',
       descricao: 'Atualize seu perfil e contato',
       icone: UserCircle,
       rota: '/usuario/1',
-      habilitado: true
+      habilitado: true,
+      badge: undefined
     }
   ];
 
