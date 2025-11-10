@@ -8,7 +8,7 @@ const routeLabels: Record<string, string> = {
   '/admin/dashboard': 'Dashboard',
   '/admin/mercados': 'Mercados',
   '/admin/alimentos': 'Alimentos',
-  '/admin/produtos': 'Produtos',
+  '/admin/produtos': 'Alimentos',
   '/admin/estoque': 'Estoque',
   '/admin/venda': 'Página de Venda',
   '/admin/cestas': 'Cestas',

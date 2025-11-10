@@ -19,7 +19,7 @@ const consumerTabs: TabItem[] = [
 const fornecedorTabs: TabItem[] = [
   { title: 'Loja', url: '/fornecedor/loja', icon: Home },
   { title: 'Pedidos', url: '/fornecedor/pedidos-aberto', icon: ShoppingBasket },
-  { title: 'Produtos', url: '/fornecedor/pre-cadastro-produtos', icon: Package },
+  { title: 'Alimentos', url: '/fornecedor/pre-cadastro-produtos', icon: Package },
   { title: 'Perfil', url: '/fornecedor/configuracoes', icon: User },
 ];
 

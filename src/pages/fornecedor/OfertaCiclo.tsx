@@ -431,16 +431,16 @@ export default function OfertaCiclo() {
 
                 <Button onClick={handleAdicionarProduto} className="w-full md:w-auto">
                   <Plus className="mr-2 h-4 w-4" />
-                  Adicionar Produto
+                  Adicionar Alimento
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Lista de produtos ofertados */}
+            {/* Lista de alimentos ofertados */}
             {produtosOfertados.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Produtos Ofertados</CardTitle>
+                  <CardTitle>Alimentos Ofertados</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {isMobile ? (
@@ -530,7 +530,7 @@ export default function OfertaCiclo() {
           <Card>
             <CardContent className="py-12 text-center">
               <p className="text-muted-foreground">
-                Período para ofertas encerrado. Não há produtos ofertados por você.
+                Período para ofertas encerrado. Não há alimentos ofertados por você.
               </p>
             </CardContent>
           </Card>

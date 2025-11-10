@@ -56,7 +56,7 @@ const LojaProdutor = () => {
     },
     {
       title: 'Relatório de Entregas',
-      description: 'Veja os pedidos e locais de entrega dos produtos desse ciclo.',
+      description: 'Veja os pedidos e locais de entrega dos alimentos desse ciclo.',
       icon: Truck,
       route: '/fornecedor/selecionar-ciclo-entregas',
       enabled: true

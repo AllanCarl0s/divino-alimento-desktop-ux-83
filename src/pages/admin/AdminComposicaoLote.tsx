@@ -56,7 +56,7 @@ export default function AdminComposicaoLote() {
     }
   }, [id, mercadoId]);
 
-  // Dados mock - Produtos ofertados com produto_base
+  // Dados mock - Alimentos ofertados com produto_base
   const [ofertas] = useState<Oferta[]>([
     {
       id: '1',
@@ -475,7 +475,7 @@ export default function AdminComposicaoLote() {
                   <div className="relative flex-1 max-w-md">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Buscar alimento, fornecedor ou unidade..."
+                    placeholder="Buscar alimento, fornecedor ou unidade..."
                       value={busca}
                       onChange={(e) => setBusca(e.target.value)}
                       className="pl-10"

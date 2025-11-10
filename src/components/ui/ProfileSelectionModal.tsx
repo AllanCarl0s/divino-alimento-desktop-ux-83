@@ -29,14 +29,14 @@ const profileConfigs = {
   fornecedor: {
     icon: Store,
     title: 'Fornecedor/Fornecedora',
-    description: 'Gestão de produtos e vendas',
+    description: 'Gestão de alimentos e vendas',
     color: 'text-accent',
     route: '/fornecedor/loja'
   },
   produtor: {
     icon: Store,
     title: 'Produtor/Produtora',
-    description: 'Gestão de produção e vendas',
+    description: 'Gestão de alimentos e vendas',
     color: 'text-accent',
     route: '/fornecedor/loja'
   },

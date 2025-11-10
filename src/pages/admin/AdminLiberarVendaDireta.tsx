@@ -496,7 +496,7 @@ export default function AdminLiberarVendaDireta() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Publicação</AlertDialogTitle>
             <AlertDialogDescription>
-              Deseja liberar os produtos selecionados para venda direta?
+              Deseja liberar os alimentos selecionados para venda direta?
               <br />
               <br />
               Após publicar, eles ficarão disponíveis para os consumidores.

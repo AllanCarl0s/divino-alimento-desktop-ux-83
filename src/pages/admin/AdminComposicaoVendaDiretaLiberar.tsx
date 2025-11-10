@@ -322,14 +322,14 @@ export default function AdminComposicaoVendaDiretaLiberar() {
           </CardHeader>
         </Card>
 
-        {/* Produtos Selecionados */}
+        {/* Alimentos Selecionados */}
         {selectedItems.length > 0 && (
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Produtos Selecionados para Venda Direta</CardTitle>
+                <CardTitle>Alimentos Selecionados para Venda Direta</CardTitle>
                 <div className="text-sm text-muted-foreground">
-                  {selectedItems.length} produto(s)
+                  {selectedItems.length} alimento(s)
                 </div>
               </div>
             </CardHeader>
@@ -337,7 +337,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
               <Table className="tabela-produtos-selecionados">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="td-texto">Produto</TableHead>
+                    <TableHead className="td-texto">Alimento</TableHead>
                     <TableHead className="td-texto">Medida</TableHead>
                     <TableHead className="td-valor">Valor Unit.</TableHead>
                     <TableHead className="td-texto">Fornecedor</TableHead>
@@ -404,16 +404,16 @@ export default function AdminComposicaoVendaDiretaLiberar() {
           </Card>
         )}
 
-        {/* Produtos Agrupados */}
+        {/* Alimentos Agrupados */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
-              <CardTitle>Produtos Ofertados</CardTitle>
+              <CardTitle>Alimentos Ofertados</CardTitle>
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="relative w-64">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Buscar produto, fornecedor ou unidade..."
+                    placeholder="Buscar alimento, fornecedor ou unidade..."
                     value={busca}
                     onChange={(e) => setBusca(e.target.value)}
                     className="pl-10"

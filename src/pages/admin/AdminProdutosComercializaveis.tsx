@@ -115,8 +115,8 @@ const AdminProdutosComercializaveis = () => {
     setProdutos(prev => prev.filter(p => p.id !== id));
     
     toast({
-      title: "Produto excluído",
-      description: "O produto comercializável foi removido com sucesso.",
+      title: "Alimento excluído",
+      description: "O alimento comercializável foi removido com sucesso.",
     });
   };
 
@@ -261,7 +261,7 @@ const AdminProdutosComercializaveis = () => {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Deseja realmente excluir este alimento? Esta ação não pode ser desfeita.
+                                    Deseja realmente excluir este alimento comercializável? Esta ação não pode ser desfeita.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>

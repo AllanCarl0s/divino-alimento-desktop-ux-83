@@ -72,7 +72,7 @@ const createCycleBanners = (): CycleBanner[] => {
   // Extras Window (entire current cycle)
   banners.push({
     id: 'extras',
-    title: 'Produtos Extras',
+    title: 'Alimentos Extras',
     cycleType: 'semanal',
     startDate: currentStart,
     endDate: currentEnd,
@@ -97,7 +97,7 @@ const createCycleBanners = (): CycleBanner[] => {
     cycleType: 'quinzenal',
     startDate: nextStart,
     endDate: nextEnd,
-    products: ['Produtos Sazonais', 'Novidades', 'Especialidades'],
+    products: ['Alimentos Sazonais', 'Novidades', 'Especialidades'],
     backgroundColor: 'bg-gradient-to-r from-muted to-secondary',
     textColor: 'text-foreground',
     badgeType: 'upcoming'
@@ -290,7 +290,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ className }) => {
                           "text-lg font-semibold",
                           banner.textColor
                         )}>
-                          Produtos em Destaque:
+                          Alimentos em Destaque:
                         </h3>
                         <div className="space-y-2">
                           {banner.products.map((product, index) => (
@@ -308,7 +308,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ className }) => {
                           variant="outline"
                           className="bg-white/20 border-white/30 hover:bg-white/30 text-current"
                         >
-                          Ver Produtos
+                          Ver Alimentos
                         </Button>
                       </div>
                       

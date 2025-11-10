@@ -105,7 +105,7 @@ const MinhaCesta = () => {
                     Você ainda não tem itens na cesta deste ciclo.
                   </h3>
                   <p className="text-muted-foreground mb-4">
-                    Confira os produtos disponíveis na venda direta
+                    Confira os alimentos disponíveis na venda direta
                   </p>
                   <Button 
                     onClick={() => navigate('/pedidoConsumidores/1')}
@@ -171,7 +171,7 @@ const MinhaCesta = () => {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Valor dos Produtos</span>
+              <span className="text-muted-foreground">Valor dos Alimentos</span>
               <span className="font-medium">{formatBRL(valorProdutos)}</span>
             </div>
             <div className="flex justify-between">
@@ -186,10 +186,10 @@ const MinhaCesta = () => {
           </CardContent>
         </Card>
 
-        {/* Produtos da Cesta */}
+        {/* Alimentos da Cesta */}
         <Card>
           <CardHeader>
-            <CardTitle>Produtos da Minha Cesta</CardTitle>
+            <CardTitle>Alimentos da Minha Cesta</CardTitle>
           </CardHeader>
           <CardContent>
             {isMobile ? (
@@ -240,7 +240,7 @@ const MinhaCesta = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Produto</TableHead>
+                    <TableHead>Alimento</TableHead>
                     <TableHead>Medida</TableHead>
                     <TableHead className="text-right">Quantidade</TableHead>
                     <TableHead className="text-right">Valor Unitário</TableHead>

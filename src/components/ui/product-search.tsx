@@ -19,7 +19,7 @@ interface ProductSearchProps {
 export const ProductSearch: React.FC<ProductSearchProps> = ({
   value,
   onSelect,
-  label = "Buscar produto base",
+  label = "Buscar alimento base",
   placeholder = "Digite para buscar...",
   className,
 }) => {
@@ -57,7 +57,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   };
 
   const handleCreateNew = () => {
-    window.open('/admin/produtos/new', '_blank');
+    window.open('/admin/alimentos/new', '_blank');
   };
 
   return (
@@ -94,7 +94,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
                 {filteredProducts.length === 0 ? (
                   <div className="space-y-3 p-4 text-center">
                     <p className="text-sm text-muted-foreground">
-                      Nenhum produto encontrado
+                      Nenhum alimento encontrado
                     </p>
                     <Button
                       type="button"
@@ -104,7 +104,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
                       className="w-full"
                     >
                       <Plus className="w-4 h-4 mr-2" />
-                      Criar novo produto base
+                      Criar novo alimento base
                       <ExternalLink className="w-3 h-3 ml-2" />
                     </Button>
                   </div>
@@ -146,7 +146,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
                           className="w-full justify-start"
                         >
                           <Plus className="w-4 h-4 mr-2" />
-                          Criar novo produto base
+                          Criar novo alimento base
                           <ExternalLink className="w-3 h-3 ml-2" />
                         </Button>
                       </div>

@@ -146,7 +146,7 @@ const AdminVenda = () => {
                 <CardHeader>
                   <CardTitle className="text-base flex items-center space-x-2">
                     <Package className="w-4 h-4 text-accent" />
-                    <span>Produtos Disponíveis</span>
+                    <span>Alimentos Disponíveis</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">

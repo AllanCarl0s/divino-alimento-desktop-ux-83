@@ -70,8 +70,8 @@ const AdminProdutosComercialivaveis = () => {
     setProdutos(prev => prev.filter(p => p.id !== selectedId));
     
     toast({
-      title: "Produto excluído",
-      description: "O produto comercializável foi removido com sucesso.",
+      title: "Alimento excluído",
+      description: "O alimento comercializável foi removido com sucesso.",
     });
     setDeleteDialogOpen(false);
     setSelectedId(null);
@@ -98,7 +98,7 @@ const AdminProdutosComercialivaveis = () => {
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary mb-2">
-            Administrador - Produtos Comercializáveis
+            Administrador - Alimentos Comercializáveis
           </h1>
           <p className="text-muted-foreground">
             Gerencie variações comerciais por unidade, peso e preço
@@ -111,7 +111,7 @@ const AdminProdutosComercialivaveis = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
               type="text"
-              placeholder="Buscar produto comercializável por nome..."
+              placeholder="Buscar alimento comercializável por nome..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -119,7 +119,7 @@ const AdminProdutosComercialivaveis = () => {
           </div>
           <Button onClick={handleAddProduto} className="shrink-0">
             <Plus className="w-4 h-4 mr-2" />
-            Adicionar Produto Comercializável
+            Adicionar Alimento Comercializável
           </Button>
         </div>
 
@@ -130,7 +130,7 @@ const AdminProdutosComercialivaveis = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Produto Base</TableHead>
+                    <TableHead>Alimento Base</TableHead>
                     <TableHead>Unidade de Comercialização</TableHead>
                     <TableHead>Peso em Kg</TableHead>
                     <TableHead>Preço Base (R$)</TableHead>
@@ -239,7 +239,7 @@ const AdminProdutosComercialivaveis = () => {
         {filteredProdutos.length === 0 && (
           <Card>
             <CardContent className="p-12 text-center">
-              <p className="text-muted-foreground">Nenhum produto comercializável encontrado.</p>
+              <p className="text-muted-foreground">Nenhum alimento comercializável encontrado.</p>
             </CardContent>
           </Card>
         )}
@@ -251,7 +251,7 @@ const AdminProdutosComercialivaveis = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir este produto comercializável? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir este alimento comercializável? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

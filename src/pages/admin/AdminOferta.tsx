@@ -571,17 +571,17 @@ export default function AdminOferta() {
                   onClick={handleAdicionarProduto}
                   disabled={!isFormValid}
                 >
-                  {editingOferta ? 'Atualizar Produto' : 'Adicionar Produto'}
+                  {editingOferta ? 'Atualizar Alimento' : 'Adicionar Alimento'}
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Produtos Ofertados Table */}
+        {/* Alimentos Ofertados Table */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Produtos Ofertados</CardTitle>
+            <CardTitle>Alimentos Ofertados</CardTitle>
             {ofertas.length > 0 && (
               <Button 
                 onClick={handleSalvarOferta}

@@ -117,7 +117,7 @@ export const ProfileSwitchModal = ({ isOpen, onClose, currentProfile }: ProfileS
                     <span className="font-medium">Fornecedor</span>
                   </Label>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Gestão de produtos, pedidos e painel administrativo
+                    Gestão de alimentos, pedidos e painel administrativo
                   </p>
                 </div>
               </div>
