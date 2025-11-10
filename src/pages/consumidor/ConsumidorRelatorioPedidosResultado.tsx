@@ -284,7 +284,7 @@ export default function ConsumidorRelatorioPedidosResultado() {
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                         pedido.tipo === 'Cesta' 
                           ? 'bg-green-100 text-green-800' 
-                          : 'bg-blue-100 text-blue-800'
+                          : 'bg-secondary/10 text-secondary'
                       }`}>
                         {pedido.tipo}
                       </span>
@@ -310,7 +310,7 @@ export default function ConsumidorRelatorioPedidosResultado() {
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       pedido.tipo === 'Cesta' 
                         ? 'bg-green-100 text-green-800' 
-                        : 'bg-blue-100 text-blue-800'
+                        : 'bg-secondary/10 text-secondary'
                     }`}>
                       {pedido.tipo}
                     </span>
