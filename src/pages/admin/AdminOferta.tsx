@@ -604,7 +604,7 @@ export default function AdminOferta() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Produto</TableHead>
+                        <TableHead>Alimento</TableHead>
                         <TableHead>Unidade</TableHead>
                         <TableHead>Peso/Volume</TableHead>
                         <TableHead>Preço Base</TableHead>
