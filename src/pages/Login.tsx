@@ -67,11 +67,26 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    toast({
-      title: "Login com Google",
-      description: "Funcionalidade em desenvolvimento",
-    });
+  const handleGoogleLogin = async () => {
+    try {
+      // Aqui você implementaria a integração com Google OAuth
+      // Por enquanto, simulamos o login e redirecionamos para registro
+      toast({
+        title: "Login com Google",
+        description: "Redirecionando para completar cadastro...",
+      });
+      
+      // Redireciona para a tela de registro
+      setTimeout(() => {
+        navigate('/registro');
+      }, 1000);
+    } catch (error) {
+      toast({
+        title: "Erro no login com Google",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
