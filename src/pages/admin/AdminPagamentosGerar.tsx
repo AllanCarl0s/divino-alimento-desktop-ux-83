@@ -26,9 +26,12 @@ interface Pagamento {
   id: string;
   tipo: "Fornecedor" | "Consumidor";
   nome: string;
-  produto: string;
+  ciclo: string;
+  mercado: string;
   valorTotal: number;
-  status: "A receber" | "A pagar";
+  status: "A receber" | "A pagar" | "Pago" | "Cancelado";
+  dataPagamento?: string;
+  observacao?: string;
 }
 
 const ciclosFinalizados: Ciclo[] = [
@@ -64,6 +67,9 @@ const AdminPagamentosGerar = () => {
   const [pagamentos, setPagamentos] = useState<Pagamento[]>([]);
   const [editandoPagamento, setEditandoPagamento] = useState<Pagamento | null>(null);
   const [novoValor, setNovoValor] = useState<string>("");
+  const [novoStatus, setNovoStatus] = useState<string>("");
+  const [novaDataPagamento, setNovaDataPagamento] = useState<string>("");
+  const [novaObservacao, setNovaObservacao] = useState<string>("");
   const [dialogAberto, setDialogAberto] = useState(false);
 
   const handleToggleCiclo = (cicloId: string) => {
@@ -85,7 +91,8 @@ const AdminPagamentosGerar = () => {
         id: "1",
         tipo: "Fornecedor",
         nome: "Sítio Verde",
-        produto: "Tomate Orgânico",
+        ciclo: "1º Ciclo de Outubro 2025",
+        mercado: "Mercado Central",
         valorTotal: 450.00,
         status: "A receber",
       },
@@ -93,7 +100,8 @@ const AdminPagamentosGerar = () => {
         id: "2",
         tipo: "Consumidor",
         nome: "Ana Souza",
-        produto: "Cesta semanal",
+        ciclo: "1º Ciclo de Outubro 2025",
+        mercado: "Mercado Sul",
         valorTotal: 120.00,
         status: "A pagar",
       },
@@ -101,7 +109,8 @@ const AdminPagamentosGerar = () => {
         id: "3",
         tipo: "Fornecedor",
         nome: "Maria Horta",
-        produto: "Banana Prata",
+        ciclo: "2º Ciclo de Outubro 2025",
+        mercado: "Mercado Central",
         valorTotal: 300.00,
         status: "A receber",
       },
@@ -109,7 +118,8 @@ const AdminPagamentosGerar = () => {
         id: "4",
         tipo: "Consumidor",
         nome: "João Silva",
-        produto: "Cesta mensal",
+        ciclo: "2º Ciclo de Outubro 2025",
+        mercado: "Mercado Norte",
         valorTotal: 180.00,
         status: "A pagar",
       },
@@ -117,7 +127,8 @@ const AdminPagamentosGerar = () => {
         id: "5",
         tipo: "Fornecedor",
         nome: "Fazenda Boa Vista",
-        produto: "Alface Crespa",
+        ciclo: "3º Ciclo de Setembro 2025",
+        mercado: "Mercado Central",
         valorTotal: 225.00,
         status: "A receber",
       },
@@ -133,6 +144,9 @@ const AdminPagamentosGerar = () => {
   const handleEditarPagamento = (pagamento: Pagamento) => {
     setEditandoPagamento(pagamento);
     setNovoValor(pagamento.valorTotal.toFixed(2).replace(".", ","));
+    setNovoStatus(pagamento.status);
+    setNovaDataPagamento(pagamento.dataPagamento || "");
+    setNovaObservacao(pagamento.observacao || "");
     setDialogAberto(true);
   };
 
@@ -142,13 +156,19 @@ const AdminPagamentosGerar = () => {
       setPagamentos(prev =>
         prev.map(p =>
           p.id === editandoPagamento.id
-            ? { ...p, valorTotal: valorFormatado }
+            ? { 
+                ...p, 
+                valorTotal: valorFormatado,
+                status: novoStatus as Pagamento["status"],
+                dataPagamento: novaDataPagamento || undefined,
+                observacao: novaObservacao || undefined
+              }
             : p
         )
       );
       toast({
-        title: "Valor atualizado!",
-        description: "O pagamento foi editado com sucesso.",
+        title: "Pagamento atualizado!",
+        description: "As alterações foram salvas com sucesso.",
       });
       setDialogAberto(false);
       setEditandoPagamento(null);
@@ -304,7 +324,8 @@ const AdminPagamentosGerar = () => {
                     <tr className="border-b">
                       <th className="text-left py-3 px-4 font-semibold text-primary">Tipo</th>
                       <th className="text-left py-3 px-4 font-semibold text-primary">Nome</th>
-                      <th className="text-left py-3 px-4 font-semibold text-primary">Produto / Item</th>
+                      <th className="text-left py-3 px-4 font-semibold text-primary">Ciclo</th>
+                      <th className="text-left py-3 px-4 font-semibold text-primary">Mercado</th>
                       <th className="text-left py-3 px-4 font-semibold text-primary">Valor Total</th>
                       <th className="text-left py-3 px-4 font-semibold text-primary">Status</th>
                       <th className="text-left py-3 px-4 font-semibold text-primary">Ações</th>
@@ -324,10 +345,15 @@ const AdminPagamentosGerar = () => {
                           </Badge>
                         </td>
                         <td className="py-3 px-4">{pagamento.nome}</td>
-                        <td className="py-3 px-4">{pagamento.produto}</td>
+                        <td className="py-3 px-4">{pagamento.ciclo}</td>
+                        <td className="py-3 px-4">{pagamento.mercado}</td>
                         <td className="py-3 px-4 font-semibold">{formatarValor(pagamento.valorTotal)}</td>
                         <td className="py-3 px-4">
-                          <Badge variant={pagamento.status === "A receber" ? "success" : "outline"}>
+                          <Badge variant={
+                            pagamento.status === "Pago" ? "success" : 
+                            pagamento.status === "Cancelado" ? "destructive" :
+                            pagamento.status === "A receber" ? "default" : "outline"
+                          }>
                             {pagamento.status}
                           </Badge>
                         </td>
@@ -370,23 +396,57 @@ const AdminPagamentosGerar = () => {
           </Card>
         )}
 
-        {/* Dialog para Editar Valor */}
+        {/* Dialog para Editar Pagamento */}
         <Dialog open={dialogAberto} onOpenChange={setDialogAberto}>
-          <DialogContent>
+          <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Editar Valor do Pagamento</DialogTitle>
+              <DialogTitle>Editar Pagamento</DialogTitle>
               <DialogDescription>
-                Ajuste o valor total do pagamento
+                Ajuste os dados do pagamento
               </DialogDescription>
             </DialogHeader>
-            <div className="py-4">
-              <Label htmlFor="valor">Valor Total (R$)</Label>
-              <Input
-                id="valor"
-                value={novoValor}
-                onChange={(e) => setNovoValor(e.target.value)}
-                placeholder="0,00"
-              />
+            <div className="space-y-4 py-4">
+              <div>
+                <Label htmlFor="valor">Valor Total (R$)</Label>
+                <Input
+                  id="valor"
+                  value={novoValor}
+                  onChange={(e) => setNovoValor(e.target.value)}
+                  placeholder="0,00"
+                />
+              </div>
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <select
+                  id="status"
+                  value={novoStatus}
+                  onChange={(e) => setNovoStatus(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="A receber">A receber</option>
+                  <option value="A pagar">A pagar</option>
+                  <option value="Pago">Pago</option>
+                  <option value="Cancelado">Cancelado</option>
+                </select>
+              </div>
+              <div>
+                <Label htmlFor="dataPagamento">Data do Pagamento</Label>
+                <Input
+                  id="dataPagamento"
+                  type="date"
+                  value={novaDataPagamento}
+                  onChange={(e) => setNovaDataPagamento(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="observacao">Observação</Label>
+                <Input
+                  id="observacao"
+                  value={novaObservacao}
+                  onChange={(e) => setNovaObservacao(e.target.value)}
+                  placeholder="Adicionar observação (opcional)"
+                />
+              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setDialogAberto(false)}>

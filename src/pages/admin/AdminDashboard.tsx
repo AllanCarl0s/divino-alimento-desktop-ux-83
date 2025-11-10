@@ -237,10 +237,10 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-poppins font-semibold text-base text-foreground mb-1">
-                      Lista de Pagamentos
+                      Gerar Registros de Pagamento
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      Registros de pagamentos de consumidores e fornecedores
+                      Gerar registros de pagamentos de consumidores e fornecedores
                     </p>
                   </div>
                 </div>
