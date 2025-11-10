@@ -208,7 +208,7 @@ export default function AdminPrecos() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nome do Produto</TableHead>
+                  <TableHead>Nome do Alimento</TableHead>
                   <TableHead>Unidade</TableHead>
                   <TableHead>Preço Base</TableHead>
                   <TableHead>Preço do Mercado</TableHead>
