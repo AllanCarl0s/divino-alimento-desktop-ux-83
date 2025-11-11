@@ -597,7 +597,7 @@ const AdminMercados = () => {
                     </div>
 
                     <div>
-                      <Label>Administrador Responsável</Label>
+                      <Label>Administrador(a) Responsável</Label>
                       {isEditingMarket ? (
                         <Select
                           value={editData?.administratorId?.toString() || ''}
@@ -873,7 +873,7 @@ const AdminMercados = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="administrator" className="text-sm font-medium">
-                    Administrador Responsável *
+                    Administrador(a) Responsável *
                   </Label>
                   <Select
                     value={newMarket.administratorId?.toString() || ''}
