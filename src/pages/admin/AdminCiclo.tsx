@@ -392,7 +392,7 @@ const AdminCiclo = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="administrador">Administrador Responsável *</Label>
+                  <Label htmlFor="administrador">Administrador(a)</Label>
                   <Select
                     value={administradorResponsavel}
                     onValueChange={setAdministradorResponsavel}
