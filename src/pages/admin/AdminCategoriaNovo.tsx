@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -73,9 +74,7 @@ const AdminCategoriaNovo = () => {
     >
       <div className="max-w-4xl mx-auto space-y-6 pb-20">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-            Administrador - Nova Categoria de Alimento
-          </h1>
+          <RoleTitle page="Nova Categoria de Alimento" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">
             Cadastre uma nova categoria para organizar seus alimentos
           </p>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -198,9 +199,7 @@ export default function AdminRelatorioFornecedoresResultado() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gradient-primary">
-            Administrador - Relatório de Entregas dos Fornecedores
-          </h1>
+          <RoleTitle page="Relatório de Entregas dos Fornecedores" className="text-3xl" />
           <p className="text-muted-foreground mt-2">
             Visualize e exporte as entregas realizadas nos ciclos selecionados
           </p>

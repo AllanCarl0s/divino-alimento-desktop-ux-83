@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -279,9 +280,7 @@ const AdminMercadoCiclo = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-primary">
-              Administrador de mercado - {isEdit ? 'Editar Ciclo' : 'Novo Ciclo'}
-            </h1>
+            <RoleTitle page={isEdit ? 'Editar Ciclo' : 'Novo Ciclo'} className="text-2xl md:text-3xl" />
             <p className="text-sm text-muted-foreground mt-1">
               Responsável: {administradorResponsavel}
             </p>

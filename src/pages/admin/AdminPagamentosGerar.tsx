@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import { ArrowLeft, Edit2, Trash2, Check } from "lucide-react";
 import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
 import { Button } from "@/components/ui/button";
@@ -218,9 +219,7 @@ const AdminPagamentosGerar = () => {
     >
       <div className="container max-w-6xl mx-auto py-8 px-4">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-primary mb-2">
-            Administrador - Gerar Lista de Pagamentos
-          </h1>
+          <RoleTitle page="Gerar Lista de Pagamentos" className="text-3xl mb-2" />
           <p className="text-muted-foreground">
             Gere automaticamente os registros de pagamentos de fornecedores e consumidores de ciclos finalizados.
           </p>

@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import { ArrowLeft, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -77,7 +78,7 @@ export default function AdminPrecosLista() {
         {/* Header */}
         <div className="flex flex-col">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">Administrador - Lista de Mercados – Gestão de Preços</h1>
+            <RoleTitle page="Lista de Mercados – Gestão de Preços" className="text-2xl md:text-3xl" />
             <p className="text-muted-foreground">
               Selecione um mercado para definir preços específicos
             </p>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import ResponsiveLayout from '@/components/layout/ResponsiveLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -100,9 +101,7 @@ const AdminProdutoComercializavelEditar = () => {
     >
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary mb-2">
-            Administrador - Editar Alimento Comercializável
-          </h1>
+          <RoleTitle page="Editar Alimento Comercializável" className="text-2xl md:text-3xl mb-2" />
           <p className="text-muted-foreground">
             Atualize as informações da variação comercial
           </p>

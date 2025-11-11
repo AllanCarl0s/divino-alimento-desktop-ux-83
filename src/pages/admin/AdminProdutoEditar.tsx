@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -85,9 +86,7 @@ const AdminProdutoEditar = () => {
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Administrador - Editar Alimento Base
-            </h1>
+            <RoleTitle page="Editar Alimento Base" className="text-2xl md:text-3xl" />
             <p className="text-sm md:text-base text-muted-foreground">
               Atualize as informações do alimento
             </p>

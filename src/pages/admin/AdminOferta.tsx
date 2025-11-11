@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -351,9 +352,7 @@ export default function AdminOferta() {
             {/* Title and Badge */}
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                  {activeRole === 'fornecedor' ? 'Fornecedor - ' : activeRole === 'admin_mercado' ? 'Administrador de mercado - ' : ''}{mockCiclo.nome}
-                </h1>
+                <RoleTitle page={mockCiclo.nome} className="text-2xl md:text-3xl" />
                 <p className="text-sm text-muted-foreground mt-1">
                   Período: {format(mockCiclo.data_inicio_oferta, 'dd/MM/yyyy', { locale: ptBR })} - {format(mockCiclo.data_fim_oferta, 'dd/MM/yyyy', { locale: ptBR })}
                 </p>
