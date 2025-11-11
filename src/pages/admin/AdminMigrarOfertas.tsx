@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit2, Check } from "lucide-react";
 import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
 import { UserMenuLarge } from "@/components/layout/UserMenuLarge";
+import { RoleTitle } from "@/components/layout/RoleTitle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -250,7 +251,7 @@ const AdminMigrarOfertas = () => {
     >
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Administrador - Migrar Ofertas entre Ciclos</h1>
+          <RoleTitle page="Migrar Ofertas entre Ciclos" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">
             Selecione o ciclo de destino e as origens de onde deseja migrar produtos
           </p>

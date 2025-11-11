@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -209,9 +210,7 @@ export default function AdminPedidosConsumidores() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Administrador - Relatório de Pedidos dos Consumidores
-          </h1>
+          <RoleTitle page="Relatório de Pedidos dos Consumidores" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">
             Consulte e exporte os pedidos consolidados do ciclo ativo
           </p>

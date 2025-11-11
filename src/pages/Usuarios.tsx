@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface Usuario {
   id: string;
@@ -78,9 +79,7 @@ const Usuarios = () => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              {activeRole === 'admin_mercado' ? 'Administrador de mercado - ' : ''}Usuários
-            </h1>
+            <RoleTitle page="Usuários" className="text-2xl md:text-3xl" />
             <p className="text-sm md:text-base text-muted-foreground">
               Gerenciar perfis e acessos do sistema
             </p>

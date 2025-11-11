@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -356,7 +357,7 @@ export default function AdminComposicaoLote() {
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <CardTitle className="text-2xl">{ciclo.nome}</CardTitle>
+                <RoleTitle page={`Composição de Lote – ${ciclo.nome}`} as="h2" className="text-2xl" updateDocumentTitle={true} />
                 <p className="text-sm text-muted-foreground mt-1">
                   Tipo: {ciclo.tipo}
                 </p>
