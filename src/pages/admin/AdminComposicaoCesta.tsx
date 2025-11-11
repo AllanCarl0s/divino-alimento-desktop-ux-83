@@ -15,6 +15,7 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 export default function AdminComposicaoCesta() {
   const { id } = useParams();
@@ -281,7 +282,7 @@ export default function AdminComposicaoCesta() {
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <CardTitle className="text-2xl">{ciclo.nome}</CardTitle>
+                <RoleTitle page={`Composição de Cesta – ${ciclo.nome}`} className="text-2xl" />
                 <p className="text-sm text-muted-foreground mt-1">
                   Tipo: {ciclo.tipo}
                 </p>

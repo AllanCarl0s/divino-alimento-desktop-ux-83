@@ -16,6 +16,7 @@ import { useCompositionFilters } from '@/hooks/useCompositionFilters';
 import { CompositionFilters } from '@/components/admin/CompositionFilters';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 export default function AdminComposicaoVendaDireta() {
   const { id } = useParams();
@@ -285,10 +286,8 @@ export default function AdminComposicaoVendaDireta() {
         {/* Cabeçalho */}
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <ShoppingCart className="h-8 w-8 text-[#006C35]" />
-            <h1 className="text-3xl font-bold text-[#006C35]">
-              Composição de Vendas – Mercado Tipo Venda Direta
-            </h1>
+            <ShoppingCart className="h-8 w-8 text-primary" />
+            <RoleTitle page="Composição de Vendas – Mercado Tipo Venda Direta" className="text-3xl" />
           </div>
           <p className="text-lg text-muted-foreground">
             Fechamento do ciclo – consolidação das vendas realizadas
