@@ -550,7 +550,7 @@ const AdminMercadoMercados = () => {
                     </div>
 
                     <div>
-                      <Label>Administrador Responsável</Label>
+                      <Label>Administrador(a) Responsável</Label>
                       <div className="mt-2 p-3 bg-muted/30 rounded-lg border">
                         <span className="text-sm font-medium">{CURRENT_ADMIN_NAME}</span>
                         <p className="text-xs text-muted-foreground mt-1">Este campo não pode ser alterado</p>
@@ -801,7 +801,7 @@ const AdminMercadoMercados = () => {
 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">
-                    Administrador Responsável *
+                    Administrador(a) Responsável *
                   </Label>
                   <div className="p-3 bg-muted/30 rounded-lg border">
                     <span className="text-sm font-medium">{CURRENT_ADMIN_NAME}</span>
