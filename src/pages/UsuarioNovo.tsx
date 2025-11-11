@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import InputMask from 'react-input-mask';
+import { roleLabel } from '@/utils/labels';
 import { 
   validarCelular, 
   validarChavePix, 
@@ -21,7 +22,16 @@ import {
 const UsuarioNovo = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { activeRole } = useAuth();
+  const { activeRole, user } = useAuth();
+
+  const roleText = activeRole ? roleLabel(activeRole, user?.gender) : '';
+  const pageTitle = `${roleText} - Novo Usuário`;
+
+  useEffect(() => {
+    if (pageTitle) {
+      document.title = `${pageTitle} | Divino Alimento`;
+    }
+  }, [pageTitle]);
 
   const [formData, setFormData] = useState({
     nomeCompleto: '',
@@ -155,7 +165,7 @@ const UsuarioNovo = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-            {activeRole === 'admin_mercado' ? 'Administrador de mercado - ' : ''}Novo Usuário
+            {pageTitle}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             Cadastre um novo usuário no sistema
