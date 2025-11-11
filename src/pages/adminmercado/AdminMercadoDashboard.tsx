@@ -16,6 +16,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
@@ -44,9 +45,7 @@ const AdminMercadoDashboard = () => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Painel do Administrador de Mercado
-            </h1>
+            <RoleTitle page="Painel do Mercado" className="md:text-3xl" />
             <p className="text-sm md:text-base text-muted-foreground">
               Gerencie ciclos, mercados, ofertas e relatórios do seu mercado.
             </p>
