@@ -143,7 +143,7 @@ export default function ConsumidorRelatorioPedidosResultado() {
   };
 
   const handleExportCSV = () => {
-    const headers = ['Alimento', 'Fornecedor', 'Medida', 'Quantidade', 'Valor Unitário', 'Valor Total', 'Tipo'];
+    const headers = ['Alimento', 'Fornecedor(a)', 'Medida', 'Quantidade', 'Valor Unitário', 'Valor Total', 'Tipo'];
     const csvContent = [
       headers.join(','),
       ...pedidosFiltrados.map(p => 
@@ -187,7 +187,7 @@ export default function ConsumidorRelatorioPedidosResultado() {
     // Tabela de pedidos
     autoTable(doc, {
       startY: 75,
-      head: [['Alimento', 'Fornecedor', 'Medida', 'Qtd', 'Valor Unit.', 'Valor Total', 'Tipo']],
+      head: [['Alimento', 'Fornecedor(a)', 'Medida', 'Qtd', 'Valor Unit.', 'Valor Total', 'Tipo']],
       body: pedidosFiltrados.map(p => [
         p.alimento,
         p.fornecedor,
@@ -313,7 +313,7 @@ export default function ConsumidorRelatorioPedidosResultado() {
                     Alimento {sortField === 'alimento' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead className="cursor-pointer" onClick={() => handleSort('fornecedor')}>
-                    Fornecedor {sortField === 'fornecedor' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    Fornecedor(a) {sortField === 'fornecedor' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead>Medida</TableHead>
                   <TableHead className="text-right cursor-pointer" onClick={() => handleSort('quantidade')}>

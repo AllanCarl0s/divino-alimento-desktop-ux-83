@@ -336,7 +336,7 @@ export default function AdminMercadoComposicaoLote() {
                     <TableHead>Alimento</TableHead>
                     <TableHead>Medida</TableHead>
                     <TableHead className="text-right">Valor Unit.</TableHead>
-                    <TableHead>Fornecedor</TableHead>
+                    <TableHead>Fornecedor(a)</TableHead>
                     <TableHead className="text-right">Ofertados</TableHead>
                     <TableHead className="text-right">Pedidos</TableHead>
                     <TableHead className="text-right">Valor Acumulado</TableHead>

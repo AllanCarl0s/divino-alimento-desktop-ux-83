@@ -231,7 +231,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
                     onClick={handleSortByFornecedor}
                   >
                     <div className="flex items-center gap-2">
-                      Fornecedor
+                      Fornecedor(a)
                       <ArrowUpDown className="h-4 w-4" />
                       {sortBy === 'fornecedor' && (
                         <span className="text-xs text-muted-foreground">

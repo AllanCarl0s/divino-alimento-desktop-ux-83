@@ -13,9 +13,9 @@ export const exportConsumidoresCSV = (
 ) => {
   const headers = [
     'Ciclo',
-    'Consumidor',
+    'Consumidor(a)',
     'Produto',
-    'Fornecedor',
+    'Fornecedor(a)',
     'Medida',
     'Valor Unitário',
     'Quantidade',
@@ -67,7 +67,7 @@ export const exportConsumidoresPDF = (
   
   // Título
   doc.setFontSize(18);
-  doc.text('Relatório de Pedidos dos Consumidores', 14, 20);
+  doc.text('Relatório de Pedidos dos Consumidores(as)', 14, 20);
   
   // Ciclos
   doc.setFontSize(11);
@@ -96,7 +96,7 @@ export const exportConsumidoresPDF = (
   
   autoTable(doc, {
     startY: 60,
-    head: [['Ciclo', 'Consumidor', 'Produto', 'Fornecedor', 'Med.', 'Vlr Unit.', 'Qtd', 'Total', 'Agr. Fam.', 'Cert.']],
+    head: [['Ciclo', 'Consumidor(a)', 'Produto', 'Fornecedor(a)', 'Med.', 'Vlr Unit.', 'Qtd', 'Total', 'Agr. Fam.', 'Cert.']],
     body: tableData,
     styles: { fontSize: 7 },
     headStyles: { fillColor: [59, 130, 246] },
@@ -113,7 +113,7 @@ export const exportFornecedoresCSV = (
 ) => {
   const headers = [
     'Ciclo',
-    'Fornecedor',
+    'Fornecedor(a)',
     'Produto',
     'Unidade',
     'Valor Unitário',
@@ -160,7 +160,7 @@ export const exportFornecedoresPDF = (
   
   // Título
   doc.setFontSize(18);
-  doc.text('Relatório de Entregas dos Fornecedores', 14, 20);
+  doc.text('Relatório de Entregas dos Fornecedores(as)', 14, 20);
   
   // Ciclos
   doc.setFontSize(11);
@@ -185,7 +185,7 @@ export const exportFornecedoresPDF = (
   
   autoTable(doc, {
     startY: 60,
-    head: [['Ciclo', 'Fornecedor', 'Produto', 'Unidade', 'Valor Unit.', 'Qtd Entregue', 'Valor Total']],
+    head: [['Ciclo', 'Fornecedor(a)', 'Produto', 'Unidade', 'Valor Unit.', 'Qtd Entregue', 'Valor Total']],
     body: tableData,
     styles: { fontSize: 8 },
     headStyles: { fillColor: [59, 130, 246] },

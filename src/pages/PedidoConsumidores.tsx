@@ -335,7 +335,7 @@ const PedidoConsumidores = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Alimento</TableHead>
-                      <TableHead>Fornecedor</TableHead>
+                      <TableHead>Fornecedor(a)</TableHead>
                       <TableHead className="text-right">Valor Unit.</TableHead>
                       <TableHead className="text-center w-32">Quantidade</TableHead>
                       <TableHead className="text-right">Subtotal</TableHead>
@@ -531,7 +531,7 @@ const PedidoConsumidores = () => {
                       <TableHead>Alimento</TableHead>
                       <TableHead>Medida</TableHead>
                       <TableHead className="text-right">Valor Unitário</TableHead>
-                      <TableHead>Fornecedor</TableHead>
+                      <TableHead>Fornecedor(a)</TableHead>
                       <TableHead className="text-right">Disponível</TableHead>
                       <TableHead className="text-center w-32">Quantidade</TableHead>
                       <TableHead className="text-right">Subtotal</TableHead>

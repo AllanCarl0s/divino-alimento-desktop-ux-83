@@ -341,7 +341,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
                     <TableHead className="td-texto">Alimento</TableHead>
                     <TableHead className="td-texto">Medida</TableHead>
                     <TableHead className="td-valor">Valor Unit.</TableHead>
-                    <TableHead className="td-texto">Fornecedor</TableHead>
+                    <TableHead className="td-texto">Fornecedor(a)</TableHead>
                     <TableHead className="td-numero">Ofertados</TableHead>
                     <TableHead className="td-numero">Pedidos</TableHead>
                     <TableHead className="td-valor">Valor Acumulado</TableHead>

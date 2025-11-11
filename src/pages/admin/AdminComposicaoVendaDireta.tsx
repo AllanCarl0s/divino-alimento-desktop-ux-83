@@ -444,7 +444,7 @@ export default function AdminComposicaoVendaDireta() {
                     <TableRow>
                       <TableHead className="min-w-[180px]">Produto</TableHead>
                       <TableHead className="min-w-[80px]">Unidade</TableHead>
-                      <TableHead className="min-w-[150px]">Fornecedor</TableHead>
+                      <TableHead className="min-w-[150px]">Fornecedor(a)</TableHead>
                       <TableHead className="text-right min-w-[120px]">Valor Unitário</TableHead>
                       <TableHead className="text-center min-w-[120px]">Qtd. Ofertada</TableHead>
                       <TableHead className="text-center min-w-[140px]">Vendidos</TableHead>

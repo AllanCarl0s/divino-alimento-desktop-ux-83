@@ -307,14 +307,14 @@ export default function AdminPedidosConsumidores() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Consumidor</TableHead>
+                <TableHead>Consumidor(a)</TableHead>
                 <TableHead>Alimento</TableHead>
                 <TableHead 
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={handleSortByFornecedor}
                 >
                   <div className="flex items-center gap-2">
-                    Fornecedor
+                    Fornecedor(a)
                     <ArrowUpDown className="h-4 w-4" />
                     {sortBy === 'fornecedor' && (
                       <span className="text-xs text-muted-foreground">
