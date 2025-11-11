@@ -582,6 +582,14 @@ const Register = () => {
                             <span className="text-sm">Celular válido</span>
                           </div>
                           <div className="flex items-center space-x-2">
+                            {watchedValues.gender ? (
+                              <CheckCircle2 className="w-4 h-4 text-success" />
+                            ) : (
+                              <div className="w-4 h-4 rounded-full border-2 border-muted-foreground" />
+                            )}
+                            <span className="text-sm">Gênero selecionado</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
                             {watchedValues.email && /\S+@\S+\.\S+/.test(watchedValues.email) ? (
                               <CheckCircle2 className="w-4 h-4 text-success" />
                             ) : (
