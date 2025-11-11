@@ -15,8 +15,18 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Plus, X, GripVertical, Calendar } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ArrowLeft, Plus, X, GripVertical, Calendar, ChevronDown, LogOut, ShoppingBasket, Store, Shield, UserCheck } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 import { formatBRLInput } from '@/utils/currency';
 import {
   DndContext,
@@ -80,6 +90,7 @@ const AdminMercadoCiclo = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEdit = !!id;
+  const { user, activeRole, switchRole, logout } = useAuth();
 
   const [nome, setNome] = useState('');
   const [inicioOfertas, setInicioOfertas] = useState('');
@@ -203,6 +214,61 @@ const AdminMercadoCiclo = () => {
     }
   };
 
+  const getDisplayName = () => {
+    if (!user?.name) return user?.email?.split('@')[0] || 'Usuário';
+    const names = user.name.split(' ');
+    return names.length >= 2 ? `${names[0]} ${names[1]}` : names[0];
+  };
+
+  const getInitials = () => {
+    if (!user?.name) return user?.email?.charAt(0).toUpperCase() || 'U';
+    const names = user.name.split(' ');
+    if (names.length >= 2) {
+      return `${names[0].charAt(0)}${names[1].charAt(0)}`.toUpperCase();
+    }
+    return names[0].charAt(0).toUpperCase();
+  };
+
+  const getRoleLabel = (role: string): string => {
+    switch (role) {
+      case 'consumidor':
+        return 'Consumidor';
+      case 'fornecedor':
+        return 'Fornecedor';
+      case 'admin':
+        return 'Administrador';
+      case 'admin_mercado':
+        return 'Administrador de Mercado';
+      default:
+        return role;
+    }
+  };
+
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case 'consumidor':
+        return <ShoppingBasket className="w-4 h-4" />;
+      case 'fornecedor':
+        return <Store className="w-4 h-4" />;
+      case 'admin':
+        return <Shield className="w-4 h-4" />;
+      case 'admin_mercado':
+        return <UserCheck className="w-4 h-4" />;
+      default:
+        return null;
+    }
+  };
+
+  const handleSwitchRole = (role: any) => {
+    switchRole(role);
+    toast.success(`Você está agora como ${getRoleLabel(role)}`);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const handleSubmit = () => {
     // Validações
     if (!nome || nome.length < 3) {
@@ -274,6 +340,78 @@ const AdminMercadoCiclo = () => {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
+      }
+      headerContent={
+        user && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 rounded-lg p-2 hover:bg-white/10 transition-colors">
+                <Avatar className="h-10 w-10 border-2 border-white shadow-md">
+                  <AvatarImage src={user.photoURL || ''} alt={user.name || ''} />
+                  <AvatarFallback 
+                    className="font-semibold text-white text-sm"
+                    style={{ backgroundColor: '#2E7D32' }}
+                  >
+                    {getInitials()}
+                  </AvatarFallback>
+                </Avatar>
+                
+                <div className="hidden md:flex flex-col items-start">
+                  <span className="text-white font-semibold text-sm leading-tight">
+                    {getDisplayName()}
+                  </span>
+                  <span className="text-white/80 text-xs leading-tight">
+                    {activeRole && getRoleLabel(activeRole)}
+                  </span>
+                </div>
+                
+                <ChevronDown className="w-4 h-4 text-white" />
+              </button>
+            </DropdownMenuTrigger>
+            
+            <DropdownMenuContent 
+              align="end" 
+              className="w-56 bg-background border shadow-lg z-[100]"
+            >
+              <div className="px-3 py-2">
+                <p className="text-sm font-semibold text-foreground">{getDisplayName()}</p>
+                <p className="text-xs text-muted-foreground">{user.email}</p>
+              </div>
+              <DropdownMenuSeparator />
+              
+              {user.roles && user.roles.length > 1 && (
+                <>
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">
+                    Trocar Perfil
+                  </DropdownMenuLabel>
+                  {user.roles.map((role) => (
+                    <DropdownMenuItem
+                      key={role}
+                      onClick={() => handleSwitchRole(role)}
+                      disabled={role === activeRole}
+                      className="gap-2 cursor-pointer"
+                    >
+                      {getRoleIcon(role)}
+                      <span>{getRoleLabel(role)}</span>
+                      {role === activeRole && (
+                        <span className="ml-auto text-xs text-muted-foreground">(Ativo)</span>
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="gap-2 cursor-pointer text-destructive focus:text-destructive"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Sair</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
       }
     >
       <div className="space-y-6 pb-20">
