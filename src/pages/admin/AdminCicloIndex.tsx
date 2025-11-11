@@ -18,6 +18,7 @@ import { toast } from '@/hooks/use-toast';
 import { Plus, Settings, Trash2, Tags, Lock, ArrowLeft, ShoppingBasket, Package, Store, Megaphone, Truck, Users, RefreshCw } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 export default function AdminCicloIndex() {
   const navigate = useNavigate();
@@ -209,7 +210,7 @@ export default function AdminCicloIndex() {
     <ResponsiveLayout leftHeaderContent={<Button variant="ghost" size="icon" onClick={() => navigate('/admin/dashboard')} className="text-white hover:bg-white/20"><ArrowLeft className="h-5 w-5" /></Button>} headerContent={<UserMenuLarge />}>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Administrador - Gestão de Ciclos</h1>
+          <RoleTitle page="Gestão de Ciclos" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">Acompanhe, edite e crie novos ciclos operacionais.</p>
         </div>
 

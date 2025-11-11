@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Search, Download, FileText, ArrowUpDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface EntregaFornecedor {
   id: string;
@@ -137,9 +138,7 @@ export default function AdminMercadoRelatorioFornecedoresResultado() {
     >
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gradient-primary">
-            Administrador de mercado - Relatório de Entregas dos Fornecedores
-          </h1>
+          <RoleTitle page="Relatório de Entregas dos Fornecedores" className="text-3xl" />
           <p className="text-muted-foreground mt-2">
             Visualize e exporte as entregas realizadas nos ciclos selecionados
           </p>

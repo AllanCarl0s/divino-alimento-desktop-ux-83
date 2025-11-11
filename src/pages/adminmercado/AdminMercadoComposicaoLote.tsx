@@ -13,6 +13,7 @@ import { formatBRL } from '@/utils/currency';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 export default function AdminMercadoComposicaoLote() {
   const { cicloId } = useParams();
@@ -283,9 +284,7 @@ export default function AdminMercadoComposicaoLote() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Administrador de mercado - Composição de Ofertas – {ciclo.mercado}
-          </h1>
+          <RoleTitle page={`Composição de Ofertas – ${ciclo.mercado}`} className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">
             Configure os produtos, quantidades e valores que serão oferecidos neste ciclo
           </p>

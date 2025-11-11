@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 // Mock data - ciclos disponíveis
 const ciclosDisponiveis = [
@@ -62,9 +63,7 @@ const AdminRelatorioFornecedores = () => {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gradient-primary">
-            Administrador - Relatório de Pedidos dos Fornecedores
-          </h1>
+          <RoleTitle page="Relatório de Pedidos dos Fornecedores" className="text-3xl" />
           <p className="text-muted-foreground mt-2">
             Selecione os ciclos para gerar o relatório consolidado.
           </p>

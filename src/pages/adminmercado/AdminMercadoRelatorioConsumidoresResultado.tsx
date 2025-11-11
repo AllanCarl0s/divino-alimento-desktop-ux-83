@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Search, Download, FileText, ArrowUpDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface PedidoConsumidor {
   id: string;
@@ -141,9 +142,7 @@ export default function AdminMercadoRelatorioConsumidoresResultado() {
     >
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gradient-primary">
-            Administrador de mercado - Relatório de Pedidos dos Consumidores
-          </h1>
+          <RoleTitle page="Relatório de Pedidos dos Consumidores" className="text-3xl" />
           <p className="text-muted-foreground mt-2">
             Consulte e exporte os pedidos consolidados dos ciclos selecionados
           </p>

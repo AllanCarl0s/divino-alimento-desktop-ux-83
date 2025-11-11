@@ -21,6 +21,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { StatusToggle } from '@/components/ui/status-toggle';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -135,9 +136,7 @@ const AdminCategorias = () => {
       <div className="space-y-6 md:space-y-8">
         <div className="md:flex md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Administrador - Categorias de Alimentos
-            </h1>
+            <RoleTitle page="Categorias de Alimentos" className="text-2xl md:text-3xl" />
             <p className="text-sm md:text-base text-muted-foreground">
               Gerenciar categorias dos alimentos comercializados
             </p>

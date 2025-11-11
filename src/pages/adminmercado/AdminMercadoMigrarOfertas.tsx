@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ciclos } from "@/fixtures/ciclos";
 import { sobrasPorCiclo } from "@/fixtures/produtosSobra";
 import { formatBRL } from "@/utils/currency";
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface ProdutoMigracao {
   id: string;
@@ -218,9 +219,7 @@ export default function AdminMercadoMigrarOfertas() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Administrador de mercado - Migrar Ofertas de um Ciclo para Outro
-          </h1>
+          <RoleTitle page="Migrar Ofertas de um Ciclo para Outro" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">
             Copie as ofertas já configuradas em um ciclo anterior para este ciclo
           </p>

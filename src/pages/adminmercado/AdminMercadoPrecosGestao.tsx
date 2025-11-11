@@ -28,6 +28,7 @@ import { toast } from "@/hooks/use-toast";
 import { produtosReferencia } from "@/data/produtos-referencia";
 import { mercadosLocais } from "@/data/mercados-locais";
 import { formatBRL, formatBRLInput, parseBRLToNumber } from "@/utils/currency";
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface ProdutoPreco {
   id: string;
@@ -176,9 +177,7 @@ export default function AdminMercadoPrecosGestao() {
         {/* Header */}
         <div className="flex flex-col">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Administrador de mercado - Gestão de Preços – {mercado.nome}
-            </h1>
+            <RoleTitle page={`Gestão de Preços – ${mercado.nome}`} className="text-2xl md:text-3xl" />
             <p className="text-muted-foreground">
               Defina preços específicos para este mercado com base nos produtos comercializáveis cadastrados
             </p>
