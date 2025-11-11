@@ -240,7 +240,7 @@ const AdminProdutosComercializaveis = () => {
                               variant="outline"
                               size="sm"
                               onClick={() => handleEdit(produto.id)}
-                              className="flex items-center gap-2"
+                              className="flex items-center gap-2 border-green-600 text-green-600 hover:bg-green-50"
                             >
                               <Edit2 className="w-4 h-4" />
                               <span className="hidden md:inline">Editar</span>
@@ -250,7 +250,7 @@ const AdminProdutosComercializaveis = () => {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="flex items-center gap-2 text-destructive hover:text-destructive"
+                                  className="flex items-center gap-2 border-red-600 text-red-600 hover:bg-red-50"
                                 >
                                   <Trash2 className="w-4 h-4" />
                                   <span className="hidden md:inline">Excluir</span>
