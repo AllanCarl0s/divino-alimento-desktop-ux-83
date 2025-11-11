@@ -6,6 +6,7 @@ import { User, ChevronDown, LogOut, ShoppingBasket, Store, Shield, Building2, X 
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { roleLabel, type AppRole, type Gender } from '@/utils/labels';
 
 const getDefaultRoute = (role: UserRole): string => {
   switch (role) {
@@ -20,17 +21,8 @@ const getDefaultRoute = (role: UserRole): string => {
   }
 };
 
-const getRoleLabel = (role: UserRole): string => {
-  switch (role) {
-    case 'consumidor':
-      return 'Consumidor';
-    case 'fornecedor':
-      return 'Fornecedor';
-    case 'admin':
-      return 'Administrador';
-    case 'admin_mercado':
-      return 'Admin Mercado';
-  }
+const getRoleLabel = (role: UserRole, gender: Gender = 'unspecified'): string => {
+  return roleLabel(role as AppRole, gender);
 };
 
 const getRoleIcon = (role: UserRole) => {
@@ -58,6 +50,9 @@ export const UserMenuLarge: React.FC = () => {
     return null;
   }
 
+  // @ts-ignore - gender pode não existir ainda no tipo User
+  const userGender: Gender = user.gender || 'unspecified';
+
   const handleSwitchRole = (role: UserRole) => {
     if (role === activeRole) return;
     
@@ -66,7 +61,7 @@ export const UserMenuLarge: React.FC = () => {
     
     toast({
       title: "Perfil alterado",
-      description: `Você está agora como ${getRoleLabel(role)}`,
+      description: `Você está agora como ${getRoleLabel(role, userGender)}`,
     });
     
     // Don't close on mobile - keep modal open for easier navigation
@@ -223,7 +218,7 @@ export const UserMenuLarge: React.FC = () => {
                       >
                         <Icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-gray-600")} />
                         <span className={cn("text-sm text-left flex-1", isActive ? "text-primary" : "text-gray-700")}>
-                          {getRoleLabel(role)}
+                          {getRoleLabel(role, userGender)}
                         </span>
                         {isActive && (
                           <span className="text-xs text-primary">Ativo</span>
@@ -320,7 +315,7 @@ export const UserMenuLarge: React.FC = () => {
                       "text-sm font-medium",
                       isActive ? "text-muted-foreground" : "text-foreground"
                     )}>
-                      {getRoleLabel(role)}
+                      {getRoleLabel(role, userGender)}
                     </span>
                     {isActive && (
                       <span className="text-xs text-muted-foreground">(Ativo)</span>
