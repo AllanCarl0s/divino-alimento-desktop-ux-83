@@ -59,7 +59,7 @@ const UsuarioIndex = () => {
     { id: '1', nomeCompleto: 'João Silva', email: 'joao@email.com', status: 'Ativo', perfis: ['Fornecedor', 'Administrador'] },
     { id: '2', nomeCompleto: 'Maria Santos', email: 'maria@email.com', status: 'Ativo', perfis: ['Consumidora'] },
     { id: '3', nomeCompleto: 'Pedro Costa', email: 'pedro@email.com', status: 'Inativo', perfis: ['Fornecedor(a)'] },
-    { id: '4', nomeCompleto: 'Ana Oliveira', email: 'ana@email.com', status: 'Ativo', perfis: ['Consumidor(a)', 'Fornecedora'] },
+    { id: '4', nomeCompleto: 'Ana Oliveira', email: 'ana@email.com', status: 'Ativo', perfis: ['Consumidora', 'Fornecedora'] },
     { id: '5', nomeCompleto: 'Carlos Pereira', email: 'carlos@email.com', status: 'Ativo', perfis: ['Administrador(a)'] },
     { id: '6', nomeCompleto: 'Fernanda Lima', email: 'fernanda@email.com', status: 'Ativo', perfis: ['Administradora de Mercado'] },
   ]);
