@@ -12,6 +12,7 @@ import { formatBRL } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { parseISO } from 'date-fns';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface EntregaFornecedor {
   id: string;
@@ -151,9 +152,7 @@ export default function FornecedorEntregas() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Fornecedor - Relatório de Entregas
-          </h1>
+          <RoleTitle page="Relatório de Entregas" />
           <p className="text-sm md:text-base text-muted-foreground">
             Visualize e exporte suas entregas no ciclo selecionado
           </p>

@@ -12,6 +12,7 @@ import { Search, Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { formatBRLInput, parseBRLToNumber } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useRoleTitle } from '@/components/layout/RoleTitle';
 
 interface ProdutoOfertado {
   id: string;
@@ -29,6 +30,7 @@ export default function OfertaCiclo() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const roleText = useRoleTitle();
   const [periodoAberto, setPeriodoAberto] = useState(true);
   const [ofertaEnviada, setOfertaEnviada] = useState(false);
   const [busca, setBusca] = useState('');
@@ -148,7 +150,7 @@ export default function OfertaCiclo() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-2xl">Fornecedor - {ciclo.nome}</CardTitle>
+                <CardTitle className="text-2xl">{roleText} - {ciclo.nome}</CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">
                   Período: {ciclo.inicioOfertas} – {ciclo.fimOfertas}
                 </p>

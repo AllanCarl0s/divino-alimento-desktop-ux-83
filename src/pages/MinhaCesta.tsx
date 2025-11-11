@@ -9,6 +9,7 @@ import { formatBRL } from '@/utils/currency';
 import { Button } from '@/components/ui/button';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 // Mock data - cesta do consumidor
 const mockCesta = {
@@ -88,7 +89,7 @@ const MinhaCesta = () => {
       >
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-gradient-primary">Minha Cesta</h1>
+            <RoleTitle page="Minha Cesta" />
             <p className="text-muted-foreground mt-2">
               Itens da sua cesta no ciclo atual
             </p>
@@ -138,7 +139,7 @@ const MinhaCesta = () => {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gradient-primary">Consumidor - Minha Cesta</h1>
+          <RoleTitle page="Minha Cesta" />
           <p className="text-muted-foreground mt-2">
             Itens da sua cesta no ciclo atual
           </p>

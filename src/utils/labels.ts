@@ -46,3 +46,15 @@ export function roleDescription(role: AppRole): string {
   };
   return descriptions[role];
 }
+
+/**
+ * Retorna o título completo da página com papel e seção
+ * @param role - O perfil/role do usuário
+ * @param page - Nome da página/seção (ex: "Minha Cesta")
+ * @param gender - O gênero do usuário
+ * @returns String com o título formatado para uso em metas/SEO
+ */
+export function getPageTitle(role: AppRole, page: string, gender: Gender = 'unspecified'): string {
+  const roleText = roleLabel(role, gender);
+  return `${roleText} – ${page}`;
+}

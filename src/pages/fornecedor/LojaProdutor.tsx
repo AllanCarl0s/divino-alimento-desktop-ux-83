@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 // Mock data - in real app would come from API/context
 const mockFornecedorData = {
@@ -92,9 +93,7 @@ const LojaProdutor = () => {
       <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-primary">
-            Fornecedor - Painel fornecedor @
-          </h1>
+          <RoleTitle page="Painel fornecedor @" />
         </div>
 
         {/* Loja */}

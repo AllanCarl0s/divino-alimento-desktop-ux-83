@@ -19,6 +19,7 @@ import {
   validarConta 
 } from '@/utils/validation';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 const UsuarioDados = () => {
   const { id } = useParams();
@@ -169,9 +170,7 @@ const UsuarioDados = () => {
     >
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-            {activeRole === 'consumidor' ? 'Consumidor - ' : activeRole === 'fornecedor' ? 'Fornecedor - ' : activeRole === 'admin_mercado' ? 'Administrador de mercado - ' : ''}Dados Pessoais
-          </h1>
+          <RoleTitle page="Dados Pessoais" />
           <p className="text-sm md:text-base text-muted-foreground">
             Atualize suas informações pessoais
           </p>

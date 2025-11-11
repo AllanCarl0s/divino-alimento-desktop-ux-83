@@ -14,6 +14,7 @@ import { toast } from '@/hooks/use-toast';
 import { groupAndSortProducts, type Oferta } from '@/utils/product-grouping';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 // Mock data - alimentos disponíveis para venda direta
 const mockProdutos: Oferta[] = [
@@ -196,9 +197,7 @@ const PedidoConsumidores = () => {
       <div className="p-4 space-y-6">
         {/* Header */}
         <div className="space-y-2">
-          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-            Consumidor - Comprar Alimentos Venda Direta
-          </h1>
+          <RoleTitle page="Comprar Alimentos Venda Direta" />
           <p className="text-muted-foreground">
             Selecione alimentos da feira direta com os produtores
           </p>

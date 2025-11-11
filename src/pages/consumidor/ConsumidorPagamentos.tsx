@@ -11,6 +11,7 @@ import { ArrowLeft, Search, Eye } from 'lucide-react';
 import { formatBRL } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface Pagamento {
   id: string;
@@ -95,9 +96,7 @@ export default function ConsumidorPagamentos() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Consumidor - Meus Pagamentos
-          </h1>
+          <RoleTitle page="Meus Pagamentos" />
           <p className="text-sm md:text-base text-muted-foreground">
             Acompanhe seus pagamentos (em aberto e quitados)
           </p>
