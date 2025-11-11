@@ -156,19 +156,21 @@ const AdminProdutosComercialivaveis = () => {
                         <div className="flex justify-end gap-2">
                           <Button
                             variant="outline"
-                            size="icon-sm"
+                            size="sm"
                             onClick={() => handleEdit(produto.id)}
-                            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                            className="flex items-center gap-2 border-green-600 text-green-600 hover:bg-green-50"
                           >
                             <Pencil className="w-4 h-4" />
+                            Editar
                           </Button>
                           <Button
                             variant="outline"
-                            size="icon-sm"
+                            size="sm"
                             onClick={() => handleDelete(produto.id)}
-                            className="border-primary text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                            className="flex items-center gap-2 border-red-600 text-red-600 hover:bg-red-50"
                           >
                             <Trash2 className="w-4 h-4" />
+                            Excluir
                           </Button>
                         </div>
                       </TableCell>
