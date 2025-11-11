@@ -16,7 +16,9 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
-import { RoleTitle } from '@/components/layout/RoleTitle';
+import { useAuth } from '@/contexts/AuthContext';
+import { roleLabel } from '@/utils/labels';
+import { useEffect } from 'react';
 
 // Mock data - in real app would come from API/context
 const mockFornecedorData = {
@@ -45,7 +47,17 @@ const mockFornecedorData = {
 
 const LojaProdutor = () => {
   const navigate = useNavigate();
+  const { activeRole, user } = useAuth();
   const { nomeFornecedor, ciclos } = mockFornecedorData;
+
+  const roleText = activeRole ? roleLabel(activeRole, user?.gender) : '';
+  const pageTitle = `Painel ${roleText}`;
+
+  useEffect(() => {
+    if (pageTitle) {
+      document.title = `${pageTitle} | Divino Alimento`;
+    }
+  }, [pageTitle]);
 
   const acoesLoja = [
     {
@@ -93,7 +105,9 @@ const LojaProdutor = () => {
       <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8">
         {/* Header */}
         <div>
-          <RoleTitle page="Painel fornecedor @" />
+          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
+            {pageTitle}
+          </h1>
         </div>
 
         {/* Loja */}
