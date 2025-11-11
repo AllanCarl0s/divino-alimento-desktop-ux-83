@@ -299,7 +299,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <RoleTitle page={`Composição – ${ciclo.nome}`} className="text-2xl" />
+                <RoleTitle page={`Composição de Venda Direta – ${ciclo.nome}`} className="text-2xl" />
                 <p className="text-sm text-muted-foreground mt-1">
                   Tipo: {ciclo.tipo} • {ciclo.mercado}
                 </p>
