@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,10 +16,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
-import { RoleTitle } from '@/components/layout/RoleTitle';
+
 
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Painel do Mercado | Divino Alimento";
+  }, []);
 
   const gestaoAlimentos = [
     {
@@ -45,7 +49,9 @@ const AdminMercadoDashboard = () => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between">
           <div>
-            <RoleTitle page="Painel do Mercado" className="md:text-3xl" />
+            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
+              Painel do Mercado
+            </h1>
             <p className="text-sm md:text-base text-muted-foreground">
               Gerencie ciclos, mercados, ofertas e relatórios do seu mercado.
             </p>
