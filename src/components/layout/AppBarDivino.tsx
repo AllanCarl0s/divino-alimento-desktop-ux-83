@@ -17,8 +17,9 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
   const location = useLocation();
 
   const handleLogoClick = () => {
-    // Se estiver na página dashboard, não faz nada
-    if (location.pathname === '/dashboard') {
+    // Se estiver nas páginas home de cada perfil, não faz nada
+    const homePages = ['/dashboard', '/fornecedor/loja'];
+    if (homePages.includes(location.pathname)) {
       return;
     }
     
@@ -49,41 +50,40 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
   }, []);
 
   return (
-    <header 
-      className={cn(
-        "relative transition-shadow duration-300",
-        "h-24 md:h-28", // 96px mobile / 112px tablet
-        hasScrolled && "shadow-[0_2px_10px_rgba(0,0,0,0.08)]",
-        className
-      )}
-      style={{
-        backgroundColor: "#f7a418",
-        width: "100vw",
-        marginLeft: "calc(-50vw + 50%)",
-        paddingLeft: "max(16px, env(safe-area-inset-left))",
-        paddingRight: "max(16px, env(safe-area-inset-right))",
-      }}
-    >
-      {/* Trilho verde superior */}
-      <div className="absolute top-0 left-0 w-full" style={{ height: '6px', backgroundColor: '#0d4622' }} />
+    <>
+      {/* Faixa branca superior */}
+      <div className="h-12 lg:h-16 bg-white" />
       
-      {/* Container principal */}
-      <div className="relative h-full flex items-center justify-center px-4 md:px-5">
-        {/* Botões à esquerda */}
+      {/* Header laranja com logo sobreposto - igual à Home */}
+      <header 
+        className={cn(
+          "relative h-20 lg:h-28 flex items-center justify-center transition-shadow duration-300",
+          hasScrolled && "shadow-[0_2px_10px_rgba(0,0,0,0.08)]",
+          className
+        )}
+        style={{
+          backgroundColor: "#F29B2C",
+          width: "100vw",
+          marginLeft: "calc(-50vw + 50%)",
+          paddingLeft: "max(16px, env(safe-area-inset-left))",
+          paddingRight: "max(16px, env(safe-area-inset-right))",
+        }}
+      >
+        {/* Botões à esquerda (se houver) */}
         {leftContent && (
           <div className="absolute left-4 md:left-5 z-10 touch-target">
             {leftContent}
           </div>
         )}
         
-        {/* Logo centralizado - Sempre perfeitamente no centro */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {location.pathname === '/dashboard' ? (
+        {/* Logo centralizado e sobreposto - igual à Home */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14">
+          {['/dashboard', '/fornecedor/loja'].includes(location.pathname) ? (
             <img 
               src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
               alt="Divino Alimento - Alimento de Todo Mundo"
-              className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain"
-              style={{ maxHeight: 'calc(100% - 16px)' }}
+              className="w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] lg:w-[200px] lg:h-[200px] object-contain"
+              style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
               decoding="async"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -92,13 +92,13 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
           ) : (
             <button
               onClick={handleLogoClick}
-              className="focus-ring rounded-lg transition-transform hover:scale-105 active:scale-95 pointer-events-auto"
+              className="focus-ring rounded-lg transition-transform hover:scale-105 active:scale-95"
             >
               <img 
                 src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
                 alt="Divino Alimento - Alimento de Todo Mundo"
-                className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain cursor-pointer"
-                style={{ maxHeight: 'calc(100% - 16px)' }}
+                className="w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] lg:w-[200px] lg:h-[200px] object-contain cursor-pointer"
+                style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
                 decoding="async"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
@@ -108,7 +108,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
           )}
         </div>
         
-        {/* Botões à direita */}
+        {/* Avatar à direita */}
         {showLoginButton && (
           <div className="absolute right-4 md:right-5 z-10 touch-target">
             <Button
@@ -124,11 +124,8 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
             {children}
           </div>
         )}
-      </div>
-      
-      {/* Trilho verde inferior */}
-      <div className="absolute bottom-0 left-0 w-full" style={{ height: '6px', backgroundColor: '#0d4622' }} />
-    </header>
+      </header>
+    </>
   );
 };
 
