@@ -6,6 +6,8 @@ import AppBarDivino from './AppBarDivino';
 import AdminSidebar from './AdminSidebar';
 import AppShell from './AppShell';
 import Breadcrumb from './Breadcrumb';
+import { AuthenticatedHeader } from './AuthenticatedHeader';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ResponsiveLayoutProps {
   children: React.ReactNode;
@@ -65,16 +67,12 @@ export const ResponsiveLayout = ({
     );
   }
 
-  // Desktop Admin Layout - Without Sidebar (same as consumer/supplier)
+  // Desktop Admin Layout - With AuthenticatedHeader
   if (isAdminRoute && !isLoginRoute) {
     return (
       <AppShell className={className}>
         {/* Header */}
-        {showHeader && (
-          <AppBarDivino leftContent={leftHeaderContent}>
-            {headerContent}
-          </AppBarDivino>
-        )}
+        {showHeader && <AuthenticatedHeader />}
 
         {/* Main Content with 12 column grid */}
         <main className={cn(
