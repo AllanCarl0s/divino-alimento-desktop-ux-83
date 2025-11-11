@@ -314,7 +314,7 @@ const AdminMercadoCiclo = () => {
                 </div>
 
                 <div>
-                  <Label>Administrador Responsável</Label>
+                  <Label>Administrador(a)</Label>
                   <Input
                     value={administradorResponsavel}
                     disabled
