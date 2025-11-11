@@ -16,6 +16,7 @@ import { ProductGroupItem } from '@/components/admin/ProductGroupItem';
 import { groupAndSortProducts, filterProducts, Oferta } from '@/utils/product-grouping';
 import { useCompositionFilters } from '@/hooks/useCompositionFilters';
 import { CompositionFilters } from '@/components/admin/CompositionFilters';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 export default function AdminComposicaoVendaDiretaLiberar() {
   const { id } = useParams();
@@ -298,7 +299,7 @@ export default function AdminComposicaoVendaDiretaLiberar() {
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <CardTitle className="text-2xl">{ciclo.nome}</CardTitle>
+                <RoleTitle page={`Liberar Venda Direta – ${ciclo.nome}`} className="text-2xl" />
                 <p className="text-sm text-muted-foreground mt-1">
                   Tipo: {ciclo.tipo} • {ciclo.mercado}
                 </p>
