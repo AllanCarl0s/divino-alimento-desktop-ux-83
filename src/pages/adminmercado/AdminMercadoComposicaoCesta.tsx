@@ -285,7 +285,7 @@ export default function AdminMercadoComposicaoCesta() {
           <CardHeader>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <CardTitle className="text-2xl">{ciclo.nome}</CardTitle>
+                <RoleTitle page={`Composição de Cesta – ${ciclo.nome}`} className="text-2xl" />
                 <p className="text-sm text-muted-foreground mt-1">
                   Mercado: {ciclo.mercado} | Tipo: {ciclo.tipo}
                 </p>
