@@ -16,14 +16,21 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { roleLabel } from '@/utils/labels';
 
 
 const AdminMercadoDashboard = () => {
   const navigate = useNavigate();
+  const { activeRole, user } = useAuth();
+
+  const roleText = activeRole ? roleLabel(activeRole, user?.gender) : '';
+  const pageTitle = `Painel do ${roleText}`;
 
   useEffect(() => {
-    document.title = "Painel do Mercado | Divino Alimento";
-  }, []);
+    if (pageTitle) {
+      document.title = `${pageTitle} | Divino Alimento`;
+    }
+  }, [pageTitle]);
 
   const gestaoAlimentos = [
     {
@@ -50,7 +57,7 @@ const AdminMercadoDashboard = () => {
         <div className="md:flex md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">
-              Painel do Mercado
+              {pageTitle}
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
               Gerencie ciclos, mercados, ofertas e relatórios do seu mercado.
