@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoDivino from '@/assets/LOGO_DIVINO_ALIMENTOS.png';
+import logoDivino from '@/assets/logo-divino-alimentos.png';
 import logoAkarui from '@/assets/logo-akarui.png';
 import logoTekopora from '@/assets/logo-tekopora.png';
 import heroAlimentos from '@/assets/hero-alimentos.png';

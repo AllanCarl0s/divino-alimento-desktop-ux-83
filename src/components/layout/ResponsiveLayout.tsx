@@ -25,16 +25,12 @@ export const ResponsiveLayout = ({
   showHeader = true 
 }: ResponsiveLayoutProps) => {
   const location = useLocation();
-  const { activeRole } = useAuth();
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isFornecedorRoute = location.pathname.startsWith('/fornecedor');
   const isLoginRoute = location.pathname.includes('/login') || 
                        location.pathname.includes('/register') || 
                        location.pathname.includes('/verify-email') ||
                        location.pathname.includes('/onboarding');
-
-  // Check if user is admin or admin_mercado
-  const isAdminOrMercado = activeRole === 'admin' || activeRole === 'admin_mercado';
 
   // Mobile-First Fornecedor Login/Onboarding Layout
   if (isFornecedorRoute && isLoginRoute) {
@@ -71,8 +67,8 @@ export const ResponsiveLayout = ({
     );
   }
 
-  // Desktop Admin Layout - With AuthenticatedHeader for admin/admin_mercado
-  if ((isAdminRoute || location.pathname.startsWith('/adminmercado')) && !isLoginRoute) {
+  // Desktop Admin Layout - With AuthenticatedHeader
+  if (isAdminRoute && !isLoginRoute) {
     return (
       <AppShell className={className}>
         {/* Header */}
@@ -95,10 +91,7 @@ export const ResponsiveLayout = ({
 
   // Responsive layout for fornecedor and consumer pages
   return (
-    <div className="min-h-screen bg-white">
-      {/* Faixa branca superior - igual à Home */}
-      <div className="h-12 lg:h-16 bg-white" />
-      
+    <div className="min-h-screen bg-gradient-surface">
       {/* Mobile Layout */}
       <div className="lg:hidden min-h-screen flex flex-col">
         {showHeader && (
@@ -112,24 +105,27 @@ export const ResponsiveLayout = ({
       </div>
 
       {/* Desktop Layout */}
-      <div className="hidden lg:flex lg:flex-col">
-        {showHeader && (
-          <AppBarDivino leftContent={leftHeaderContent}>
-            {headerContent}
-          </AppBarDivino>
-        )}
+      <div className="hidden lg:block">
+        <AppShell className={className}>
+          {/* Header */}
+          {showHeader && (
+            <AppBarDivino leftContent={leftHeaderContent}>
+              {headerContent}
+            </AppBarDivino>
+          )}
 
-        {/* Main Content with 12 column grid */}
-        <main className={cn(
-          'flex-1 py-8 px-4 lg:px-8',
-          // Grid system for desktop
-          'grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1200px] mx-auto w-full',
-          className
-        )}>
-          <div className="lg:col-span-12">
-            {children}
-          </div>
-        </main>
+          {/* Main Content with 12 column grid */}
+          <main className={cn(
+            'flex-1 py-8',
+            // Grid system for desktop
+            'grid grid-cols-1 lg:grid-cols-12 gap-8',
+            className
+          )}>
+            <div className="lg:col-span-12">
+              {children}
+            </div>
+          </main>
+        </AppShell>
       </div>
     </div>
   );
