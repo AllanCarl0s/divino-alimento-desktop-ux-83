@@ -107,9 +107,9 @@ const Dashboard = () => {
                 Alimentos da Cesta:
               </h4>
               <ul className="space-y-2 text-[#333] text-sm mb-4">
-                <li>- Tomate (3 kg) — Fornecedor: Sítio Bela Vista</li>
-                <li>- Alface (5 unidades) — Fornecedor: Orgânicos da Serra</li>
-                <li>- Cenoura (2 kg) — Fornecedor: Fazenda São José</li>
+                <li>- Tomate (3 kg) — Fornecedor(a): Sítio Bela Vista</li>
+                <li>- Alface (5 unidades) — Fornecedor(a): Orgânicos da Serra</li>
+                <li>- Cenoura (2 kg) — Fornecedor(a): Fazenda São José</li>
               </ul>
               <div className="pt-3 border-t border-[#126B3F]/20">
                 <p className="text-[#2C3E50] text-base font-bold">Valor Total Cesta: {formatBRL(48.50)}</p>
@@ -122,8 +122,8 @@ const Dashboard = () => {
                 Compras em Varejo:
               </h4>
               <ul className="space-y-2 text-[#333] text-sm mb-4">
-                <li>- Banana Nanica (1,5 kg) — Fornecedor: Sítio Boa Esperança</li>
-                <li>- Mel Orgânico (300 g) — Fornecedor: Apiário Flor do Campo</li>
+                <li>- Banana Nanica (1,5 kg) — Fornecedor(a): Sítio Boa Esperança</li>
+                <li>- Mel Orgânico (300 g) — Fornecedor(a): Apiário Flor do Campo</li>
               </ul>
               <div className="pt-3 border-t border-[#E0E0E0]">
                 <p className="text-[#2C3E50] text-base font-bold">Valor Total: {formatBRL(32.50)}</p>
