@@ -402,7 +402,7 @@ const Register = () => {
                                     </FormLabel>
                                   </div>
                                   <p className="text-[14px] max-[767px]:text-[13px] min-[1200px]:text-[15px] text-[#606C76] leading-[1.45] whitespace-normal break-words hyphens-auto line-clamp-2 min-[1200px]:line-clamp-3 ml-[34px] max-[767px]:ml-[30px]">
-                                    Acesso a cestas ou venda direta. Ideal para quem deseja receber produtos orgânicos.
+                                    Receba cestas e produtos orgânicos.
                                   </p>
                                 </FormItem>
                               )}
