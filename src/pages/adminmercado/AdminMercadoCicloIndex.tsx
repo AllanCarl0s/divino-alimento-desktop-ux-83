@@ -16,6 +16,7 @@ import { Plus, Settings, Trash2, Lock, ArrowLeft, ShoppingBasket, Package, Store
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo, CicloMercado, getNomeTipoVenda } from '@/types/ciclo-mercado';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 // Constante para o administrador logado
 const CURRENT_ADMIN_NAME = 'João Silva';
@@ -216,7 +217,7 @@ export default function AdminMercadoCicloIndex() {
     >
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Administrador de mercado - Gestão de Ciclos</h1>
+          <RoleTitle page="Gestão de Ciclos" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">Acompanhe, edite e crie novos ciclos operacionais.</p>
         </div>
 

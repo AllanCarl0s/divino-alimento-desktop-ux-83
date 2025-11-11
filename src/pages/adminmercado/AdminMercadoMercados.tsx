@@ -17,6 +17,7 @@ import { useFilters } from '@/hooks/useFilters';
 import { ArrowLeft, Plus, Store, MapPin, Trash2, Edit, Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 // Mock data - administrador atual (em produção viria do contexto de autenticação)
 const CURRENT_ADMIN_ID = 1;
@@ -271,9 +272,7 @@ const AdminMercadoMercados = () => {
         <div className="lg:col-span-12 mb-4 lg:mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="text-left mb-4 lg:mb-0">
-              <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-                Administrador de mercado - Cadastro de Mercados
-              </h1>
+              <RoleTitle page="Cadastro de Mercados" className="text-2xl lg:text-3xl" />
               <p className="text-sm lg:text-lg text-muted-foreground mt-2">
                 Gerencie mercados e pontos de entrega
               </p>

@@ -20,6 +20,7 @@ import { FiltersBar } from "@/components/admin/FiltersBar";
 import { FiltersPanel } from "@/components/admin/FiltersPanel";
 import { useFilters } from "@/hooks/useFilters";
 import { mercadosLocais } from "@/data/mercados-locais";
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 // Mock data - administrador atual
 const CURRENT_ADMIN_ID = 1;
@@ -88,7 +89,7 @@ export default function AdminMercadoPrecos() {
         {/* Header */}
         <div className="flex flex-col">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">Administrador de mercado - Lista de Mercados – Gestão de Preços</h1>
+            <RoleTitle page="Lista de Mercados – Gestão de Preços" className="text-2xl md:text-3xl" />
             <p className="text-muted-foreground">
               Selecione um mercado para definir preços específicos
             </p>

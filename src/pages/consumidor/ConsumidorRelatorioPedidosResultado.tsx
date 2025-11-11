@@ -11,6 +11,7 @@ import { formatBRL } from '@/utils/currency';
 import { useIsMobile } from '@/hooks/use-mobile';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface PedidoItem {
   id: string;
@@ -233,7 +234,7 @@ export default function ConsumidorRelatorioPedidosResultado() {
     >
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Relatório de Pedidos</h1>
+          <RoleTitle page="Relatório de Pedidos" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">
             {cicloId === '1' ? '1º Ciclo de Novembro 2025' : `Ciclo ${cicloId}`}
           </p>

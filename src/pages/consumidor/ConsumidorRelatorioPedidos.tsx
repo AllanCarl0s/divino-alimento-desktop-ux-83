@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ArrowLeft, FileText } from 'lucide-react';
 import { formatarDataBR } from '@/utils/ciclo';
 import { Ciclo } from '@/types/ciclo-mercado';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 export default function ConsumidorRelatorioPedidos() {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ export default function ConsumidorRelatorioPedidos() {
     >
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Selecione o Ciclo para Ver Pedidos</h1>
+          <RoleTitle page="Selecione o Ciclo para Ver Pedidos" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">Escolha em qual ciclo ativo você deseja visualizar o relatório de pedidos.</p>
         </div>
 
