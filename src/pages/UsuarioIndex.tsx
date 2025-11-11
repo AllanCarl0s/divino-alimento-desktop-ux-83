@@ -56,12 +56,12 @@ const UsuarioIndex = () => {
   };
 
   const [usuarios] = useState<Usuario[]>([
-    { id: '1', nomeCompleto: 'João Silva', email: 'joao@email.com', status: 'Ativo', perfis: ['Fornecedor(a)', 'Administrador(a)'] },
-    { id: '2', nomeCompleto: 'Maria Santos', email: 'maria@email.com', status: 'Ativo', perfis: ['Consumidor(a)'] },
+    { id: '1', nomeCompleto: 'João Silva', email: 'joao@email.com', status: 'Ativo', perfis: ['Fornecedor', 'Administrador'] },
+    { id: '2', nomeCompleto: 'Maria Santos', email: 'maria@email.com', status: 'Ativo', perfis: ['Consumidora'] },
     { id: '3', nomeCompleto: 'Pedro Costa', email: 'pedro@email.com', status: 'Inativo', perfis: ['Fornecedor(a)'] },
-    { id: '4', nomeCompleto: 'Ana Oliveira', email: 'ana@email.com', status: 'Ativo', perfis: ['Consumidor(a)', 'Fornecedor(a)'] },
+    { id: '4', nomeCompleto: 'Ana Oliveira', email: 'ana@email.com', status: 'Ativo', perfis: ['Consumidor(a)', 'Fornecedora'] },
     { id: '5', nomeCompleto: 'Carlos Pereira', email: 'carlos@email.com', status: 'Ativo', perfis: ['Administrador(a)'] },
-    { id: '6', nomeCompleto: 'Fernanda Lima', email: 'fernanda@email.com', status: 'Ativo', perfis: ['Administrador(a) de Mercado'] },
+    { id: '6', nomeCompleto: 'Fernanda Lima', email: 'fernanda@email.com', status: 'Ativo', perfis: ['Administradora de Mercado'] },
   ]);
 
   const perfisDisponiveis = ['Administrador(a)', 'Administrador(a) de Mercado', 'Fornecedor(a)', 'Consumidor(a)'];
