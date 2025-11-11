@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ArrowLeft, Search, Download, FileText, Eye, ArrowUpDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface PedidoConsumidor {
   id: string;
@@ -195,9 +196,7 @@ export default function AdminMercadoRelatorioConsumidores() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Administrador de mercado - Relatório de Pedidos dos Consumidores
-          </h1>
+          <RoleTitle page="Relatório de Pedidos dos Consumidores" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">
             Consulte e exporte os pedidos consolidados do seu mercado neste ciclo
           </p>
