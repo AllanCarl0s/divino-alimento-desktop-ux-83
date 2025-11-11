@@ -66,6 +66,7 @@ import AdminMercadoComposicaoCesta from './pages/adminmercado/AdminMercadoCompos
 import AdminMercadoComposicaoLote from './pages/adminmercado/AdminMercadoComposicaoLote';
 import AdminMercadoMigrarOfertas from './pages/adminmercado/AdminMercadoMigrarOfertas';
 import AdminMercadoRelatorioFornecedores from './pages/adminmercado/AdminMercadoRelatorioFornecedores';
+import AdminMercadoRelatorioFornecedoresResultado from './pages/adminmercado/AdminMercadoRelatorioFornecedoresResultado';
 import AdminMercadoRelatorioConsumidores from './pages/adminmercado/AdminMercadoRelatorioConsumidores';
 import AdminMercadoRelatorioConsumidoresResultado from './pages/adminmercado/AdminMercadoRelatorioConsumidoresResultado';
 import AdminMercadoRelatorioFornecedoresCiclo from './pages/adminmercado/AdminMercadoRelatorioFornecedoresCiclo';
@@ -114,6 +115,7 @@ const App = () => (
           <Route path="/adminmercado/composicao-cesta/:cicloId" element={<ProtectedRoute><AdminMercadoComposicaoCesta /></ProtectedRoute>} />
           <Route path="/adminmercado/composicao-lote/:cicloId" element={<ProtectedRoute><AdminMercadoComposicaoLote /></ProtectedRoute>} />
           <Route path="/adminmercado/migrar-ofertas/:cicloId" element={<ProtectedRoute><AdminMercadoMigrarOfertas /></ProtectedRoute>} />
+          <Route path="/adminmercado/relatorio-fornecedores/resultado" element={<ProtectedRoute><AdminMercadoRelatorioFornecedoresResultado /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorio-fornecedores/:cicloId" element={<ProtectedRoute><AdminMercadoRelatorioFornecedores /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorio-consumidores/resultado" element={<ProtectedRoute><AdminMercadoRelatorioConsumidoresResultado /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorio-consumidores/:cicloId" element={<ProtectedRoute><AdminMercadoRelatorioConsumidores /></ProtectedRoute>} />
