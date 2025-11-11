@@ -227,7 +227,7 @@ export default function AdminCicloIndex() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Nome do Ciclo</TableHead>
-                  <TableHead>Administrador Responsável</TableHead>
+                  <TableHead>Administrador(a) Responsável</TableHead>
                   <TableHead>Período de Ofertas</TableHead>
                   <TableHead>Mercado Atual</TableHead>
                   <TableHead>Status</TableHead>
