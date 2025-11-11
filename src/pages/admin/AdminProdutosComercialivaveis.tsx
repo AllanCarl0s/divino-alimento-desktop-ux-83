@@ -167,7 +167,7 @@ const AdminProdutosComercialivaveis = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => handleDelete(produto.id)}
-                            className="flex items-center gap-2 border-red-600 text-red-600 hover:bg-red-50"
+                            className="flex items-center gap-2 border-green-600 text-red-600 hover:bg-red-50"
                           >
                             <Trash2 className="w-4 h-4" />
                             Excluir
