@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import logoDivino from '@/assets/LOGO_DIVINO_ALIMENTOS.png';
+import logoDivino from '@/assets/logo-divino-alimentos.png';
 
 interface AppBarDivinoProps {
   children?: React.ReactNode;
@@ -80,7 +80,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14">
           {['/dashboard', '/fornecedor/loja'].includes(location.pathname) ? (
             <img 
-              src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
+              src={logoDivino}
               alt="Divino Alimento - Alimento de Todo Mundo"
               className="w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] lg:w-[200px] lg:h-[200px] object-contain"
               style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
@@ -95,7 +95,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
               className="focus-ring rounded-lg transition-transform hover:scale-105 active:scale-95"
             >
               <img 
-                src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
+                src={logoDivino}
                 alt="Divino Alimento - Alimento de Todo Mundo"
                 className="w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] lg:w-[200px] lg:h-[200px] object-contain cursor-pointer"
                 style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
