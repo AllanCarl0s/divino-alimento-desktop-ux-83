@@ -111,7 +111,7 @@ export default function AdminPrecosLista() {
                 <TableRow>
                   <TableHead>Nome do Mercado</TableHead>
                   <TableHead>Tipo de Mercado</TableHead>
-                  <TableHead>Administrador Responsável</TableHead>
+                  <TableHead>Administrador(a) Responsável</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Ação</TableHead>
                 </TableRow>
