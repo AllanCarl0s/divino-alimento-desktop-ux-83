@@ -56,7 +56,7 @@ const Dashboard = () => {
         <UserMenuLarge />
       }
     >
-      <div className="space-y-6 mt-8">
+      <div className="space-y-6">
         {/* Header */}
         <div className="text-center">
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
