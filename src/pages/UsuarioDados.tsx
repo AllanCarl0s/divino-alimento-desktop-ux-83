@@ -423,7 +423,7 @@ const UsuarioDados = () => {
                 htmlFor="perfilFornecedor" 
                 className={activeRole !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
               >
-                Fornecedor{activeRole !== 'admin' ? ' (não editável)' : ''}
+                Fornecedor(a){activeRole !== 'admin' ? ' (não editável)' : ''}
               </Label>
             </div>
 
@@ -440,7 +440,7 @@ const UsuarioDados = () => {
                 htmlFor="perfilConsumidor" 
                 className={activeRole !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
               >
-                Consumidor{activeRole !== 'admin' ? ' (não editável)' : ''}
+                Consumidor(a){activeRole !== 'admin' ? ' (não editável)' : ''}
               </Label>
             </div>
 
@@ -457,7 +457,7 @@ const UsuarioDados = () => {
                 htmlFor="perfilAdministradorMercado" 
                 className={activeRole !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
               >
-                Administrador de Mercado{activeRole !== 'admin' ? ' (não editável)' : ''}
+                Administrador(a) de Mercado{activeRole !== 'admin' ? ' (não editável)' : ''}
               </Label>
             </div>
 
@@ -474,7 +474,7 @@ const UsuarioDados = () => {
                 htmlFor="perfilAdministrador" 
                 className="cursor-not-allowed opacity-50"
               >
-                Administrador (não editável)
+                Administrador(a) (não editável)
               </Label>
             </div>
           </CardContent>
