@@ -26,6 +26,7 @@ import {
 import { Search, Plus, Pencil, Trash2, ArrowLeft } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { formatBRL } from '@/utils/currency';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface ProdutoComercializavel {
   id: string;
@@ -97,9 +98,7 @@ const AdminProdutosComercialivaveis = () => {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary mb-2">
-            Administrador - Alimentos Comercializáveis
-          </h1>
+          <RoleTitle page="Alimentos Comercializáveis" className="text-2xl md:text-3xl mb-2" />
           <p className="text-muted-foreground">
             Gerencie variações comerciais por unidade, peso e preço
           </p>
