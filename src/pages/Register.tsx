@@ -16,7 +16,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useConsumer } from '@/contexts/ConsumerContext';
 import { useAuth, UserRole, Gender } from '@/contexts/AuthContext';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { roleLabel, roleDescription } from '@/utils/labels';
 
 const getDefaultRoute = (role: UserRole): string => {
@@ -273,41 +272,25 @@ const Register = () => {
                         control={form.control}
                         name="gender"
                         render={({ field }) => (
-                          <FormItem className="space-y-3">
-                            <FormLabel id="label-genero">Gênero</FormLabel>
-                            <FormControl>
-                              <RadioGroup
-                                onValueChange={field.onChange}
-                                value={field.value}
-                                className="flex flex-col space-y-2"
-                                aria-labelledby="label-genero"
-                              >
-                                <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="male" id="male" />
-                                  <Label htmlFor="male" className="font-normal cursor-pointer">
-                                    Masculino
-                                  </Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="female" id="female" />
-                                  <Label htmlFor="female" className="font-normal cursor-pointer">
-                                    Feminino
-                                  </Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="nonbinary" id="nonbinary" />
-                                  <Label htmlFor="nonbinary" className="font-normal cursor-pointer">
-                                    Não binário
-                                  </Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="unspecified" id="unspecified" />
-                                  <Label htmlFor="unspecified" className="font-normal cursor-pointer">
-                                    Prefiro não informar
-                                  </Label>
-                                </div>
-                              </RadioGroup>
-                            </FormControl>
+                          <FormItem>
+                            <FormLabel htmlFor="gender">Gênero *</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger 
+                                  id="gender" 
+                                  className="lg:h-12 lg:text-base"
+                                  aria-required="true"
+                                >
+                                  <SelectValue placeholder="Selecione seu gênero" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="male">Masculino</SelectItem>
+                                <SelectItem value="female">Feminino</SelectItem>
+                                <SelectItem value="nonbinary">Não binário</SelectItem>
+                                <SelectItem value="unspecified">Prefiro não informar</SelectItem>
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
