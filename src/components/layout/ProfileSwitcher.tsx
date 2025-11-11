@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ShoppingBasket, Store, Shield, UserCheck, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { roleLabel } from '@/utils/labels';
 
 const getDefaultRoute = (role: UserRole): string => {
   switch (role) {
@@ -39,18 +40,6 @@ const getRoleIcon = (role: UserRole) => {
   }
 };
 
-const getRoleLabel = (role: UserRole): string => {
-  switch (role) {
-    case 'consumidor':
-      return 'Consumidor';
-    case 'fornecedor':
-      return 'Fornecedor';
-    case 'admin':
-      return 'Administrador';
-    case 'admin_mercado':
-      return 'Admin Mercado';
-  }
-};
 
 export const ProfileSwitcher: React.FC = () => {
   const { user, activeRole, switchRole } = useAuth();
@@ -67,7 +56,7 @@ export const ProfileSwitcher: React.FC = () => {
     
     toast({
       title: "Perfil alterado",
-      description: `Você está agora como ${getRoleLabel(role)}`,
+      description: `Você está agora como ${roleLabel(role, user.gender)}`,
     });
     
     navigate(newRoute);
@@ -78,7 +67,7 @@ export const ProfileSwitcher: React.FC = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
           {getRoleIcon(activeRole)}
-          <span>{getRoleLabel(activeRole)}</span>
+          <span>{roleLabel(activeRole, user.gender)}</span>
           <ChevronDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -93,7 +82,7 @@ export const ProfileSwitcher: React.FC = () => {
             className="gap-2"
           >
             {getRoleIcon(role)}
-            <span>{getRoleLabel(role)}</span>
+            <span>{roleLabel(role, user.gender)}</span>
             {role === activeRole && (
               <span className="ml-auto text-xs text-muted-foreground">Ativo</span>
             )}

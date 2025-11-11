@@ -2,21 +2,7 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-
-type UserRole = 'consumidor' | 'fornecedor' | 'admin' | 'admin_mercado';
-
-const getRoleLabel = (role: UserRole): string => {
-  switch (role) {
-    case 'consumidor':
-      return 'Consumidor';
-    case 'fornecedor':
-      return 'Fornecedor';
-    case 'admin':
-      return 'Administrador';
-    case 'admin_mercado':
-      return 'Administrador de Mercado';
-  }
-};
+import { roleLabel } from '@/utils/labels';
 
 interface PageTitleProps {
   title: string;
@@ -25,12 +11,12 @@ interface PageTitleProps {
 }
 
 export const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle, className }) => {
-  const { activeRole } = useAuth();
+  const { activeRole, user } = useAuth();
   const isMobile = useIsMobile();
 
   if (!activeRole) return null;
 
-  const fullTitle = `${getRoleLabel(activeRole)} - ${title}`;
+  const fullTitle = `${roleLabel(activeRole, user?.gender)} - ${title}`;
 
   return (
     <div 

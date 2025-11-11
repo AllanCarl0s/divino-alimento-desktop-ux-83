@@ -11,6 +11,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronDown, User, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { roleLabel } from '@/utils/labels';
 
 const getDefaultRoute = (role: UserRole): string => {
   switch (role) {
@@ -25,18 +26,6 @@ const getDefaultRoute = (role: UserRole): string => {
   }
 };
 
-const getRoleLabel = (role: UserRole): string => {
-  switch (role) {
-    case 'consumidor':
-      return 'Consumidor';
-    case 'fornecedor':
-      return 'Fornecedor';
-    case 'admin':
-      return 'Administrador';
-    case 'admin_mercado':
-      return 'Admin Mercado';
-  }
-};
 
 export const UserMenu: React.FC = () => {
   const { user, activeRole, switchRole, logout } = useAuth();
@@ -55,7 +44,7 @@ export const UserMenu: React.FC = () => {
     
     toast({
       title: "Perfil alterado",
-      description: `Você está agora como ${getRoleLabel(role)}`,
+      description: `Você está agora como ${roleLabel(role, user.gender)}`,
     });
     
     navigate(newRoute);
@@ -93,7 +82,7 @@ export const UserMenu: React.FC = () => {
                 className="cursor-pointer hover:bg-accent"
               >
                 <span className={role === activeRole ? 'text-muted-foreground' : ''}>
-                  {getRoleLabel(role)}
+                  {roleLabel(role, user.gender)}
                 </span>
                 {role === activeRole && (
                   <span className="ml-auto text-xs text-muted-foreground">(Ativo)</span>

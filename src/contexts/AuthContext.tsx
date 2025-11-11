@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { useNavigate } from 'react-router-dom';
 
 export type UserRole = 'consumidor' | 'fornecedor' | 'admin' | 'admin_mercado';
+export type Gender = 'male' | 'female' | 'nonbinary' | 'unspecified';
 
 interface User {
   id: string;
@@ -9,6 +10,7 @@ interface User {
   name: string;
   roles: UserRole[];
   defaultRole: UserRole;
+  gender?: Gender;
   photoURL?: string;
 }
 
@@ -19,7 +21,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   switchRole: (role: UserRole) => void;
-  register: (email: string, password: string, name: string, roles: UserRole[]) => Promise<void>;
+  register: (email: string, password: string, name: string, roles: UserRole[], gender?: Gender) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -69,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [user, activeRole]);
 
-  const register = async (email: string, password: string, name: string, roles: UserRole[]) => {
+  const register = async (email: string, password: string, name: string, roles: UserRole[], gender: Gender = 'unspecified') => {
     // Definir defaultRole como o primeiro role selecionado
     const defaultRole = roles[0];
     
@@ -79,6 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       name,
       roles,
       defaultRole,
+      gender,
     };
     
     setUser(newUser);
@@ -111,6 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         name: email.split('@')[0],
         roles: ['consumidor'],
         defaultRole: 'consumidor',
+        gender: 'unspecified',
       };
       
       setUser(mockUser);
