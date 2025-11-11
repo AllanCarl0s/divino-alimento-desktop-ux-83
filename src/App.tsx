@@ -67,6 +67,7 @@ import AdminMercadoComposicaoLote from './pages/adminmercado/AdminMercadoComposi
 import AdminMercadoMigrarOfertas from './pages/adminmercado/AdminMercadoMigrarOfertas';
 import AdminMercadoRelatorioFornecedores from './pages/adminmercado/AdminMercadoRelatorioFornecedores';
 import AdminMercadoRelatorioConsumidores from './pages/adminmercado/AdminMercadoRelatorioConsumidores';
+import AdminMercadoRelatorioConsumidoresResultado from './pages/adminmercado/AdminMercadoRelatorioConsumidoresResultado';
 import AdminMercadoRelatorioFornecedoresCiclo from './pages/adminmercado/AdminMercadoRelatorioFornecedoresCiclo';
 import AdminMercadoRelatorioConsumidoresCiclo from './pages/adminmercado/AdminMercadoRelatorioConsumidoresCiclo';
 
@@ -114,10 +115,11 @@ const App = () => (
           <Route path="/adminmercado/composicao-lote/:cicloId" element={<ProtectedRoute><AdminMercadoComposicaoLote /></ProtectedRoute>} />
           <Route path="/adminmercado/migrar-ofertas/:cicloId" element={<ProtectedRoute><AdminMercadoMigrarOfertas /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorio-fornecedores/:cicloId" element={<ProtectedRoute><AdminMercadoRelatorioFornecedores /></ProtectedRoute>} />
+          <Route path="/adminmercado/relatorio-consumidores/resultado" element={<ProtectedRoute><AdminMercadoRelatorioConsumidoresResultado /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorio-consumidores/:cicloId" element={<ProtectedRoute><AdminMercadoRelatorioConsumidores /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorios/fornecedores-ciclo" element={<ProtectedRoute><AdminMercadoRelatorioFornecedoresCiclo /></ProtectedRoute>} />
           <Route path="/adminmercado/relatorios/consumidores-ciclo" element={<ProtectedRoute><AdminMercadoRelatorioConsumidoresCiclo /></ProtectedRoute>} />
-          
+
           <Route path="/admin/mercados" element={<ProtectedRoute><AdminMercados /></ProtectedRoute>} />
           <Route path="/admin/precos" element={<ProtectedRoute><AdminPrecosLista /></ProtectedRoute>} />
           <Route path="/admin/precos/:id" element={<ProtectedRoute><AdminPrecos /></ProtectedRoute>} />
