@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { RoleTitle } from '@/components/layout/RoleTitle';
 
 interface EntregaFornecedor {
   id: string;
@@ -166,9 +167,7 @@ export default function AdminMercadoRelatorioFornecedores() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Administrador de mercado - Relatório de Entregas dos Fornecedores
-          </h1>
+          <RoleTitle page="Relatório de Entregas dos Fornecedores" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">
             Visualize e exporte as entregas realizadas para seu mercado neste ciclo
           </p>
