@@ -287,7 +287,7 @@ export default function AdminComposicaoVendaDireta() {
         <div>
           <div className="flex items-center gap-3 mb-2">
             <ShoppingCart className="h-8 w-8 text-primary" />
-            <RoleTitle page="Composição de Vendas – Mercado Tipo Venda Direta" className="text-3xl" />
+            <RoleTitle page={`Composição – ${ciclo.nome}`} className="text-3xl" />
           </div>
           <p className="text-lg text-muted-foreground">
             Fechamento do ciclo – consolidação das vendas realizadas
