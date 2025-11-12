@@ -103,7 +103,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
           }}
         >
           {/* Logo circular sobreposto - mesma posição, tamanho e sombra da home */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14 z-20">
             <div
               className="hover:opacity-90 transition-opacity"
               style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
@@ -121,7 +121,11 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
           </div>
 
           {/* Botão de voltar - canto superior esquerdo */}
-          {location.pathname !== '/dashboard' && !location.pathname.startsWith('/fornecedor/loja') && (
+          {leftContent ? (
+            <div className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-10">
+              {leftContent}
+            </div>
+          ) : location.pathname !== '/dashboard' && !location.pathname.startsWith('/fornecedor/loja') && (
             <button
               onClick={handleVoltar}
               className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-10 text-white hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 rounded-full p-2"
@@ -133,7 +137,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
 
           {/* Avatar do usuário - centralizado verticalmente na faixa laranja */}
           {children && (
-            <div className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-10 touch-target">
+            <div className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 touch-target">
               {children}
             </div>
           )}
