@@ -702,21 +702,21 @@ export default function AdminOferta() {
                     const precoAlterado = oferta.valor_unitario !== oferta.preco_base;
                     
                     return (
-                      <Card key={oferta.id} className="p-4">
+                      <Card key={oferta.id} className="p-4 overflow-hidden">
                         <div className="space-y-3">
                           {/* Linha 1: Produto e Total */}
-                          <div className="flex justify-between items-start gap-2">
-                            <h3 className="font-semibold text-base">{oferta.produto_base_nome}</h3>
-                            <span className="font-bold text-primary whitespace-nowrap">
+                          <div className="flex justify-between items-start gap-3">
+                            <h3 className="font-semibold text-base break-words flex-1 min-w-0">{oferta.produto_base_nome}</h3>
+                            <span className="font-bold text-primary whitespace-nowrap shrink-0">
                               {formatBRL(total)}
                             </span>
                           </div>
 
                           {/* Linha 2: Medida, Valor Unit, Quantidade */}
-                          <div className="flex gap-4 text-sm text-muted-foreground flex-wrap">
-                            <span>{oferta.unidade}</span>
-                            <span>|</span>
-                            <span>
+                          <div className="flex gap-2 text-sm text-muted-foreground flex-wrap items-center">
+                            <span className="break-words">{oferta.unidade}</span>
+                            <span className="text-xs">•</span>
+                            <span className="break-words">
                               {precoAlterado ? (
                                 <Badge variant="outline" className="bg-amber-50 dark:bg-amber-950 border-amber-300 dark:border-amber-700 text-xs">
                                   {formatBRL(oferta.valor_unitario)}
@@ -725,8 +725,8 @@ export default function AdminOferta() {
                                 formatBRL(oferta.valor_unitario)
                               )}
                             </span>
-                            <span>|</span>
-                            <span>Qtd: {oferta.quantidade_disponivel}</span>
+                            <span className="text-xs">•</span>
+                            <span className="whitespace-nowrap">Qtd: {oferta.quantidade_disponivel}</span>
                           </div>
 
                           {/* Linha 3: Badges de Certificação e Tipo */}
