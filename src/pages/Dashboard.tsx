@@ -58,17 +58,15 @@ const Dashboard = () => {
     >
       <div className="space-y-6 pt-8">
         {/* Header */}
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-3">
-            <img 
-              src="/src/assets/leaf-title-icon.png" 
-              alt="" 
-              className="w-8 h-8 md:w-10 md:h-10"
-            />
-            <h1 className="text-2xl md:text-3xl font-bold text-primary">
-              Gerencie suas compras
-            </h1>
-          </div>
+        <div className="text-center relative">
+          <img 
+            src="/src/assets/leaf-title-icon.png" 
+            alt="" 
+            className="absolute left-1/2 -translate-x-[200px] md:-translate-x-[250px] top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16"
+          />
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">
+            Gerencie suas compras
+          </h1>
         </div>
 
         {/* Resumo do Ciclo Atual */}
