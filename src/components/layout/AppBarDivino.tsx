@@ -53,6 +53,50 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Identifica rotas de consumidor/fornecedor que devem usar layout da home
+  const isHomeStyleRoute = 
+    location.pathname === '/dashboard' || 
+    location.pathname.startsWith('/fornecedor');
+
+  // Layout idêntico à página inicial (/) para consumidor e fornecedor
+  if (isHomeStyleRoute) {
+    return (
+      <>
+        {/* Faixa branca superior - EXATAMENTE igual à home */}
+        <div className="h-12 lg:h-16 bg-white" />
+        
+        {/* Header laranja com logo sobreposto - EXATAMENTE igual à home */}
+        <header className="relative h-20 lg:h-28 bg-[#F29B2C] flex items-center justify-center">
+          {/* Logo circular sobreposto - mesma posição, tamanho e sombra da home */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14">
+            <div
+              className="hover:opacity-90 transition-opacity"
+              style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
+            >
+              <img 
+                src="/assets/logo-divino-circular.png"
+                alt="Divino Alimento"
+                className="w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] lg:w-[200px] lg:h-[200px] object-contain"
+                decoding="async"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Avatar do usuário - posicionado absolutamente no canto direito */}
+          {children && (
+            <div className="absolute right-4 lg:right-8 top-4 lg:top-6 z-10 touch-target">
+              {children}
+            </div>
+          )}
+        </header>
+      </>
+    );
+  }
+
+  // Header padrão para admin, admin de mercado e outras rotas
   return (
     <header 
       className={cn(
@@ -81,39 +125,23 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
           </div>
         )}
         
-        {/* Logo centralizado - Sempre perfeitamente no centro */}
+        {/* Logo centralizado */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {/* Verifica se está em rota de consumidor ou fornecedor para exibir logo circular */}
-          {(location.pathname === '/dashboard' || 
-            location.pathname.startsWith('/minhaCesta') || 
-            location.pathname.startsWith('/pedidoConsumidores') ||
-            location.pathname.startsWith('/fornecedor')) ? (
+          <button
+            onClick={handleLogoClick}
+            className="focus-ring rounded-lg transition-transform hover:scale-105 active:scale-95 pointer-events-auto"
+          >
             <img 
-              src="/assets/logo-divino-circular.png"
-              alt="Divino Alimento"
-              className="h-[72px] w-[72px] md:h-[84px] md:w-[84px] object-contain"
+              src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
+              alt="Divino Alimento - Alimento de Todo Mundo"
+              className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain cursor-pointer"
+              style={{ maxHeight: 'calc(100% - 16px)' }}
               decoding="async"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
-          ) : (
-            <button
-              onClick={handleLogoClick}
-              className="focus-ring rounded-lg transition-transform hover:scale-105 active:scale-95 pointer-events-auto"
-            >
-              <img 
-                src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
-                alt="Divino Alimento - Alimento de Todo Mundo"
-                className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain cursor-pointer"
-                style={{ maxHeight: 'calc(100% - 16px)' }}
-                decoding="async"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </button>
-          )}
+          </button>
         </div>
         
         {/* Botões à direita */}
