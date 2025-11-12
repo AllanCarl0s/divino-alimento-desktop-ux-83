@@ -93,9 +93,9 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
             </div>
           </div>
 
-          {/* Avatar do usuário - posicionado absolutamente no canto direito */}
+          {/* Avatar do usuário - centralizado verticalmente na faixa laranja */}
           {children && (
-            <div className="absolute right-4 lg:right-8 top-4 lg:top-6 z-10 touch-target">
+            <div className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-10 touch-target">
               {children}
             </div>
           )}
