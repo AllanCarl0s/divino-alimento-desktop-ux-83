@@ -63,34 +63,28 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
   // Se for estilo da home (consumidor/fornecedor)
   if (isHomeStyleHeader) {
     return (
-      <>
-        {/* Faixa branca superior */}
-        <div className="h-12 lg:h-16 bg-white" />
-        
-        {/* Header laranja com logo sobreposto */}
-        <header className="relative h-20 lg:h-28 bg-[#F29B2C] flex items-center justify-center">
-          {/* Logo circular sobreposto, centralizado */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14 pointer-events-none z-20">
-            <img 
-              src="/assets/logo-divino-circular.png"
-              alt="Divino Alimento"
-              className="w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] lg:w-[200px] lg:h-[200px] object-contain"
-              style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
-              decoding="async"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          </div>
+      <header className="relative h-24 md:h-28 bg-[#F29B2C] flex items-center justify-center">
+        {/* Logo circular centralizado */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+          <img 
+            src="/assets/logo-divino-circular.png"
+            alt="Divino Alimento"
+            className="w-[80px] h-[80px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px] object-contain"
+            style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
+            decoding="async"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </div>
 
-          {/* Avatar do usuário no canto direito */}
-          {children && (
-            <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-10 touch-target">
-              {children}
-            </div>
-          )}
-        </header>
-      </>
+        {/* Avatar do usuário no canto direito */}
+        {children && (
+          <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-10 touch-target">
+            {children}
+          </div>
+        )}
+      </header>
     );
   }
 
