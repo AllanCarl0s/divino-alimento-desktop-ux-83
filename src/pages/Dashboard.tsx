@@ -59,9 +59,16 @@ const Dashboard = () => {
       <div className="space-y-6 pt-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Gerencie suas compras
-          </h1>
+          <div className="flex items-center justify-center gap-3">
+            <img 
+              src="/src/assets/leaf-title-icon.png" 
+              alt="" 
+              className="w-8 h-8 md:w-10 md:h-10"
+            />
+            <h1 className="text-2xl md:text-3xl font-bold text-primary">
+              Gerencie suas compras
+            </h1>
+          </div>
         </div>
 
         {/* Resumo do Ciclo Atual */}
