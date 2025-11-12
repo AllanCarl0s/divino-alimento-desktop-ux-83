@@ -9,6 +9,7 @@ import { useCycle } from '@/hooks/useCycle';
 import { Button } from '@/components/ui/button';
 import { formatBRL } from '@/utils/currency';
 import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
+import leafTitleIcon from '@/assets/leaf-title-icon.png';
 
 
 const Dashboard = () => {
@@ -60,7 +61,7 @@ const Dashboard = () => {
         {/* Header */}
         <div className="text-center relative mb-8">
           <img 
-            src="/src/assets/leaf-title-icon.png" 
+            src={leafTitleIcon} 
             alt="" 
             className="absolute left-1/2 -translate-x-[175px] md:-translate-x-[250px] top-1/2 -translate-y-[80%] w-10 h-10 md:w-16 md:h-16"
           />
