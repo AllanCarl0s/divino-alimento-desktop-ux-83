@@ -89,7 +89,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
             location.pathname.startsWith('/pedidoConsumidores') ||
             location.pathname.startsWith('/fornecedor')) ? (
             <img 
-              src="/lovable-uploads/00c320e7-a99d-4c71-a87f-548f186305d0.png"
+              src="/assets/logo-divino-circular.png"
               alt="Divino Alimento"
               className="h-[72px] w-[72px] md:h-[84px] md:w-[84px] object-contain"
               decoding="async"
