@@ -17,26 +17,31 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
   const location = useLocation();
 
   const handleLogoClick = () => {
-    // Se estiver na página dashboard, não faz nada
-    if (location.pathname === '/dashboard') {
+    // Detecta se está em rota de consumidor ou fornecedor
+    const isConsumerRoute = location.pathname === '/dashboard' || 
+                           location.pathname.startsWith('/minhaCesta') || 
+                           location.pathname.startsWith('/pedidoConsumidores');
+    const isSupplierRoute = location.pathname.startsWith('/fornecedor');
+    
+    // Para rotas de consumidor, não faz nada ao clicar no logo
+    if (isConsumerRoute) {
       return;
     }
     
-    // Páginas que devem voltar para /dashboard
-    const dashboardPages = ['/relatorio', '/cesta', '/resumo', '/pagamentos', '/configuracoes'];
-    if (dashboardPages.includes(location.pathname)) {
-      navigate('/dashboard');
-      return;
-    }
-    
-    // Detecta se está em rota de fornecedor e navega para a home apropriada
-    if (location.pathname.startsWith('/fornecedor')) {
+    // Para rotas de fornecedor, volta para a loja
+    if (isSupplierRoute) {
       navigate('/fornecedor/loja');
-    } else if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/usuario')) {
-      navigate('/admin/dashboard');
-    } else {
-      navigate('/');
+      return;
     }
+    
+    // Para rotas de admin
+    if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/usuario')) {
+      navigate('/admin/dashboard');
+      return;
+    }
+    
+    // Para outras rotas, volta para home
+    navigate('/');
   };
 
   useEffect(() => {
@@ -78,12 +83,15 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
         
         {/* Logo centralizado - Sempre perfeitamente no centro */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {location.pathname === '/dashboard' ? (
+          {/* Verifica se está em rota de consumidor ou fornecedor para exibir logo circular */}
+          {(location.pathname === '/dashboard' || 
+            location.pathname.startsWith('/minhaCesta') || 
+            location.pathname.startsWith('/pedidoConsumidores') ||
+            location.pathname.startsWith('/fornecedor')) ? (
             <img 
-              src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
-              alt="Divino Alimento - Alimento de Todo Mundo"
-              className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain"
-              style={{ maxHeight: 'calc(100% - 16px)' }}
+              src="/lovable-uploads/00c320e7-a99d-4c71-a87f-548f186305d0.png"
+              alt="Divino Alimento"
+              className="h-[72px] w-[72px] md:h-[84px] md:w-[84px] object-contain"
               decoding="async"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
