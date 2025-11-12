@@ -56,6 +56,8 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
   // Identifica rotas de consumidor/fornecedor que devem usar layout da home
   const isHomeStyleRoute = 
     location.pathname === '/dashboard' || 
+    location.pathname.startsWith('/minhaCesta') ||
+    location.pathname.startsWith('/pedidoConsumidores') ||
     location.pathname.startsWith('/fornecedor');
 
   // Layout idêntico à página inicial (/) para consumidor e fornecedor
