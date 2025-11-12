@@ -248,7 +248,7 @@ export const UserMenuLarge: React.FC = () => {
     );
   }
 
-  // Desktop version - Modal centralizado
+  // Desktop version - Modal centralizado igual mobile
   return (
     <>
       <div ref={menuRef} className="relative">
