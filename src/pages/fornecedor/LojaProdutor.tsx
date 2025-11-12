@@ -110,7 +110,7 @@ const LojaProdutor = () => {
             alt="" 
             className="absolute left-1/2 -translate-x-[175px] md:-translate-x-[270px] top-1/2 -translate-y-[80%] w-10 h-10 md:w-16 md:h-16"
           />
-          <h1 className="text-xl md:text-2xl font-bold text-primary">
+          <h1 className="text-xl md:text-[28px] font-bold text-primary">
             Agricultoras e agricultores
           </h1>
         </div>
