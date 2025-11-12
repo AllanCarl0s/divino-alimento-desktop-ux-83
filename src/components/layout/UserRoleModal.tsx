@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -110,7 +111,9 @@ export const UserRoleModal: React.FC<UserRoleModalProps> = ({ isOpen, onClose })
 
   const displayName = getDisplayName();
 
-  return (
+  if (!isOpen) return null;
+
+  return createPortal(
     <div 
       id="user-role-modal"
       role="dialog"
@@ -200,6 +203,7 @@ export const UserRoleModal: React.FC<UserRoleModalProps> = ({ isOpen, onClose })
           Sair
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
