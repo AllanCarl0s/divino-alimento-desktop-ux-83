@@ -11,8 +11,6 @@ export const AppShell = ({ children, className }: AppShellProps) => {
     <div className={cn(
       // Responsive container
       'min-h-screen bg-gradient-surface',
-      // Desktop constraints
-      'lg:min-w-[1024px]',
       className
     )}>
       {/* Container with responsive constraints */}
