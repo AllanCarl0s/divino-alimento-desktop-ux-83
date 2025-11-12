@@ -62,7 +62,7 @@ const Dashboard = () => {
           <img 
             src="/src/assets/leaf-title-icon.png" 
             alt="" 
-            className="absolute left-1/2 -translate-x-[200px] md:-translate-x-[250px] top-1/2 -translate-y-[80%] w-12 h-12 md:w-16 md:h-16"
+            className="absolute left-1/2 -translate-x-[150px] md:-translate-x-[250px] top-1/2 -translate-y-[80%] w-10 h-10 md:w-16 md:h-16"
           />
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
             Gerencie suas compras
