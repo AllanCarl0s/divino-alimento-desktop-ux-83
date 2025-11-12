@@ -19,6 +19,7 @@ import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useAuth } from '@/contexts/AuthContext';
 import { roleLabel } from '@/utils/labels';
 import { useEffect } from 'react';
+import leafTitleIcon from '@/assets/leaf-title-icon.png';
 
 // Mock data - in real app would come from API/context
 const mockFornecedorData = {
@@ -106,7 +107,7 @@ const LojaProdutor = () => {
         {/* Header */}
         <div className="text-center relative mb-8">
           <img 
-            src="/src/assets/leaf-title-icon.png" 
+            src={leafTitleIcon} 
             alt="" 
             className="absolute left-1/2 -translate-x-[175px] md:-translate-x-[270px] top-1/2 -translate-y-[90%] w-10 h-10 md:w-16 md:h-16"
           />
