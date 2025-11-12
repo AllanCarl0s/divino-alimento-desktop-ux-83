@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 import logoDivino from '@/assets/LOGO_DIVINO_ALIMENTOS.png';
 
 interface AppBarDivinoProps {
@@ -58,7 +59,11 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
     location.pathname === '/dashboard' || 
     location.pathname.startsWith('/minhaCesta') ||
     location.pathname.startsWith('/pedidoConsumidores') ||
-    location.pathname.startsWith('/fornecedor');
+    location.pathname.startsWith('/fornecedor') ||
+    location.pathname.startsWith('/usuario/') ||
+    location.pathname.startsWith('/oferta/') ||
+    location.pathname.startsWith('/consumidor/selecionar-ciclo') ||
+    location.pathname.startsWith('/consumidor/relatorio-pedidos');
 
   // Layout idêntico à página inicial (/) para consumidor e fornecedor
   if (isHomeStyleRoute) {
@@ -92,6 +97,17 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
               />
             </div>
           </div>
+
+          {/* Botão de voltar - canto superior esquerdo */}
+          {location.pathname !== '/dashboard' && (
+            <button
+              onClick={() => navigate(-1)}
+              className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-10 text-white hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 rounded-full p-2"
+              aria-label="Voltar"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+          )}
 
           {/* Avatar do usuário - centralizado verticalmente na faixa laranja */}
           {children && (
