@@ -62,9 +62,6 @@ const Dashboard = () => {
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
             Gerencie suas compras
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground mt-1">
-            Gerencie suas cestas e pedidos
-          </p>
         </div>
 
         {/* Resumo do Ciclo Atual */}
