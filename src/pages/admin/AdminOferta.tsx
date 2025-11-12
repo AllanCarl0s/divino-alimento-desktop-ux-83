@@ -350,19 +350,19 @@ export default function AdminOferta() {
         <Card className="border-0 shadow-none bg-transparent">
           <CardContent className="p-0 space-y-6">
             {/* Title and Badge */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
+            <div className="flex flex-col items-center gap-4 md:flex-row md:items-start md:justify-between">
+              <Badge 
+                variant={periodoOfertaAberto ? "default" : "secondary"}
+                className={periodoOfertaAberto ? "bg-green-600 hover:bg-green-700 text-white whitespace-nowrap md:order-2" : "bg-orange-500 hover:bg-orange-600 text-white whitespace-nowrap md:order-2"}
+              >
+                {periodoOfertaAberto ? "Período de oferta aberto" : "Período de oferta encerrado"}
+              </Badge>
+              <div className="text-center md:text-left md:order-1">
                 <RoleTitle page={mockCiclo.nome} className="text-2xl md:text-3xl" />
                 <p className="text-sm text-muted-foreground mt-1">
                   Período: {format(mockCiclo.data_inicio_oferta, 'dd/MM/yyyy', { locale: ptBR })} - {format(mockCiclo.data_fim_oferta, 'dd/MM/yyyy', { locale: ptBR })}
                 </p>
               </div>
-              <Badge 
-                variant={periodoOfertaAberto ? "default" : "secondary"}
-                className={periodoOfertaAberto ? "bg-green-600 hover:bg-green-700 text-white whitespace-nowrap" : "bg-orange-500 hover:bg-orange-600 text-white whitespace-nowrap"}
-              >
-                {periodoOfertaAberto ? "Período de oferta aberto" : "Período de oferta encerrado"}
-              </Badge>
             </div>
 
             {/* Stepper */}
