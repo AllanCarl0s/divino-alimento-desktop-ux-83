@@ -102,7 +102,7 @@ const LojaProdutor = () => {
         <UserMenuLarge />
       }
     >
-      <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8">
+      <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8 pt-8">
         {/* Header */}
         <div>
           <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">

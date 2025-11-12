@@ -194,7 +194,7 @@ const PedidoConsumidores = () => {
         </button>
       }
     >
-      <div className="p-4 space-y-6">
+      <div className="p-4 space-y-6 pt-8">
         {/* Header */}
         <div className="space-y-2">
           <RoleTitle page="Comprar Alimentos Venda Direta" />

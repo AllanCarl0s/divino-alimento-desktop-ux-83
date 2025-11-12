@@ -232,7 +232,7 @@ export default function ConsumidorRelatorioPedidosResultado() {
       } 
       headerContent={<UserMenuLarge />}
     >
-      <div className="space-y-6">
+      <div className="space-y-6 pt-8">
         <div>
           <RoleTitle page="Relatório de Pedidos" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">

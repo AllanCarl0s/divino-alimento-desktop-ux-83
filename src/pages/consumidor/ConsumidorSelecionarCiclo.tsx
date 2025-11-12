@@ -73,7 +73,7 @@ export default function ConsumidorSelecionarCiclo() {
       } 
       headerContent={<UserMenuLarge />}
     >
-      <div className="space-y-6">
+      <div className="space-y-6 pt-8">
         <div>
           <RoleTitle page="Selecione o Ciclo para Pedido em Varejo" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">Escolha em qual ciclo ativo você deseja fazer seu pedido de varejo.</p>

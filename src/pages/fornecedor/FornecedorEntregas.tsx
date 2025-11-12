@@ -149,7 +149,7 @@ export default function FornecedorEntregas() {
         </Button>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-6 pt-8">
         {/* Header */}
         <div>
           <RoleTitle page="Relatório de Entregas" />

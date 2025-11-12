@@ -144,7 +144,7 @@ export default function OfertaCiclo() {
         </Button>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-6 pt-8">
         {/* Cabeçalho com informações do ciclo */}
         <Card>
           <CardHeader>

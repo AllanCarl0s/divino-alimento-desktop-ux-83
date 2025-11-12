@@ -73,7 +73,7 @@ export default function FornecedorSelecionarCicloEntregas() {
       } 
       headerContent={<UserMenuLarge />}
     >
-      <div className="space-y-6">
+      <div className="space-y-6 pt-8">
         <div>
           <RoleTitle page="Selecione o Ciclo para Ver Entregas" className="text-2xl md:text-3xl" />
           <p className="text-sm md:text-base text-muted-foreground">Escolha em qual ciclo ativo você deseja visualizar o relatório de entregas.</p>

@@ -87,7 +87,7 @@ const MinhaCesta = () => {
           </button>
         }
       >
-        <div className="space-y-6">
+        <div className="space-y-6 pt-8">
           <div>
             <RoleTitle page="Minha Cesta" />
             <p className="text-muted-foreground mt-2">
@@ -136,7 +136,7 @@ const MinhaCesta = () => {
         </button>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-6 pt-8">
         {/* Header */}
         <div>
           <RoleTitle page="Minha Cesta" />

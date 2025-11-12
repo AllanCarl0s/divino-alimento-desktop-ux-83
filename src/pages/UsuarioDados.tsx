@@ -168,7 +168,7 @@ const UsuarioDados = () => {
         </Button>
       }
     >
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6 pt-8">
         <div>
           <RoleTitle page="Dados Pessoais" />
           <p className="text-sm md:text-base text-muted-foreground">
