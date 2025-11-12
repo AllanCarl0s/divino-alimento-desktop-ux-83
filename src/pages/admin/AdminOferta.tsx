@@ -97,6 +97,7 @@ export default function AdminOferta() {
   
   // Form state
   const [selectedProdutoId, setSelectedProdutoId] = useState('');
+  const [selectedProdutoBase, setSelectedProdutoBase] = useState('');
   const [valorUnitario, setValorUnitario] = useState('');
   const [quantidadeDisponivel, setQuantidadeDisponivel] = useState('');
   const [precoBaseSugerido, setPrecoBaseSugerido] = useState<number | null>(null);
@@ -140,6 +141,21 @@ export default function AdminOferta() {
     );
   }, [searchProduto]);
 
+  // Lista única de produtos base (para o primeiro dropdown mobile)
+  const produtosBase = useMemo(() => {
+    const baseMap = new Map<string, string>();
+    mockProdutosComercializaveis.forEach(p => {
+      baseMap.set(p.produto_base_id, p.produto_base_nome);
+    });
+    return Array.from(baseMap.entries()).map(([id, nome]) => ({ id, nome }));
+  }, []);
+
+  // Variações do produto base selecionado (para o segundo dropdown mobile)
+  const variacoesProduto = useMemo(() => {
+    if (!selectedProdutoBase) return [];
+    return mockProdutosComercializaveis.filter(p => p.produto_base_id === selectedProdutoBase);
+  }, [selectedProdutoBase]);
+
   // Ao selecionar um produto, preencher o valor unitário com o preço base e focar
   useEffect(() => {
     if (selectedProdutoId && !editingOferta) {
@@ -165,6 +181,7 @@ export default function AdminOferta() {
   const handleLimparFormulario = () => {
     setEditingOferta(null);
     setSelectedProdutoId('');
+    setSelectedProdutoBase('');
     setValorUnitario('');
     setQuantidadeDisponivel('');
     setPrecoBaseSugerido(null);
@@ -242,6 +259,10 @@ export default function AdminOferta() {
   const handleEditarOferta = (oferta: OfertaProduto) => {
     setEditingOferta(oferta);
     setSelectedProdutoId(oferta.produto_comercializavel_id);
+    const produto = mockProdutosComercializaveis.find(p => p.id === oferta.produto_comercializavel_id);
+    if (produto) {
+      setSelectedProdutoBase(produto.produto_base_id);
+    }
     const precoFormatado = oferta.valor_unitario.toFixed(2).replace('.', ',');
     setValorUnitario(precoFormatado);
     setQuantidadeDisponivel(oferta.quantidade_disponivel.toString());
@@ -438,8 +459,8 @@ export default function AdminOferta() {
                 </div>
               </div>
 
-              {/* Seleção de produto */}
-              <div>
+              {/* Seleção de produto - Desktop (dropdown único) */}
+              <div className="hidden md:block">
                 <Label htmlFor="produto">Alimento *</Label>
                 <Select value={selectedProdutoId} onValueChange={setSelectedProdutoId}>
                   <SelectTrigger id="produto">
@@ -456,6 +477,51 @@ export default function AdminOferta() {
                 <p className="text-xs text-muted-foreground mt-1">
                   Todas as variações do mesmo alimento base estão disponíveis
                 </p>
+              </div>
+
+              {/* Seleção de produto - Mobile (dois dropdowns) */}
+              <div className="md:hidden space-y-4">
+                {/* Dropdown 1: Alimento Base */}
+                <div>
+                  <Label htmlFor="produto-base-mobile">Alimento *</Label>
+                  <Select 
+                    value={selectedProdutoBase} 
+                    onValueChange={(value) => {
+                      setSelectedProdutoBase(value);
+                      setSelectedProdutoId(''); // Limpar variação ao mudar o alimento
+                    }}
+                  >
+                    <SelectTrigger id="produto-base-mobile">
+                      <SelectValue placeholder="Selecione o alimento" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[300px] bg-background z-50">
+                      {produtosBase.map((base) => (
+                        <SelectItem key={base.id} value={base.id}>
+                          {base.nome}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Dropdown 2: Variação */}
+                {selectedProdutoBase && (
+                  <div>
+                    <Label htmlFor="variacao-mobile">Variação *</Label>
+                    <Select value={selectedProdutoId} onValueChange={setSelectedProdutoId}>
+                      <SelectTrigger id="variacao-mobile">
+                        <SelectValue placeholder="Selecione a variação" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[300px] bg-background z-50">
+                        {variacoesProduto.map((produto) => (
+                          <SelectItem key={produto.id} value={produto.id}>
+                            ({produto.unidade}) - {produto.peso ? `${produto.peso.toFixed(2)} kg` : produto.volume ? `${produto.volume.toFixed(2)} L` : ''} - {produto.quantidade > 1 ? `${produto.quantidade} un. - ` : ''}{formatBRL(produto.preco_base)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
 
               {/* Valor Unitário */}
