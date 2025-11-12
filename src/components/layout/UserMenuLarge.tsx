@@ -253,7 +253,7 @@ export const UserMenuLarge: React.FC = () => {
     <div ref={menuRef} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex flex-col items-center pt-14 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80 cursor-pointer"
+        className="flex flex-col items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md transition-all hover:opacity-80 cursor-pointer"
         aria-expanded={isOpen}
         aria-haspopup="menu"
       >
