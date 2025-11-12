@@ -58,7 +58,7 @@ const Dashboard = () => {
     >
       <div className="space-y-6 pt-8">
         {/* Header */}
-        <div className="text-center relative">
+        <div className="text-center relative mb-8">
           <img 
             src="/src/assets/leaf-title-icon.png" 
             alt="" 
