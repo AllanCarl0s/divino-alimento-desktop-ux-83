@@ -103,28 +103,25 @@ export const AuthenticatedHeader: React.FC = () => {
   return (
     <>
       {isMobile ? (
-        /* Mobile Layout: Logo horizontal centralizado na faixa laranja, avatar + nome em faixa branca abaixo */
+        /* Mobile Layout: Logo na faixa laranja, avatar + nome em faixa branca abaixo */
         <>
-          {/* Faixa laranja com logo horizontal centralizado */}
+          {/* Faixa laranja com logo centralizada */}
           <header 
             className="sticky top-0 z-50 w-full"
-            style={{ 
-              backgroundColor: '#F29B2C',
-              borderBottom: '4px solid #2E7D32'
-            }}
+            style={{ backgroundColor: '#F29B2C' }}
           >
-            <div className="flex justify-center items-center" style={{ height: '72px', padding: '12px 16px' }}>
+            <div className="flex justify-center items-center" style={{ height: '60px', paddingTop: '8px', paddingBottom: '8px' }}>
               <img 
                 src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
-                alt="Divino Alimento - Alimento de Todo Mundo"
+                alt="Divino Alimento"
                 className="object-contain"
-                style={{ height: '40px', maxWidth: '200px' }}
+                style={{ height: '40px', maxWidth: '160px' }}
               />
             </div>
           </header>
 
           {/* Faixa branca com avatar + nome centralizado */}
-          <div className="sticky z-40 w-full bg-white border-b border-border" style={{ top: '72px', paddingTop: '8px', paddingBottom: '8px' }}>
+          <div className="sticky z-40 w-full bg-white border-b border-border" style={{ top: '60px', paddingTop: '6px', paddingBottom: '6px' }}>
             <div className="flex justify-center items-center px-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -193,7 +190,7 @@ export const AuthenticatedHeader: React.FC = () => {
           </div>
         </>
       ) : (
-        /* Desktop Layout: Logo horizontal centralizado, avatar + nome à direita */
+        /* Desktop Layout: Logo à esquerda, avatar + nome à direita na mesma linha */
         <header 
           className="sticky top-0 z-50 w-full transition-shadow duration-300"
           style={{
@@ -201,19 +198,19 @@ export const AuthenticatedHeader: React.FC = () => {
             borderBottom: '4px solid #2E7D32',
           }}
         >
-          <div className="relative flex items-center justify-center px-6 lg:px-8 min-h-[80px]">
-            {/* Logo centralizado */}
-            <div className="flex items-center justify-center">
+          <div className="flex items-center justify-between px-6 lg:px-8 min-h-[72px]">
+            {/* Logo à esquerda */}
+            <div className="flex items-center">
               <img 
                 src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
-                alt="Divino Alimento - Alimento de Todo Mundo"
-                className="h-auto object-contain"
-                style={{ height: '48px', maxWidth: '280px' }}
+                alt="Divino Alimento"
+                className="h-auto object-contain max-w-[200px] md:max-w-[240px]"
+                style={{ maxHeight: '56px' }}
               />
             </div>
 
-            {/* Avatar + Nome + Menu à direita (posição absoluta) */}
-            <div className="absolute right-6 lg:right-8 flex items-center gap-3">
+            {/* Avatar + Nome + Menu à direita */}
+            <div className="flex items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#F29B2C] rounded-lg p-2 hover:bg-white/10 transition-colors">
