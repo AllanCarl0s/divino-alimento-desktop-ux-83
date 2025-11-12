@@ -13,6 +13,7 @@ import { UserMenuLarge } from '@/components/layout/UserMenuLarge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { parseISO } from 'date-fns';
 import { RoleTitle } from '@/components/layout/RoleTitle';
+import { exportFornecedoresCSV, exportFornecedoresPDF } from '@/utils/export';
 
 interface EntregaFornecedor {
   id: string;
@@ -90,19 +91,67 @@ export default function FornecedorEntregas() {
   const valorTotalGeral = filteredEntregas.reduce((acc, e) => acc + e.valor_total, 0);
 
   const handleExportCSV = () => {
-    toast({
-      title: "Exportação iniciada",
-      description: "O relatório CSV está sendo gerado..."
-    });
-    // In production: generate and download CSV
+    try {
+      // Preparar dados para exportação com campos necessários
+      const entregasParaExportar = filteredEntregas.map(e => ({
+        ciclo: `Ciclo ${cicloId}`,
+        fornecedor: 'Fornecedor Atual', // Em produção, viria do contexto de autenticação
+        produto: e.produto,
+        unidade_medida: e.unidade_medida,
+        valor_unitario: e.valor_unitario,
+        quantidade_entregue: e.quantidade_entregue,
+        valor_total: e.valor_total
+      }));
+
+      const ciclos = [{ id: Number(cicloId), nome: `Ciclo ${cicloId}` }];
+      
+      exportFornecedoresCSV(entregasParaExportar, ciclos);
+      
+      toast({
+        title: "Exportação concluída",
+        description: "O relatório CSV foi gerado com sucesso!"
+      });
+    } catch (error) {
+      toast({
+        title: "Erro na exportação",
+        description: "Não foi possível gerar o arquivo CSV.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleExportPDF = () => {
-    toast({
-      title: "Exportação iniciada",
-      description: "O relatório PDF está sendo gerado..."
-    });
-    // In production: generate and download PDF
+    try {
+      // Preparar dados para exportação com campos necessários
+      const entregasParaExportar = filteredEntregas.map(e => ({
+        ciclo: `Ciclo ${cicloId}`,
+        fornecedor: 'Fornecedor Atual', // Em produção, viria do contexto de autenticação
+        produto: e.produto,
+        unidade_medida: e.unidade_medida,
+        valor_unitario: e.valor_unitario,
+        quantidade_entregue: e.quantidade_entregue,
+        valor_total: e.valor_total
+      }));
+
+      const ciclos = [{ id: Number(cicloId), nome: `Ciclo ${cicloId}` }];
+      const resumo = {
+        totalQuantidade,
+        valorTotal: valorTotalGeral
+      };
+      
+      exportFornecedoresPDF(entregasParaExportar, ciclos, resumo);
+      
+      toast({
+        title: "Exportação concluída",
+        description: "O relatório PDF foi gerado com sucesso!"
+      });
+    } catch (error) {
+      toast({
+        title: "Erro na exportação",
+        description: "Não foi possível gerar o arquivo PDF.",
+        variant: "destructive"
+      });
+    }
   };
 
   // Empty state when no entregas
