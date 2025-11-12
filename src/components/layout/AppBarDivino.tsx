@@ -68,7 +68,13 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
         <div className="h-12 lg:h-16 bg-white" />
         
         {/* Header laranja com logo sobreposto - EXATAMENTE igual à home */}
-        <header className="relative h-20 lg:h-28 bg-[#F29B2C] flex items-center justify-center">
+        <header 
+          className="relative h-20 lg:h-28 bg-[#F29B2C] flex items-center justify-center"
+          style={{
+            width: "100vw",
+            marginLeft: "calc(-50vw + 50%)",
+          }}
+        >
           {/* Logo circular sobreposto - mesma posição, tamanho e sombra da home */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14">
             <div
