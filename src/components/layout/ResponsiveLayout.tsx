@@ -67,25 +67,34 @@ export const ResponsiveLayout = ({
     );
   }
 
-  // Desktop Admin Layout - With AuthenticatedHeader
+  // Admin Layout - With AuthenticatedHeader (old header style)
   if (isAdminRoute && !isLoginRoute) {
     return (
-      <AppShell className={className}>
-        {/* Header */}
-        {showHeader && <AuthenticatedHeader />}
-
-        {/* Main Content with 12 column grid */}
-        <main className={cn(
-          'flex-1 py-6 lg:py-8',
-          // Grid system for desktop
-          'grid grid-cols-1 lg:grid-cols-12 gap-6',
-          className
-        )}>
-          <div className="lg:col-span-12">
+      <div className="min-h-screen bg-gradient-surface">
+        {/* Mobile Layout */}
+        <div className="lg:hidden min-h-screen flex flex-col">
+          {showHeader && <AuthenticatedHeader />}
+          <main className="flex-1 px-4 py-6">
             {children}
-          </div>
-        </main>
-      </AppShell>
+          </main>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden lg:block">
+          <AppShell className={className}>
+            {showHeader && <AuthenticatedHeader />}
+            <main className={cn(
+              'flex-1 py-8',
+              'grid grid-cols-1 lg:grid-cols-12 gap-8',
+              className
+            )}>
+              <div className="lg:col-span-12">
+                {children}
+              </div>
+            </main>
+          </AppShell>
+        </div>
+      </div>
     );
   }
 
