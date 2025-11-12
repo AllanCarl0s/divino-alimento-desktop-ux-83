@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import logoDivino from '@/assets/LOGO_DIVINO_ALIMENTOS.png';
 
 interface AppBarDivinoProps {
@@ -16,6 +17,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
   const [hasScrolled, setHasScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { activeRole } = useAuth();
 
   const handleLogoClick = () => {
     // Detecta se está em rota de consumidor ou fornecedor
@@ -43,6 +45,26 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
     
     // Para outras rotas, volta para home
     navigate('/');
+  };
+
+  const handleVoltar = () => {
+    // Redirecionar baseado no perfil ativo
+    switch (activeRole) {
+      case 'consumidor':
+        navigate('/dashboard');
+        break;
+      case 'fornecedor':
+        navigate('/fornecedor/loja');
+        break;
+      case 'admin_mercado':
+        navigate('/adminmercado/dashboard');
+        break;
+      case 'admin':
+        navigate('/admin/dashboard');
+        break;
+      default:
+        navigate('/dashboard');
+    }
   };
 
   useEffect(() => {
@@ -99,9 +121,9 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
           </div>
 
           {/* Botão de voltar - canto superior esquerdo */}
-          {location.pathname !== '/dashboard' && (
+          {location.pathname !== '/dashboard' && !location.pathname.startsWith('/fornecedor/loja') && (
             <button
-              onClick={() => navigate(-1)}
+              onClick={handleVoltar}
               className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-10 text-white hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 rounded-full p-2"
               aria-label="Voltar"
             >
