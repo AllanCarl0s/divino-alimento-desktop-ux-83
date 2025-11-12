@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { roleLabel, type AppRole, type Gender } from '@/utils/labels';
+import { UserRoleModal } from './UserRoleModal';
 
 const getDefaultRoute = (role: UserRole): string => {
   switch (role) {
@@ -132,118 +133,27 @@ export const UserMenuLarge: React.FC = () => {
     };
   }, [isOpen, isMobile]);
 
-  // Mobile version - Modal style Google
+  // Mobile version - usar modal unificado
   if (isMobile) {
     return (
       <>
-        <div ref={menuRef} className="relative">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center hover:opacity-80 transition-opacity"
-            aria-haspopup="dialog"
-            aria-expanded={isOpen}
-          >
-            <Avatar className="h-11 w-11 border-2 border-white">
-              <AvatarImage src={user.photoURL} alt={displayName} />
-              <AvatarFallback className="bg-primary text-white font-semibold">
-                {getInitials()}
-              </AvatarFallback>
-            </Avatar>
-          </button>
-        </div>
+        <button
+          id="avatar-button"
+          onClick={() => setIsOpen(true)}
+          className="flex items-center hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          aria-controls="user-role-modal"
+        >
+          <Avatar className="h-11 w-11 border-2 border-white shadow-lg">
+            <AvatarImage src={user.photoURL} alt={displayName} />
+            <AvatarFallback className="bg-primary text-white font-semibold">
+              {getInitials()}
+            </AvatarFallback>
+          </Avatar>
+        </button>
 
-        {/* Mobile Modal */}
-        {isOpen && (
-          <div 
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="avatar-menu-title"
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-40 animate-in fade-in duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div 
-              className="bg-white w-[90%] max-w-[340px] rounded-2xl p-6 text-center shadow-2xl animate-in slide-in-from-top-4 duration-300 relative z-50"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setIsOpen(false);
-                }}
-                className="absolute top-3 right-3 h-10 w-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-                aria-label="Fechar menu de perfil"
-              >
-                <X className="h-5 w-5 text-gray-600" />
-              </button>
-
-              {/* Large Avatar */}
-              <Avatar className="h-20 w-20 border-3 border-primary mx-auto mb-2">
-                <AvatarImage src={user.photoURL} alt={displayName} />
-                <AvatarFallback className="bg-primary text-white font-semibold text-2xl">
-                  {getInitials()}
-                </AvatarFallback>
-              </Avatar>
-
-              {/* User Info */}
-              <h3 id="avatar-menu-title" className="text-lg font-semibold text-primary mb-1">
-                Olá, {displayName}!
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {user.email}
-              </p>
-
-              {/* Roles List */}
-              {user.roles && user.roles.length > 0 && (
-                <ul className="mb-3 border-t border-gray-200">
-                  {user.roles.map((role) => {
-                    const Icon = getRoleIcon(role);
-                    const isActive = role === activeRole;
-                    return (
-                      <li 
-                        key={role}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          if (!isActive) {
-                            handleSwitchRole(role);
-                            setIsOpen(false);
-                          }
-                        }}
-                        className={cn(
-                          "flex items-center gap-3 px-4 py-3 border-b border-gray-100 transition-colors",
-                          isActive ? "bg-primary/5 font-medium cursor-default" : "hover:bg-gray-50 cursor-pointer"
-                        )}
-                      >
-                        <Icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-gray-600")} />
-                        <span className={cn("text-sm text-left flex-1", isActive ? "text-primary" : "text-gray-700")}>
-                          {getRoleLabel(role, userGender)}
-                        </span>
-                        {isActive && (
-                          <span className="text-xs text-primary">Ativo</span>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-
-              {/* Logout Button */}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleLogout();
-                }}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
-              >
-                <LogOut className="h-4 w-4" />
-                Sair
-              </button>
-            </div>
-          </div>
-        )}
+        <UserRoleModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       </>
     );
   }
