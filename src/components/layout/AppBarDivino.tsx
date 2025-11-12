@@ -20,33 +20,23 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
   const { activeRole } = useAuth();
 
   const handleLogoClick = () => {
-    // Detecta se está em rota de consumidor ou fornecedor
-    const isConsumerRoute = location.pathname === '/dashboard' || 
-                           location.pathname.startsWith('/minhaCesta') || 
-                           location.pathname.startsWith('/pedidoConsumidores') ||
-                           location.pathname.startsWith('/consumidor');
-    const isSupplierRoute = location.pathname.startsWith('/fornecedor');
-    
-    // Para rotas de consumidor, volta para o dashboard
-    if (isConsumerRoute) {
-      navigate('/dashboard');
-      return;
+    // Usa o perfil ativo para determinar para onde navegar
+    switch (activeRole) {
+      case 'consumidor':
+        navigate('/dashboard');
+        break;
+      case 'fornecedor':
+        navigate('/fornecedor/loja');
+        break;
+      case 'admin_mercado':
+        navigate('/adminmercado/dashboard');
+        break;
+      case 'admin':
+        navigate('/admin/dashboard');
+        break;
+      default:
+        navigate('/');
     }
-    
-    // Para rotas de fornecedor, volta para a loja
-    if (isSupplierRoute) {
-      navigate('/fornecedor/loja');
-      return;
-    }
-    
-    // Para rotas de admin
-    if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/usuario')) {
-      navigate('/admin/dashboard');
-      return;
-    }
-    
-    // Para outras rotas, volta para home
-    navigate('/');
   };
 
   const handleVoltar = () => {
