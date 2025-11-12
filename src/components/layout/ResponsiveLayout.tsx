@@ -25,7 +25,7 @@ export const ResponsiveLayout = ({
   showHeader = true 
 }: ResponsiveLayoutProps) => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/adminmercado');
   const isFornecedorRoute = location.pathname.startsWith('/fornecedor');
   const isLoginRoute = location.pathname.includes('/login') || 
                        location.pathname.includes('/register') || 
