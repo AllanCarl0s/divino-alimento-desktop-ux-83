@@ -23,11 +23,13 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
     // Detecta se está em rota de consumidor ou fornecedor
     const isConsumerRoute = location.pathname === '/dashboard' || 
                            location.pathname.startsWith('/minhaCesta') || 
-                           location.pathname.startsWith('/pedidoConsumidores');
+                           location.pathname.startsWith('/pedidoConsumidores') ||
+                           location.pathname.startsWith('/consumidor');
     const isSupplierRoute = location.pathname.startsWith('/fornecedor');
     
-    // Para rotas de consumidor, não faz nada ao clicar no logo
+    // Para rotas de consumidor, volta para o dashboard
     if (isConsumerRoute) {
+      navigate('/dashboard');
       return;
     }
     
@@ -104,9 +106,11 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
         >
           {/* Logo circular sobreposto - mesma posição, tamanho e sombra da home */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-10 lg:mt-14 z-20">
-            <div
-              className="hover:opacity-90 transition-opacity"
+            <button
+              onClick={handleLogoClick}
+              className="hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full"
               style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
+              aria-label="Voltar para o início"
             >
               <img 
                 src="/assets/logo-divino-circular.png"
@@ -117,7 +121,7 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
                   e.currentTarget.style.display = 'none';
                 }}
               />
-            </div>
+            </button>
           </div>
 
           {/* Botão de voltar - canto superior esquerdo */}
