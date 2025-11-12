@@ -53,47 +53,11 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Define se deve usar estilo da home (logo sobreposto)
-  const isHomeStyleHeader = 
-    location.pathname === '/dashboard' || 
-    location.pathname.startsWith('/minhaCesta') || 
-    location.pathname.startsWith('/pedidoConsumidores') ||
-    location.pathname.startsWith('/fornecedor');
-
-  // Se for estilo da home (consumidor/fornecedor)
-  if (isHomeStyleHeader) {
-    return (
-      <header className="relative h-24 md:h-28 bg-[#F29B2C] flex items-center justify-center">
-        {/* Logo circular centralizado */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-          <img 
-            src="/assets/logo-divino-circular.png"
-            alt="Divino Alimento"
-            className="w-[80px] h-[80px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px] object-contain"
-            style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
-            decoding="async"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-        </div>
-
-        {/* Avatar do usuário no canto direito */}
-        {children && (
-          <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-10 touch-target">
-            {children}
-          </div>
-        )}
-      </header>
-    );
-  }
-
-  // Header padrão para outras rotas (admin, adminmercado, home)
   return (
     <header 
       className={cn(
         "relative transition-shadow duration-300",
-        "h-24 md:h-28",
+        "h-24 md:h-28", // 96px mobile / 112px tablet
         hasScrolled && "shadow-[0_2px_10px_rgba(0,0,0,0.08)]",
         className
       )}
@@ -117,23 +81,39 @@ export const AppBarDivino = ({ children, leftContent, className, showLoginButton
           </div>
         )}
         
-        {/* Logo centralizado */}
+        {/* Logo centralizado - Sempre perfeitamente no centro */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <button
-            onClick={handleLogoClick}
-            className="focus-ring rounded-lg transition-transform hover:scale-105 active:scale-95 pointer-events-auto"
-          >
+          {/* Verifica se está em rota de consumidor ou fornecedor para exibir logo circular */}
+          {(location.pathname === '/dashboard' || 
+            location.pathname.startsWith('/minhaCesta') || 
+            location.pathname.startsWith('/pedidoConsumidores') ||
+            location.pathname.startsWith('/fornecedor')) ? (
             <img 
-              src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
-              alt="Divino Alimento - Alimento de Todo Mundo"
-              className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain cursor-pointer"
-              style={{ maxHeight: 'calc(100% - 16px)' }}
+              src="/assets/logo-divino-circular.png"
+              alt="Divino Alimento"
+              className="h-[72px] w-[72px] md:h-[84px] md:w-[84px] object-contain"
               decoding="async"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
-          </button>
+          ) : (
+            <button
+              onClick={handleLogoClick}
+              className="focus-ring rounded-lg transition-transform hover:scale-105 active:scale-95 pointer-events-auto"
+            >
+              <img 
+                src="/lovable-uploads/075f4442-f5fb-4f92-a192-635abe87b383.png"
+                alt="Divino Alimento - Alimento de Todo Mundo"
+                className="h-auto max-w-[180px] md:max-w-[280px] lg:max-w-[340px] object-contain cursor-pointer"
+                style={{ maxHeight: 'calc(100% - 16px)' }}
+                decoding="async"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </button>
+          )}
         </div>
         
         {/* Botões à direita */}
