@@ -104,9 +104,14 @@ const LojaProdutor = () => {
     >
       <div className="container max-w-7xl mx-auto py-6 px-4 space-y-8 pt-8">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gradient-primary">
-            {pageTitle}
+        <div className="text-center relative mb-8">
+          <img 
+            src="/src/assets/leaf-title-icon.png" 
+            alt="" 
+            className="absolute left-1/2 -translate-x-[175px] md:-translate-x-[250px] top-1/2 -translate-y-[80%] w-10 h-10 md:w-16 md:h-16"
+          />
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">
+            Agricultoras e agricultores
           </h1>
         </div>
 
