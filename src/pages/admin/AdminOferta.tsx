@@ -104,6 +104,7 @@ export default function AdminOferta() {
   const [salvandoOferta, setSalvandoOferta] = useState(false);
   const [certificacao, setCertificacao] = useState<CertificacaoType | ''>('');
   const [tipoAgricultura, setTipoAgricultura] = useState<TipoAgriculturaType | ''>('');
+  const [ofertaSalva, setOfertaSalva] = useState(false);
 
   // Refs para foco automático
   const valorInputRef = useRef<HTMLInputElement>(null);
@@ -337,6 +338,7 @@ export default function AdminOferta() {
     });
 
     setSalvandoOferta(false);
+    setOfertaSalva(true);
 
     toast({
       title: '✓ Oferta registrada com sucesso',
@@ -398,22 +400,22 @@ export default function AdminOferta() {
               
               <div className="h-0.5 w-12 md:w-20 bg-green-600" />
               
-              {/* Etapa 2 - Ativa */}
+              {/* Etapa 2 - Ativa ou Completa */}
               <div className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white font-bold">
-                  2
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full ${ofertaSalva ? 'bg-green-600' : 'bg-green-600'} text-white font-bold`}>
+                  {ofertaSalva ? <CheckCircle2 className="h-5 w-5" /> : '2'}
                 </div>
                 <span className="text-sm font-medium text-foreground">Seleção de produtos</span>
               </div>
               
-              <div className="h-0.5 w-12 md:w-20 bg-muted" />
+              <div className={`h-0.5 w-12 md:w-20 ${ofertaSalva ? 'bg-green-600' : 'bg-muted'}`} />
               
-              {/* Etapa 3 - Pendente */}
+              {/* Etapa 3 - Pendente ou Completa */}
               <div className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-muted text-muted-foreground font-bold">
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full ${ofertaSalva ? 'bg-green-600 text-white' : 'border-2 border-muted text-muted-foreground'} font-bold`}>
                   3
                 </div>
-                <span className="text-sm font-medium text-muted-foreground">Oferta enviada</span>
+                <span className={`text-sm font-medium ${ofertaSalva ? 'text-foreground' : 'text-muted-foreground'}`}>Oferta enviada</span>
               </div>
             </div>
           </CardContent>
